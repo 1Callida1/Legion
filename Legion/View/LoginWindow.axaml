@@ -1,0 +1,97 @@
+<Window
+    x:Class="Legion.LoginWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Legion.ViewModel"
+    Title="Legion"
+    Width="850"
+    Height="600"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:LoginWindowViewModel"
+    Background="Transparent"
+    ExtendClientAreaChromeHints="NoChrome"
+    ExtendClientAreaTitleBarHeightHint="-1"
+    SystemDecorations="None"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Border Background="#123" CornerRadius="20" />
+        <Grid>
+            <!--  Login Form  -->
+            <StackPanel Width="300" Height="400">
+                <Grid Width="300" Height="400">
+                    <Border Background="#ffff" CornerRadius="20" />
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="4*" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Content="Вход"
+                            FontFamily="sans-serif"
+                            FontSize="30"
+                            Foreground="#e95322" />
+
+                        <StackPanel
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            VerticalAlignment="Center">
+                            <Label Content="Логин:" Foreground="Black" />
+                            <TextBox
+                                Height="30"
+                                Background="#123"
+                                CornerRadius="7"
+                                Foreground="White"
+                                Text="{CompiledBinding UserName}" />
+                            <Label Content="Пароль:" Foreground="Black" />
+                            <TextBox
+                                Height="30"
+                                Background="#123"
+                                CornerRadius="7"
+                                Foreground="White"
+                                Text="{CompiledBinding Password}" />
+                        </StackPanel>
+
+                        <Label
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="3"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Content="Неверный логин или пароль!"
+                            Foreground="Red"
+                            IsVisible="{Binding WrongData}" />
+
+                        <Button
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="#e95322"
+                            ClickMode="Press"
+                            Command="{CompiledBinding SubmitCommand}"
+                            Content="Войти"
+                            CornerRadius="20"
+                            FontFamily="TildaSans" />
+                    </Grid>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
