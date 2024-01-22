@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Legion", "Legion\Legion.csproj", "{0B7D5634-4BC0-4872-B0FD-410D759E3450}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B7D5634-4BC0-4872-B0FD-410D759E3450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B7D5634-4BC0-4872-B0FD-410D759E3450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B7D5634-4BC0-4872-B0FD-410D759E3450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B7D5634-4BC0-4872-B0FD-410D759E3450}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {20F10BA7-34A7-43DB-A9B9-9E6A2A43DC3F}
+	EndGlobalSection
+EndGlobal
