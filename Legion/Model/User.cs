@@ -6,20 +6,10 @@ using System.Threading.Tasks;
 
 namespace Legion.Model
 {
-    internal class User
+    public class User
     {
-        private string _username;
-        public string UserName
-        {
-            get => _username;
-            set => _username = value;
-        }
-
-        private string _password;
-        public string Password
-        {
-            get => _password;
-            set => _password = value;
-        }
+        public int Id { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
     }
 }
