@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Legion.Models
 {
-    internal class Referral
+    public class Referral
     {
         public int Id { get; set; }
         public int InvestorCalledId { get; set; }

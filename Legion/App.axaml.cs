@@ -61,6 +61,9 @@ namespace Legion
                    .UseSerilog() // Add Serilog
                    .Build(); // Build the Host
 
+                host.Services.GetRequiredService<ApplicationDbContext>().Database.EnsureCreated();
+                host.Services.GetRequiredService<ApplicationDbContext>().SaveChanges();
+
                 desktop.MainWindow = host.Services.GetRequiredService<LoginWindow>();
                 desktop.MainWindow.DataContext = host.Services.GetRequiredService<LoginWindowViewModel>();
 

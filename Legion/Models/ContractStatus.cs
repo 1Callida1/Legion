@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Legion.Models
 {
-    internal class ContractStatus
+    public class ContractStatus
     {
         public int Id { get; set; }
         public string Status { get; set; }

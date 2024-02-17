@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Legion.Models
 {
-    internal class Repeateds
+    public class Repeated
     {
         public int Id { get; set; }
         public string Type { get; set; }

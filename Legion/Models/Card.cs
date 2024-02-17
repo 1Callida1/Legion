@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Legion.Models
 {
-    internal class Card
+    public class Card
     {
         public int Id { get; set; }
         public int InvestorId { get; set; }

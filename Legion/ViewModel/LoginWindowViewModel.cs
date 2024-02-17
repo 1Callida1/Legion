@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Legion.Model;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -42,15 +43,15 @@ namespace Legion.ViewModels
             }, IsInputValid);
 
 
-            //if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
-            //{
-                //_context.Users.Add(new Model.User() { Password = "123", UserName = "admin" });
-                //_context.SaveChanges();
-            //}
-            //else
-            //{
-               //Debug.WriteLine($"Finded user {_context.Users.FirstOrDefault().UserName} in database");
-            //}
+            if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
+            {
+                _context.Users.Add(new User() { Password = "123", UserName = "admin" });
+                _context.SaveChanges();
+            }
+            else
+            {
+                Debug.WriteLine($"Finded user {_context.Users.FirstOrDefault().UserName} in database");
+            }
         }
 
         private string _username = string.Empty;
