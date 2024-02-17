@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Legion.ViewModel;
+using Legion.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -53,16 +53,22 @@ namespace Legion
 
                        services.AddSingleton<LoginWindow>();
                        services.AddSingleton<LoginWindowViewModel>();
+                       services.AddSingleton<InvestorsView>();
+                       services.AddSingleton<InvestorsViewModel>();
 
                        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("name=ConnectionStrings:DefaultConnection"));
                    })
                    .UseSerilog() // Add Serilog
                    .Build(); // Build the Host
 
-                desktop.MainWindow = new LoginWindow()
-                {
-                    DataContext = host.Services.GetRequiredService<LoginWindowViewModel>()
-                };
+                desktop.MainWindow = host.Services.GetRequiredService<LoginWindow>();
+                desktop.MainWindow.DataContext = host.Services.GetRequiredService<LoginWindowViewModel>();
+
+
+                //desktop.MainWindow = new InvestorsView()
+                //{
+                //    DataContext = host.Services.GetRequiredService<InvestorsViewModel>()
+                //};
             }
 
             base.OnFrameworkInitializationCompleted();

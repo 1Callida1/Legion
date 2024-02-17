@@ -9,13 +9,13 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Legion.ViewModel
+namespace Legion.ViewModels
 {
     internal class LoginWindowViewModel : ReactiveObject
     {
         private ApplicationDbContext _context;
 
-        public LoginWindowViewModel(ApplicationDbContext context)
+        public LoginWindowViewModel(ApplicationDbContext context, InvestorsView investorsView, LoginWindow mainHandler)
         {
             _context = context;
 
@@ -31,12 +31,16 @@ namespace Legion.ViewModel
             {
                 Debug.WriteLine($"{UserName} : {Password}");
                 if (_context.Users.FirstOrDefault(user => user.UserName == UserName && user.Password == Password) == null)
+                {
                     WrongData = true;
+                    return;
+                }
+                mainHandler.Hide();
+                investorsView.DataContext = new InvestorsViewModel(context);
+                investorsView.Show();
 
             }, IsInputValid);
 
-            _context.Database.EnsureCreated();
-            _context.SaveChanges();
 
             if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
             {
