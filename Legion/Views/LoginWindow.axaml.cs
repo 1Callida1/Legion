@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using System;
 
 namespace Legion
 {
@@ -10,9 +11,14 @@ namespace Legion
             InitializeComponent();
         }
 
-        public void ClickHandler(object sender, RoutedEventArgs args)
+        private void StackPanelPointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
         {
+            this.BeginMoveDrag(e);
+        }
 
+        private void ExitButtonClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }

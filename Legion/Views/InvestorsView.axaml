@@ -7,13 +7,22 @@
              xmlns:vm="using:Legion.ViewModels"
              x:DataType="vm:InvestorsViewModel">
   <Grid>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="0.1*" />
-        <RowDefinition />
-      </Grid.RowDefinitions>
-    <Button Content="Добавить инвестора" Grid.Row="0"/>
-    <DataGrid Grid.Row="1" Margin="20" ItemsSource="{Binding Investors}" AutoGenerateColumns="True" GridLinesVisibility="All"
-          BorderThickness="1" BorderBrush="Gray" Foreground="White">
-    </DataGrid>
+	  <StackPanel>
+		  <Grid>
+			  <Grid.RowDefinitions>
+				  <RowDefinition Height="0.1*" />
+				  <RowDefinition />
+			  </Grid.RowDefinitions>
+			  <Button Content="Добавить инвестора" Grid.Row="0"/>
+			  <DataGrid Grid.Row="1" Margin="20" ItemsSource="{Binding Investors}" AutoGenerateColumns="True" GridLinesVisibility="All"
+					BorderThickness="1" BorderBrush="Gray" Foreground="White">
+			  </DataGrid>
+		  </Grid>
+	  </StackPanel>
+	  <StackPanel>
+		  <Grid>
+
+		  </Grid>
+	  </StackPanel>
   </Grid>
 </UserControl>
