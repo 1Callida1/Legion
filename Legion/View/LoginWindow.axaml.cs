@@ -3,9 +3,9 @@ using Avalonia.Interactivity;
 
 namespace Legion
 {
-    public partial class MainWindow : Window
+    public partial class LoginWindow : Window
     {
-        public MainWindow()
+        public LoginWindow()
         {
             InitializeComponent();
         }
