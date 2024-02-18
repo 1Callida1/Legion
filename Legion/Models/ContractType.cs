@@ -8,8 +8,13 @@ namespace Legion.Models
 {
     public class ContractType
     {
+        public ContractType()
+        {
+            TypeName = string.Empty;
+        }
+
         public int Id { get; set; }
-        public string Type { get; set; }
+        public string TypeName { get; set; }
         public int Period { get; set; }
         public int Bet { get; set; }
         public string Formula { get; set; }

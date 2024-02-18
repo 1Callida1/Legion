@@ -8,6 +8,10 @@ namespace Legion.Models
 {
     public class Contract
     {
+        public Contract()
+        {
+            Id = string.Empty;
+        }
         public string Id { get; set; }
         public int StatusId { get; set; }
         public int InvestorId { get; set; }

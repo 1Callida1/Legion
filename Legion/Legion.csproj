@@ -35,12 +35,11 @@
 
 
   <ItemGroup>
-    <Compile Update="Views\LoginWindow.axaml.cs">
-      <DependentUpon>LoginWindow.axaml</DependentUpon>
+    <Compile Update="Views\LoginView.axaml.cs">
+      <DependentUpon>LoginView.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
-
-
+  
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

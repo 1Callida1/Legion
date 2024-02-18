@@ -11,6 +11,13 @@ using System;
 using System.IO;
 using Serilog.Events;
 using Microsoft.EntityFrameworkCore;
+using Legion.Models;
+using SkiaSharp;
+using System.Diagnostics;
+using System.Linq;
+using Legion.Helpers;
+using Legion.Views;
+using ReactiveUI;
 
 namespace Legion
 {
@@ -21,9 +28,9 @@ namespace Legion
             AvaloniaXamlLoader.Load(this);
         }
 
-        public IServiceProvider ServiceProvider { get; private set; }
+        public IServiceProvider? ServiceProvider { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfiguration? Configuration { get; private set; }
 
         public override void OnFrameworkInitializationCompleted()
         {
@@ -51,8 +58,9 @@ namespace Legion
                    .ConfigureServices((context, services) => { // Adding the DI container for configuration
                        services.AddSingleton(Configuration);
 
-                       services.AddSingleton<LoginWindow>();
-                       services.AddSingleton<LoginWindowViewModel>();
+                       services.AddSingleton<MainWindow>();
+                       services.AddSingleton<MainWindowViewModel>();
+                       services.AddSingleton<LoginView>();
                        services.AddSingleton<InvestorsView>();
                        services.AddSingleton<InvestorsViewModel>();
 
@@ -61,12 +69,26 @@ namespace Legion
                    .UseSerilog() // Add Serilog
                    .Build(); // Build the Host
 
-                host.Services.GetRequiredService<ApplicationDbContext>().Database.EnsureCreated();
-                host.Services.GetRequiredService<ApplicationDbContext>().SaveChanges();
+                // Db init
+                var _context = host.Services.GetRequiredService<ApplicationDbContext>();
+                _context.Database.EnsureCreated();
 
-                desktop.MainWindow = host.Services.GetRequiredService<LoginWindow>();
-                desktop.MainWindow.DataContext = host.Services.GetRequiredService<LoginWindowViewModel>();
+                if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
+                {
+                    _context.Users.Add(new User() { Password = "123", UserName = "admin" });
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    Log.Logger.Information($"Finded user {_context.Users.FirstOrDefault().UserName} in database");
+                }
 
+                _context.SaveChanges();
+
+                desktop.MainWindow = host.Services.GetRequiredService<MainWindow>();
+                desktop.MainWindow.DataContext = host.Services.GetRequiredService<MainWindowViewModel>();
+                MainWindowViewModel S = (MainWindowViewModel)desktop.MainWindow.DataContext;
+                S.GoNext.Execute();
 
                 //desktop.MainWindow = new InvestorsView()
                 //{
@@ -75,6 +97,7 @@ namespace Legion
             }
 
             base.OnFrameworkInitializationCompleted();
+            Locator.CurrentMutable.RegisterLazySingleton(() => new AppViewLocator(), typeof(IViewLocator));
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Legion.Model
+namespace Legion.Models
 {
     public class User
     {

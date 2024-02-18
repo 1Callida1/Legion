@@ -10,6 +10,6 @@ namespace Legion.Models
     {
         public int Id { get; set; }
         public int InvestorId { get; set; }
-        public string CardNumber { get; set; }
+        public string? CardNumber { get; set; }
     }
 }

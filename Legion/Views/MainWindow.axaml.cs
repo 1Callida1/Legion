@@ -1,13 +1,20 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using Legion.ViewModels;
+using ReactiveUI;
 
-namespace Legion;
-
-public partial class MainWindow : Window
+namespace Legion.Views
 {
-    public MainWindow()
+    public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
-        InitializeComponent();
+        public MainWindow()
+        {
+            // ViewModel's WhenActivated block will also get called.
+            this.WhenActivated(disposables => { /* Handle view activation etc. */ });
+            AvaloniaXamlLoader.Load(this);
+        }
     }
 }
+

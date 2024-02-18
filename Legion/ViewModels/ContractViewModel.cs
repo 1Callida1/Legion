@@ -1,4 +1,5 @@
 ﻿using Legion.Models;
+using Legion.ViewModels;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Legion.ViewModels
 {
-    internal class ContractViewModel : ReactiveObject
+    public class ContractViewModel : ViewModelBase
     {
         private ApplicationDbContext _context;
 
@@ -18,5 +19,7 @@ namespace Legion.ViewModels
         {
             _context = context;
         }
+
+        public override IScreen HostScreen => throw new NotImplementedException();
     }
 }

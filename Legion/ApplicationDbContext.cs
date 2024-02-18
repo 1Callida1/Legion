@@ -1,5 +1,4 @@
-﻿using Legion.Model;
-using Legion.Models;
+﻿using Legion.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 

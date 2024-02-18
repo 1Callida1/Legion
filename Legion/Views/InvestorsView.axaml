@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Legion.InvestorsView"
+             x:Class="Legion.Views.InvestorsView"
              xmlns:vm="using:Legion.ViewModels"
              x:DataType="vm:InvestorsViewModel">
   <Grid>
@@ -15,8 +15,7 @@
 			  </Grid.RowDefinitions>
 			  <Button Content="Добавить инвестора" Grid.Row="0"/>
 			  <DataGrid Grid.Row="1" Margin="20" ItemsSource="{Binding Investors}" AutoGenerateColumns="True" GridLinesVisibility="All"
-					BorderThickness="1" BorderBrush="Gray" Foreground="White">
-			  </DataGrid>
+					BorderThickness="1" BorderBrush="Gray" Foreground="White"/>
 		  </Grid>
 	  </StackPanel>
 	  <StackPanel>

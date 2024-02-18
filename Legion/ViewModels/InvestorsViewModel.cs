@@ -1,4 +1,5 @@
 ﻿using Legion.Models;
+using Legion.ViewModels;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Legion.ViewModels
 {
-    public class InvestorsViewModel : ReactiveObject
+    public class InvestorsViewModel : ViewModelBase
     {
         private ApplicationDbContext _context;
 
@@ -26,5 +27,7 @@ namespace Legion.ViewModels
             new Investor() { LastName = "Abobov", MiddleName = "Abobovich"},
             new Investor() { LastName = "Abobov", MiddleName = "Abobovich"},
         });
+
+        public override IScreen HostScreen => throw new NotImplementedException();
     }
 }
