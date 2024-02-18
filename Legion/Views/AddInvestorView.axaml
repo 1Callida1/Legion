@@ -1,0 +1,113 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="Legion.Views.AddInvestorView"
+             Width="800"
+             Height="700"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
+             xmlns:vm="using:Legion.ViewModels"
+             x:DataType="vm:AddInvestorViewModel">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="55" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="80" />
+        </Grid.ColumnDefinitions>
+        <Panel
+            Background="#e95322"
+            Grid.Row="0" Grid.ColumnSpan="2" Height="55">
+        </Panel>
+        <Button Name="BtnBack" Grid.Row="0" Grid.Column="1" Content="Назад" Height="35" Width="80"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                HorizontalAlignment="Right" Margin="0,0,5,0" Background="#ffff" Foreground="#e95322"
+                Command="{Binding BackCommand}" />
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Transparent">
+            <Label
+                Content="Добавление инвестора"
+                HorizontalAlignment="Center"
+                FontFamily="sans-serif"
+                FontSize="30"
+                Foreground="#e95322"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.1*" />
+                    <RowDefinition Height="0.1*" />
+                    <RowDefinition Height="0.1*" />
+                    <RowDefinition Height="0.1*" />
+                    <RowDefinition Height="0.1*" />
+                    <RowDefinition Height="0.1*" />
+                    <RowDefinition Height="0.1*" />
+                    <RowDefinition Height="0.1*" />
+                    <RowDefinition Height="0.1*" />
+                    <RowDefinition Height="0.1*" />
+                    <RowDefinition Height="0.1*" />
+                    <RowDefinition Height="0.1*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.1*" />
+                    <ColumnDefinition Width="0.1*" />
+                    <ColumnDefinition Width="0.1*" />
+                    <ColumnDefinition Width="0.1*" />
+                </Grid.ColumnDefinitions>
+                <Label Content="Личная информация" Grid.Column="1" Grid.Row="0" Margin="7" Foreground="Black"
+                       FontSize="15" FontWeight="Bold" />
+                <Label Content="Фамилия" Grid.Column="0" Grid.Row="1" Margin="7" Foreground="Black" />
+                <Label Content="Имя" Grid.Column="0" Grid.Row="2" Margin="7" Foreground="Black" />
+                <Label Content="Отчество" Grid.Column="0" Grid.Row="3" Margin="7" Foreground="Black" />
+                <Label Content="Дата рождения" Grid.Column="0" Grid.Row="4" Margin="7" Foreground="Black" />
+                <TextBox Grid.Column="1" Grid.Row="1" Margin="7" Height="20" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" Text="{Binding Investor.LastName}" />
+                <TextBox Grid.Column="1" Grid.Row="2" Margin="7" Height="20" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" Text="{Binding Investor.FirstName}" />
+                <TextBox Grid.Column="1" Grid.Row="3" Margin="7" Height="20" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" Text="{Binding Investor.MiddleName}" />
+                <Label Content="Город проживания" Grid.Column="2" Grid.Row="1" Margin="7" Foreground="Black" />
+                <Label Content="Номер телефона" Grid.Column="2" Grid.Row="2" Margin="7" Foreground="Black" />
+                <Label Content="Почта" Grid.Column="2" Grid.Row="3" Margin="7" Foreground="Black" />
+                <DatePicker Grid.Column="1" Grid.Row="4" DayFormat="ddd dd" Foreground="Black" />
+                <TextBox Grid.Column="3" Grid.Row="1" Margin="7" Height="20" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" Text="{Binding Investor.City}" />
+                <MaskedTextBox Mask="+79999999999" Grid.Column="3" Grid.Row="2" Margin="7" Height="20"
+                               Background="Gainsboro" CornerRadius="20" Foreground="Black"
+                               Text="{Binding Investor.Phone}" />
+                <TextBox Grid.Column="3" Grid.Row="3" Margin="7" Height="20" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" Text="{Binding Investor.Email}" />
+                <Label Content="Паспортные данные" Grid.Column="1" Grid.Row="5" Margin="7" Foreground="Black"
+                       FontSize="15" FontWeight="Bold" />
+                <Label Content="Серия" Grid.Column="0" Grid.Row="6" Margin="7" Foreground="Black" />
+                <Label Content="Номер" Grid.Column="0" Grid.Row="7" Margin="7" Foreground="Black" />
+                <Label Content="Кем выдан" Grid.Column="0" Grid.Row="8" Margin="7" Foreground="Black" />
+                <TextBox Grid.Column="1" Grid.Row="6" Margin="7" Height="20" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" Text="{Binding Investor.PassprotSeries}" />
+                <TextBox Grid.Column="1" Grid.Row="7" Margin="7" Height="20" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" Text="{Binding Investor.PassprotNumber}" />
+                <TextBox Grid.Column="1" Grid.Row="8" Margin="7" Height="20" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" Text="{Binding Investor.Given}" />
+                <Label Content="Дата выдачи" Grid.Column="2" Grid.Row="6" Margin="7" Foreground="Black" />
+                <Label Content="Код подразделения" Grid.Column="2" Grid.Row="7" Margin="7" Foreground="Black" />
+                <Label Content="Место регистрации" Grid.Column="2" Grid.Row="8" Margin="7" Foreground="Black" />
+                <DatePicker Grid.Column="3" Grid.Row="6" DayFormat="ddd dd" Foreground="Black" />
+                <MaskedTextBox Mask="999-999" Grid.Column="3" Grid.Row="7" Margin="7" Height="20"
+                               Background="Gainsboro" CornerRadius="20" Foreground="Black"
+                               Text="{Binding Investor.PassportUnitCode}" />
+                <TextBox Grid.Column="3" Grid.Row="8" Margin="7" Height="20" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" Text="{Binding Investor.PassportRegistration}" />
+                <Label Content="Особые данные" Grid.Column="1" Grid.Row="9" Margin="7" Foreground="Black"
+                       FontSize="15" FontWeight="Bold" />
+                <Label Content="Банковские карты" Grid.Column="0" Grid.Row="10" Margin="7" Foreground="Black" />
+                <Label Content="Особые памятки" Grid.Column="2" Grid.Row="10" Margin="7" Foreground="Black" />
+                <TextBox Grid.Column="1" Grid.Row="10" Margin="7" Height="100" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" AcceptsReturn="True" TextWrapping="Wrap" />
+                <TextBox Grid.Column="3" Grid.Row="10" Margin="7" Height="100" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" AcceptsReturn="True" TextWrapping="Wrap"
+                         Text="{Binding Investor.Note}" />
+            </Grid>
+            <Button Height="40" Margin="10" CornerRadius="20" Width="200" Content="Добавить инвестора"
+                    Background="#e95322" Command="{Binding SaveCommand}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

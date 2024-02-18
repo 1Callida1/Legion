@@ -2,18 +2,105 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Legion.InvestorsView"
+             x:Class="Legion.Views.InvestorsView"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
+             Width="800"
+             Height="700"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
              xmlns:vm="using:Legion.ViewModels"
              x:DataType="vm:InvestorsViewModel">
-  <Grid>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="0.1*" />
-        <RowDefinition />
-      </Grid.RowDefinitions>
-    <Button Content="Добавить инвестора" Grid.Row="0"/>
-    <DataGrid Grid.Row="1" Margin="20" ItemsSource="{Binding Investors}" AutoGenerateColumns="True" GridLinesVisibility="All"
-          BorderThickness="1" BorderBrush="Gray" Foreground="White">
-    </DataGrid>
-  </Grid>
+    <Grid>
+        <Border Background="#ffff" CornerRadius="20" />
+        <SplitView VerticalAlignment="Bottom" Height="645" ZIndex="1" Name="SVLeft" OpenPaneLength="260"
+                   CompactPaneLength="0" Background="#ffff" HorizontalAlignment="Left" DisplayMode="CompactInline"
+                   IsPaneOpen="{Binding IsPaneOpen}">
+            <SplitView.Pane>
+                <StackPanel Background="#e95322">
+                    <Grid ShowGridLines="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+                        <Label Content="ФИО:" Grid.Row="1" Foreground="#ffff" />
+                        <TextBox Grid.Row="2" CornerRadius="20" Background="#ffff" Height="25" Foreground="Black" />
+                    </Grid>
+                </StackPanel>
+            </SplitView.Pane>
+        </SplitView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="55" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Background="#e95322" Grid.Row="0" VerticalAlignment="Center" Height="55">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Name="BtnAddNew" Margin="0,0,5,0" Grid.Column="3" IsVisible="True" Content="Добавить инвестора"
+                        Height="35"
+                        Width="180" HorizontalAlignment="Right" Background="#ffff" Foreground="#e95322"
+                        Command="{Binding NewInvestorCommand}" />
+                <TextBox Name="SerachBox" Grid.Column="1" Background="#ffff" Foreground="Black" Height="25"
+                         CornerRadius="20" Margin="15, 0,0,0" />
+                <Button Name="SerachBtn" Grid.Column="2" Content="Найти" Background="#ffff" Foreground="#e95322"
+                        Width="80" Height="35" Margin="25, 0,0,0" />
+                <Button Name="SpTriggerBtn" Content="-" Background="#ffff" Foreground="#e95322" Width="35"
+                        Height="35" Command="{Binding PaneCommand}" Margin="5, 0,0,0" />
+            </Grid>
+
+            <StackPanel Grid.Row="1">
+                <StackPanel IsVisible="True" Background="Transparent" Name="SPInvestorDG">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.1*" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <DataGrid ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20"
+                                  ItemsSource="{Binding Investors}" AutoGenerateColumns="True"
+                                  GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray" IsReadOnly="True"
+                                  HorizontalScrollBarVisibility="Visible">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}">
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}" />
+                                <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}" />
+                                <DataGridTextColumn Header="Дата рождения" Binding="{Binding Path=DateBirth}" />
+                                <DataGridTextColumn Header="Серия паспорта" Binding="{Binding Path=PassprotSeries}" />
+                                <DataGridTextColumn Header="Номер паспорта" Binding="{Binding Path=PassprotNumber}" />
+                                <DataGridTextColumn Header="Телефон" Binding="{Binding Path=Phone}" />
+                            </DataGrid.Columns>
+                            <DataGrid.Styles>
+                                <Style Selector="DataGridColumnHeader">
+                                    <Setter Property="Foreground" Value="Black" />
+                                </Style>
+                                <Style Selector="ScrollBar:horizontal">
+                                  <Setter Property="Background" Value="Gray" />
+                                </Style>
+                                <Style Selector="ScrollBar:vertical">
+                                    <Setter Property="Background" Value="Gray" />
+
+                                </Style>
+                                <Style Selector="Thumb">
+                                    <Setter Property="Background" Value="Black" />
+                                    <Setter Property="Foreground" Value="Wheat" />
+
+                                </Style>
+                            </DataGrid.Styles>
+                        </DataGrid>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
 </UserControl>

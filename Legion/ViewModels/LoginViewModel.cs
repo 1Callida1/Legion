@@ -1,4 +1,6 @@
 ﻿using Avalonia;
+using Legion.Models;
+using Legion.ViewModels;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -8,16 +10,22 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Legion.Views;
+using System.Reactive.Disposables;
 
 namespace Legion.ViewModels
 {
-    internal class LoginWindowViewModel : ReactiveObject
+    public class LoginViewModel : ViewModelBase
     {
         private ApplicationDbContext _context;
+        public override IScreen HostScreen { get; }
 
-        public LoginWindowViewModel(ApplicationDbContext context, InvestorsView investorsView, LoginWindow mainHandler)
+        public LoginViewModel(IScreen hostScreen, ApplicationDbContext context)
         {
+            Activator = new ViewModelActivator();
             _context = context;
+            HostScreen = hostScreen;
+
 
             IsInputValid = this.WhenAnyValue(
                 x => x.UserName, 
@@ -35,16 +43,15 @@ namespace Legion.ViewModels
                     WrongData = true;
                     return;
                 }
-                mainHandler.Hide();
-                investorsView.DataContext = new InvestorsViewModel(context);
-                investorsView.Show();
+
+                HostScreen.Router.Navigate.Execute(new InvestorsViewModel(HostScreen, _context));
 
             }, IsInputValid);
 
 
             if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
             {
-                _context.Users.Add(new Model.User() { Password = "123", UserName = "admin" });
+                _context.Users.Add(new User() { Password = "123", UserName = "admin" });
                 _context.SaveChanges();
             }
             else
@@ -56,7 +63,6 @@ namespace Legion.ViewModels
         private string _username = string.Empty;
         private string _password = string.Empty;
         private bool _wrongData = false;
-
 
         public IObservable<bool> IsInputValid { get; }
         public bool WrongData { 
@@ -75,5 +81,7 @@ namespace Legion.ViewModels
             get => _password;
             set => this.RaiseAndSetIfChanged(ref _password, value);
         }
-    }
+
+        public ViewModelActivator Activator { get; }
+    };
 }

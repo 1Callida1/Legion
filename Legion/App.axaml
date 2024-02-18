@@ -8,9 +8,12 @@
 
     <Application.Styles>
         <FluentTheme />
+		<StyleInclude Source="avares://Legion/Icons.axaml" />
         <themes:MaterialTheme
             BaseTheme="Dark"
             PrimaryColor="Purple"
             SecondaryColor="Lime" />
+
     </Application.Styles>
+	
 </Application>

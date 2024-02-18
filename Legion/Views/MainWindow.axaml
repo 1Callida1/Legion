@@ -1,0 +1,31 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:reactiveUi="http://reactiveui.net"
+        xmlns:vm="using:Legion.ViewModels"
+        x:DataType="vm:MainWindowViewModel"
+        xmlns:app="using:Legion.Helpers"
+        mc:Ignorable="d" d:DesignWidth="850" d:DesignHeight="600"
+        x:Class="Legion.Views.MainWindow"
+        Width="800"
+        Height="700"
+        Title="MainWindow"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        SystemDecorations="None"
+        Background="Transparent"
+        WindowStartupLocation="CenterScreen">
+  <Grid>
+      <Border Background="#464866" CornerRadius="20" />
+      <Grid.RowDefinitions>
+          <RowDefinition Height="*" />
+          <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+    <reactiveUi:RoutedViewHost Grid.Row="0" Router="{Binding Router}">
+        <reactiveUi:RoutedViewHost.DefaultContent>
+            <TextBlock Text="Default Content" />
+        </reactiveUi:RoutedViewHost.DefaultContent>
+    </reactiveUi:RoutedViewHost>
+  </Grid>
+</Window>
