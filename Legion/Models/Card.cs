@@ -9,7 +9,7 @@ namespace Legion.Models
     public class Card
     {
         public int Id { get; set; }
-        public int InvestorId { get; set; }
+        public Investor Investor { get; set; }
         public string? CardNumber { get; set; }
     }
 }

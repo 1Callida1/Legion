@@ -13,14 +13,14 @@ namespace Legion.Models
             Id = string.Empty;
         }
         public string Id { get; set; }
-        public int StatusId { get; set; }
-        public int InvestorId { get; set; }
+        public ContractStatus Status { get; set; }
+        public Investor Investor { get; set; }
         public DateOnly DateStart { get; set; }
         public DateOnly DateEnd { get; set; }
         public int Amount { get; set; }
-        public int ContractTypeId { get; set; }
-        public int RepeatedId { get; set; }
-        public int ReferralId { get; set; }
+        public ContractType ContractType { get; set; }
+        public Repeated? Repeated { get; set; }
+        public Referral Referral { get; set; }
         public string Note {  get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace Legion.Models
     public class RenewalContract
     {
         public int Id { get; set; }
-        public string ContractId { get; set; }
+        public Contract Contract { get; set; }
         public DateOnly NewDateEnd { get; set; }
     }
 }

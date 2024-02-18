@@ -9,6 +9,12 @@ namespace Legion.Models
 {
     public class Investor
     {
+        public Investor()
+        {
+            DateBirth = DateOnly.FromDateTime(DateTime.Now);
+            PassportDateGiven = DateOnly.FromDateTime(DateTime.Now);
+        }
+
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -16,6 +22,7 @@ namespace Legion.Models
         public DateOnly DateBirth { get; set; }
         public int PassprotSeries { get; set; }
         public int PassprotNumber { get; set; }
+        public string Given { get; set; }
         public DateOnly PassportDateGiven { get; set; }
         public string PassportUnitCode { get; set; }
         public string PassportRegistration {  get; set; }

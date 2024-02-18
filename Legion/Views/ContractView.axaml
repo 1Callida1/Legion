@@ -16,7 +16,6 @@
 				<RowDefinition />
 			</Grid.RowDefinitions>
 			<StackPanel
-				PointerPressed=""
 				Background="#e95322"
 				Grid.Row="0"
 				Height="25">
@@ -32,8 +31,7 @@
 						HorizontalAlignment="Center"
 						VerticalAlignment="Center"
 						Width="25"
-						Height="25"
-						Click="">
+						Height="25">
 					</Button>
 				</Grid>
 			</StackPanel>

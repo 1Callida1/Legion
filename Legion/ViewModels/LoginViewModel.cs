@@ -44,7 +44,7 @@ namespace Legion.ViewModels
                     return;
                 }
 
-                HostScreen.Router.Navigate.Execute(new InvestorsViewModel(_context));
+                HostScreen.Router.Navigate.Execute(new InvestorsViewModel(HostScreen, _context));
 
             }, IsInputValid);
 

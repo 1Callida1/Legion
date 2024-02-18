@@ -9,8 +9,8 @@ namespace Legion.Models
     public class Referral
     {
         public int Id { get; set; }
-        public int InvestorCalledId { get; set; }
-        public int InvestorInvitedId { get; set; }
+        public Investor InvestorCalled { get; set; }
+        public Investor InvestorInvited { get; set; }
         public int Bonus {  get; set; }
         public string Note { get; set; }
     }

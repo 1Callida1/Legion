@@ -1,4 +1,3 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
@@ -7,14 +6,12 @@ using ReactiveUI;
 
 namespace Legion.Views
 {
-    public partial class ContractView : ReactiveUserControl<ContractViewModel>
+    public partial class AddInvestorView : ReactiveUserControl<AddInvestorViewModel>
     {
-        public ContractView()
+        public AddInvestorView()
         {
             this.WhenActivated(disposables => { });
             AvaloniaXamlLoader.Load(this);
-
         }
     }
 }
-

@@ -9,6 +9,6 @@ namespace Legion.Models
     public class ContractStatus
     {
         public int Id { get; set; }
-        public int Status { get; set; }
+        public string Status { get; set; }
     }
 }
