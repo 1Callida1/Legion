@@ -2,27 +2,137 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:i="https://github.com/projektanker/icons.avalonia"
+			 Width="800"
+			 Height="700"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
              x:Class="Legion.InvestorsView"
              xmlns:vm="using:Legion.ViewModels"
              x:DataType="vm:InvestorsViewModel">
   <Grid>
-	  <StackPanel>
-		  <Grid>
-			  <Grid.RowDefinitions>
-				  <RowDefinition Height="0.1*" />
-				  <RowDefinition />
-			  </Grid.RowDefinitions>
-			  <Button Content="Добавить инвестора" Grid.Row="0"/>
-			  <DataGrid Grid.Row="1" Margin="20" ItemsSource="{Binding Investors}" AutoGenerateColumns="True" GridLinesVisibility="All"
-					BorderThickness="1" BorderBrush="Gray" Foreground="White">
-			  </DataGrid>
-		  </Grid>
-	  </StackPanel>
-	  <StackPanel>
-		  <Grid>
-
-		  </Grid>
-	  </StackPanel>
+	  <Border Background="#ffff" CornerRadius="20"/>
+	  <SplitView VerticalAlignment="Bottom" Height="660" ZIndex="1" Name="SVLeft" OpenPaneLength="260" CompactPaneLength="0" Background="#ffff" HorizontalAlignment="Left" DisplayMode="CompactInline" IsPaneOpen="False">
+		  <SplitView.Pane>
+			  <StackPanel Background="#e95322">
+				  <Grid ShowGridLines="True">
+					  <Grid.RowDefinitions>
+						  <RowDefinition Height="50" />
+						  <RowDefinition Height="" />
+						  <RowDefinition Height="" />
+						  <RowDefinition Height="50" />
+						  <RowDefinition Height="50" />
+						  <RowDefinition Height="50" />
+						  <RowDefinition Height="50" />
+						  <RowDefinition Height="50" />
+						  <RowDefinition Height="50" />
+					  </Grid.RowDefinitions>
+					  <Label Content="ФИО:" Grid.Row="1" Foreground="#ffff"/>
+					  <TextBox Grid.Row="2" CornerRadius="20" Background="#ffff" Height="25" Foreground="Black"/>
+				  </Grid>
+			  </StackPanel>
+		  </SplitView.Pane>
+	  </SplitView>
+	  <Grid>
+		  <Grid.RowDefinitions>
+			  <RowDefinition Height="25" />
+			  <RowDefinition />
+		  </Grid.RowDefinitions>
+			<StackPanel
+			Background="#e95322"
+			Grid.Row="0"
+			Height="55">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="40"/>
+						<ColumnDefinition Width="200"/>
+						<ColumnDefinition Width="50"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Button Name="BtnBack" Click="BackBtnClick" Grid.Column="3" Content="Назад" IsVisible="False" Height="35" Width="80" HorizontalAlignment="Right" Margin="16" Background="#ffff" Foreground="#e95322"/>
+					<Button Name="BtnAddNew" Click="AddNewInvestor" Grid.Column="3" IsVisible="True" Content="Добавить инвестора" Height="35" Width="180" HorizontalAlignment="Right" Margin="16" Background="#ffff" Foreground="#e95322"/>
+					<TextBox Name="SerachBox" Grid.Column="1" Background="#ffff" Foreground="Black" Height="25" Margin="16" CornerRadius="20"/>
+					<Button Name="SerachBtn" Grid.Column="2" Content="Найти" Background="#ffff" Foreground="#e95322" Width="80" Height="35" Margin="8"/>
+					<Button Name="SpTriggerBtn" Content="-" Background="#ffff" Foreground="#e95322" Width="35" Height="35" Margin="19" Click="TriggerPaneCommand"/> 
+				</Grid>
+			</StackPanel>
+		  
+		  <StackPanel Grid.Row="1">
+			  <StackPanel IsVisible="True" Background="Transparent" Name="SPInvestorDG">
+				  <Grid>
+					  <Grid.RowDefinitions>
+						  <RowDefinition Height="0.1*" />
+						  <RowDefinition />
+					  </Grid.RowDefinitions>
+					  <DataGrid ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20" ItemsSource="{Binding Investors}" AutoGenerateColumns="True" GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
+					  </DataGrid>
+				  </Grid>
+			  </StackPanel>
+			  <StackPanel IsVisible="False" Background="Transparent" Name="SPAddNewInvestor">
+				  <Label
+					  Content="Добавление инвестора"
+					  HorizontalAlignment="Center"
+					  FontFamily="sans-serif"
+					  FontSize="30"
+					  Foreground="#e95322"
+					  Margin="10"/>
+				  <Grid>
+					  <Grid.RowDefinitions>
+						  <RowDefinition Height="0.1*"/>
+						  <RowDefinition Height="0.1*"/>
+						  <RowDefinition Height="0.1*"/>
+						  <RowDefinition Height="0.1*"/>
+						  <RowDefinition Height="0.1*"/>
+						  <RowDefinition Height="0.1*"/>
+						  <RowDefinition Height="0.1*"/>
+						  <RowDefinition Height="0.1*"/>
+						  <RowDefinition Height="0.1*"/>
+						  <RowDefinition Height="0.1*"/>
+						  <RowDefinition Height="0.1*"/>
+						  <RowDefinition Height="0.1*"/>
+					  </Grid.RowDefinitions>
+					  <Grid.ColumnDefinitions>
+						  <ColumnDefinition Width="0.1*"/>
+						  <ColumnDefinition Width="0.1*"/>
+						  <ColumnDefinition Width="0.1*"/>
+						  <ColumnDefinition Width="0.1*"/>
+					  </Grid.ColumnDefinitions>
+					  <Label Content="Личная информация" Grid.Column="1" Grid.Row="0" Margin="7" Foreground="Black" FontSize="15" FontWeight="Bold"/>
+					  <Label Content="Фамилия" Grid.Column="0" Grid.Row="1" Margin="7" Foreground="Black"/>
+					  <Label Content="Имя" Grid.Column="0" Grid.Row="2" Margin="7" Foreground="Black"/>
+					  <Label Content="Отчество" Grid.Column="0" Grid.Row="3" Margin="7" Foreground="Black"/>
+					  <Label Content="Дата рождения" Grid.Column="0" Grid.Row="4" Margin="7" Foreground="Black"/>
+					  <TextBox Grid.Column="1" Grid.Row="1" Margin="7" Height="20" Background="Gainsboro" CornerRadius="20" Foreground="Black" />
+					  <TextBox Grid.Column="1" Grid.Row="2" Margin="7" Height="20" Background="Gainsboro" CornerRadius="20" Foreground="Black" />
+					  <TextBox Grid.Column="1" Grid.Row="3" Margin="7" Height="20" Background="Gainsboro" CornerRadius="20" Foreground="Black" />
+					  <Label Content="Город проживания" Grid.Column="2" Grid.Row="1" Margin="7" Foreground="Black"/>
+					  <Label Content="Номер телефона" Grid.Column="2" Grid.Row="2" Margin="7" Foreground="Black"/>
+					  <Label Content="Почта" Grid.Column="2" Grid.Row="3" Margin="7" Foreground="Black"/>
+					  <DatePicker Grid.Column="1" Grid.Row="4" DayFormat="ddd dd" Foreground="Black"/>
+					  <TextBox Grid.Column="3" Grid.Row="1" Margin="7" Height="20" Background="Gainsboro" CornerRadius="20" Foreground="Black" />
+					  <MaskedTextBox Mask="+___________" Grid.Column="3" Grid.Row="2" Margin="7" Height="20" Background="Gainsboro" CornerRadius="20" Foreground="Black" />
+					  <TextBox Grid.Column="3" Grid.Row="3" Margin="7" Height="20" Background="Gainsboro" CornerRadius="20" Foreground="Black" />
+					  <Label Content="Паспортные данные" Grid.Column="1" Grid.Row="5" Margin="7" Foreground="Black" FontSize="15" FontWeight="Bold"/>
+					  <Label Content="Серия" Grid.Column="0" Grid.Row="6" Margin="7" Foreground="Black"/>
+					  <Label Content="Номер" Grid.Column="0" Grid.Row="7" Margin="7" Foreground="Black"/>
+					  <Label Content="Кем выдан" Grid.Column="0" Grid.Row="8" Margin="7" Foreground="Black"/>
+					  <TextBox Grid.Column="1" Grid.Row="6" Margin="7" Height="20" Background="Gainsboro" CornerRadius="20" Foreground="Black" />
+					  <TextBox Grid.Column="1" Grid.Row="7" Margin="7" Height="20" Background="Gainsboro" CornerRadius="20" Foreground="Black" />
+					  <TextBox Grid.Column="1" Grid.Row="8" Margin="7" Height="20" Background="Gainsboro" CornerRadius="20" Foreground="Black" />
+					  <Label Content="Дата выдачи" Grid.Column="2" Grid.Row="6" Margin="7" Foreground="Black"/>
+					  <Label Content="Код подразделения" Grid.Column="2" Grid.Row="7" Margin="7" Foreground="Black"/>
+					  <Label Content="Место регистрации" Grid.Column="2" Grid.Row="8" Margin="7" Foreground="Black"/>
+					  <DatePicker Grid.Column="3" Grid.Row="6" DayFormat="ddd dd" Foreground="Black"/>
+					  <MaskedTextBox Mask="___-___" Grid.Column="3" Grid.Row="7" Margin="7" Height="20" Background="Gainsboro" CornerRadius="20" Foreground="Black" />
+					  <TextBox Grid.Column="3" Grid.Row="8" Margin="7" Height="20" Background="Gainsboro" CornerRadius="20" Foreground="Black" />
+					  <Label Content="Особые данные" Grid.Column="1" Grid.Row="9" Margin="7" Foreground="Black" FontSize="15" FontWeight="Bold"/>
+					  <Label Content="Банковские карты" Grid.Column="0" Grid.Row="10" Margin="7" Foreground="Black"/>
+					  <Label Content="Особые памятки" Grid.Column="2" Grid.Row="10" Margin="7" Foreground="Black"/>
+					  <TextBox Grid.Column="1" Grid.Row="10" Margin="7" Height="100" Background="Gainsboro" CornerRadius="20" Foreground="Black" AcceptsReturn="True" TextWrapping="Wrap"/>
+					  <TextBox Grid.Column="3" Grid.Row="10" Margin="7" Height="100" Background="Gainsboro" CornerRadius="20" Foreground="Black" AcceptsReturn="True" TextWrapping="Wrap"/>
+				  </Grid>
+				  <Button Height="40" Margin="10" CornerRadius="20" Width="200" Content="Добавить инвестора" Background="#e95322"/>
+			  </StackPanel>
+		  </StackPanel>
+	  </Grid>
   </Grid>
 </UserControl>
