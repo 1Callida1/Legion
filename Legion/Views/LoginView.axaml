@@ -50,9 +50,9 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
+                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*" />
-                            <ColumnDefinition />
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
                         <Label

@@ -21,7 +21,7 @@
 				Height="25">
 				<Grid>
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition />
+						<ColumnDefinition Width="*"/>
 						<ColumnDefinition Width="31"/>
 					</Grid.ColumnDefinitions>
 
