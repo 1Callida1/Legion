@@ -44,11 +44,11 @@ namespace Legion.ViewModels
 
             DataGridEditActionCommand = ReactiveCommand.Create((Investor inv) =>
             {
-                Debug.WriteLine(inv.ToString());
+                hostScreen.Router.Navigate.Execute(new AddInvestorViewModel(inv, hostScreen, context));
             });
 
 
-            DataGridEditActionCommand = ReactiveCommand.Create((Investor inv) =>
+            DataGridPrintActionCommand = ReactiveCommand.Create((Investor inv) =>
             {
                 Debug.WriteLine(inv.ToString());
             });

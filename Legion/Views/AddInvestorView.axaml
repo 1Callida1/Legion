@@ -106,7 +106,7 @@
                          CornerRadius="20" Foreground="Black" AcceptsReturn="True" TextWrapping="Wrap"
                          Text="{Binding Investor.Note}" />
             </Grid>
-            <Button Height="40" Margin="10" CornerRadius="20" Width="200" Content="Добавить инвестора"
+            <Button Height="40" Margin="10" CornerRadius="20" Width="220" Content="{Binding SubmitText}"
                     Background="#e95322" Command="{Binding SaveCommand}" />
         </StackPanel>
     </Grid>
