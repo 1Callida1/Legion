@@ -8,6 +8,7 @@
              Height="700"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
              xmlns:vm="using:Legion.ViewModels"
+             xmlns:models="clr-namespace:Legion.Models"
              x:DataType="vm:InvestorsViewModel">
     <Grid>
         <Border Background="#ffff" CornerRadius="20" />
@@ -55,8 +56,10 @@
                          CornerRadius="20" Margin="15, 0,0,0" />
                 <Button Name="SerachBtn" Grid.Column="2" Content="Найти" Background="#ffff" Foreground="#e95322"
                         Width="80" Height="35" Margin="25, 0,0,0" />
-                <Button Name="SpTriggerBtn" Content="-" Background="#ffff" Foreground="#e95322" Width="35"
-                        Height="35" Command="{Binding PaneCommand}" Margin="5, 0,0,0" />
+                <Button Name="SpTriggerBtn" Background="#ffff" Foreground="#e95322" Width="35"
+                        Height="35" Margin="5, 0,0,0" Command="{Binding PaneCommand}">
+                    <i:Icon Value="fa-bars" Width="35" Height="35" />
+                </Button>
             </Grid>
 
             <StackPanel Grid.Row="1">
@@ -66,7 +69,7 @@
                             <RowDefinition Height="0.1*" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <DataGrid ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20"
+                        <DataGrid Name="InvestorsGrid" ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20"
                                   ItemsSource="{Binding Investors}" AutoGenerateColumns="True"
                                   GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray" IsReadOnly="True"
                                   HorizontalScrollBarVisibility="Visible">
@@ -80,12 +83,47 @@
                                 <DataGridTextColumn Header="Номер паспорта" Binding="{Binding Path=PassprotNumber}" />
                                 <DataGridTextColumn Header="Телефон" Binding="{Binding Path=Phone}" />
                             </DataGrid.Columns>
+                            <DataGrid.Resources>
+                                <ContextMenu x:Key="RowMenu">
+                                    <MenuItem Header="Печать"
+                                              CommandParameter="{Binding (models:Investor).Id}"
+                                              Command="{Binding #InvestorsGrid.((vm:InvestorsViewModel)DataContext).DataGridPrintActionCommand}">
+                                        <MenuItem.Icon>
+                                            <i:Icon Value="fa-print" Width="35" Height="35"/>
+                                        </MenuItem.Icon>
+
+                                        <MenuItem Header="Договор">
+
+                                        </MenuItem>
+                                        <MenuItem Header="График">
+
+                                        </MenuItem>
+                                    </MenuItem>
+                                    <MenuItem Header="Редактировать"
+                                              CommandParameter="{Binding (models:Investor).Id}"
+                                              Command="{Binding #InvestorsGrid.((vm:InvestorsViewModel)DataContext).DataGridEditActionCommand}">
+                                        <MenuItem.Icon>
+                                            <i:Icon Value="fa-pen" Width="35" Height="35"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <Separator />
+                                    <MenuItem Header="Удалить" CommandParameter="{Binding (models:Investor)}"
+                                              Command="{Binding #InvestorsGrid.((vm:InvestorsViewModel)DataContext).DataGridRemoveActionCommand}">
+                                        <MenuItem.Icon>
+                                            <i:Icon Value="fa-trash" Width="35" Height="35" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </DataGrid.Resources>
                             <DataGrid.Styles>
+                                <Style Selector="DataGridRow">
+                                    <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+                                </Style>
                                 <Style Selector="DataGridColumnHeader">
                                     <Setter Property="Foreground" Value="Black" />
                                 </Style>
                                 <Style Selector="ScrollBar:horizontal">
-                                  <Setter Property="Background" Value="Gray" />
+                                    <Setter Property="Background" Value="Gray" />
                                 </Style>
                                 <Style Selector="ScrollBar:vertical">
                                     <Setter Property="Background" Value="Gray" />
