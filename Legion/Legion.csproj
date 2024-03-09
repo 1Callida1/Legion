@@ -41,11 +41,22 @@
     <Compile Update="Views\LoginView.axaml.cs">
       <DependentUpon>LoginView.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\MainMenuView.axaml.cs">
+      <DependentUpon>MainMenuView.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\AddContractView.axaml" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\AddContractView.axaml" />
   </ItemGroup>
 </Project>

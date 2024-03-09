@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="Legion.Views.InvestorSerachView"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
+             Width="500"
+             Height="500"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="500"
+             xmlns:vm="using:Legion.ViewModels"
+             xmlns:models="clr-namespace:Legion.Models"
+             x:DataType="vm:InvestorSerachViewModel">
+	<Grid>
+		<Border Background="#ffff" CornerRadius="20"/>
+	</Grid>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="55" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+
+			<Grid Background="#e95322" Grid.Row="0" VerticalAlignment="Center" Height="55">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="40" />
+					<ColumnDefinition Width="200" />
+					<ColumnDefinition Width="50" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				</Grid>
+			</Grid>
+</UserControl>
