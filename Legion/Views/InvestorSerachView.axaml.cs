@@ -8,9 +8,9 @@ using System;
 
 namespace Legion.Views
 {
-    public partial class InvestorsView : ReactiveUserControl<InvestorsViewModel>
+    public partial class InvestorSerachView : ReactiveUserControl<InvestorSerachViewModel>
     {
-        public InvestorsView()
+        public InvestorSerachView()
         {
             this.WhenActivated(disposables => { });
             AvaloniaXamlLoader.Load(this);
