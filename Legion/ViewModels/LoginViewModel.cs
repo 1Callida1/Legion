@@ -45,6 +45,7 @@ namespace Legion.ViewModels
                 }
 
                 HostScreen.Router.Navigate.Execute(new InvestorsViewModel(HostScreen, _context));
+                //HostScreen.Router.Navigate.Execute(new ContractsViewModel(HostScreen, _context));
 
             }, IsInputValid);
 

@@ -1,0 +1,88 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="Legion.Views.AddContractView"
+             Width="800"
+             Height="700"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
+             xmlns:vm="using:Legion.ViewModels"
+             x:DataType="vm:AddContractViewModel">
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="55" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="80" />
+		</Grid.ColumnDefinitions>
+		<Panel
+            Background="#e95322"
+            Grid.Row="0" Grid.ColumnSpan="2" Height="55">
+		</Panel>
+		<Button Name="BtnBack" Grid.Row="0" Grid.Column="1" Content="Назад" Height="35" Width="80"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                HorizontalAlignment="Right" Margin="0,0,5,0" Background="#ffff" Foreground="#e95322"
+                Command="{Binding BackCommand}" />
+		<StackPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Transparent">
+			<Label
+                Content="Добавление инвестора"
+                HorizontalAlignment="Center"
+                FontFamily="sans-serif"
+                FontSize="30"
+                Foreground="#e95322"/>
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="0.1*" />
+					<RowDefinition Height="0.1*" />
+					<RowDefinition Height="0.1*" />
+					<RowDefinition Height="0.1*" />
+					<RowDefinition Height="0.1*" />
+					<RowDefinition Height="0.1*" />
+					<RowDefinition Height="0.1*" />
+					<RowDefinition Height="0.1*" />
+					<RowDefinition Height="0.1*" />
+					<RowDefinition Height="0.1*" />
+					<RowDefinition Height="0.1*" />
+					<RowDefinition Height="0.1*" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="0.1*" />
+					<ColumnDefinition Width="0.1*" />
+					<ColumnDefinition Width="0.1*" />
+					<ColumnDefinition Width="0.1*" />
+				</Grid.ColumnDefinitions>
+				<Label Content="Основная информация" Grid.Column="1" Grid.Row="0" Margin="7" Foreground="Black"
+                       FontSize="15" FontWeight="Bold" />
+				<Label Content="Номер договора" Grid.Column="0" Grid.Row="1" Margin="7" Foreground="Black" />
+				<TextBox Grid.Column="1" Grid.Row="1" Margin="7" Height="20" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" Text="{Binding Contract.Id}" />
+				<Label Content="Статус договора" Grid.Column="0" Grid.Row="2" Margin="7" Foreground="Black" />
+				<ComboBox Grid.Column="1" Grid.Row="2" Margin="7" Height="20" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" />
+				<Label Content="Дата начала" Grid.Column="0" Grid.Row="3" Margin="7" Foreground="Black" />
+				<DatePicker Grid.Column="1" Grid.Row="3" DayFormat="ddd dd" Foreground="Black" SelectedDate="{Binding Contract.DateStart}"/>
+				<Label Content="Тип договора" Grid.Column="0" Grid.Row="4" Margin="7" Foreground="Black" />
+				<ComboBox Grid.Column="1" Grid.Row="4" Margin="7" Height="20" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" />
+				<Label Content="Сумма" Grid.Column="2" Grid.Row="1" Margin="7" Foreground="Black" />
+				<TextBox Grid.Column="3" Grid.Row="1" Margin="7" Height="20" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" Text="{Binding Contract.Amount}" />
+				<Label Content="Заметка" Grid.Column="2" Grid.Row="2" Margin="7" Foreground="Black" />
+				<TextBox Grid.Column="3" Grid.Row="2" Margin="7" Height="20" Background="Gainsboro"
+                         CornerRadius="20" Foreground="Black" Text="{Binding Contract.Note}" />
+				<Label Content="Инвестор" Grid.Column="1" Grid.Row="5" Margin="7" Foreground="Black"
+                       FontSize="15" FontWeight="Bold" />
+				<Label Content="Поиск" Grid.Column="0" Grid.Row="6" Margin="7" Foreground="Black" />
+				<Label Content="" Grid.Column="0" Grid.Row="7" Margin="7" Foreground="Black" />
+				<Label Content="Реферал" Grid.Column="1" Grid.Row="9" Margin="7" Foreground="Black"
+                       FontSize="15" FontWeight="Bold" />
+				<Label Content="Поиск" Grid.Column="0" Grid.Row="10" Margin="7" Foreground="Black" />
+			</Grid>
+			<Button Height="40" Margin="10" CornerRadius="20" Width="220" Content="{Binding SubmitText}"
+                    Background="#e95322" Command="{Binding SaveCommand}" />
+		</StackPanel>
+	</Grid>
+</UserControl>

@@ -77,6 +77,17 @@ namespace Legion.ViewModels
                 _context.SaveChangesAsync();
                 _context.Investors.LoadAsync();
             });
+
+            SerachCommand = ReactiveCommand.Create((Investor inv) =>
+            {
+                if(SerachBoxText.Equals("") && InvCitySBText.Equals("") && InvRegistrationSBText.Equals("") && InvRegistrationSBText.Equals(""))
+                {
+                }
+                else
+                {
+
+                }
+            });
         }
 
         public ObservableCollection<Investor> Investors
@@ -107,6 +118,12 @@ namespace Legion.ViewModels
 
         public IObservable<bool> IsSearchTextExist { get; }
 
+        public string SerachBoxText { get; }
+        public string InvCitySBText { get; }
+        public string InvRegistrationSBText { get; }
+        public DateOnly InvDobDPDate { get; }
+        public int InvDobCBItem { get; }
+        public ReactiveCommand<Investor, Unit> SerachCommand { get; set; }
         public ReactiveCommand<Unit, Unit> PaneCommand { get;}
         public ReactiveCommand<Unit, Unit> NewInvestorCommand { get; }
         public ReactiveCommand<Unit, Unit> SearchCommand { get; }

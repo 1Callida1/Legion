@@ -11,6 +11,7 @@ namespace Legion.Models
         public Contract()
         {
             Id = string.Empty;
+            DateStart = DateOnly.FromDateTime(DateTime.Now);
         }
         public string Id { get; set; }
         public ContractStatus Status { get; set; }
@@ -22,6 +23,7 @@ namespace Legion.Models
         public ContractType ContractType { get; set; }
         public Repeated? Repeated { get; set; }
         public Referral Referral { get; set; }
+        public Card Card { get; set; }
         public string Note {  get; set; }
     }
 }

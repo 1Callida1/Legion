@@ -14,7 +14,7 @@
         <Border Background="#ffff" CornerRadius="20" />
         <SplitView VerticalAlignment="Bottom" Height="645" ZIndex="1" Name="SVLeft" OpenPaneLength="260"
                    CompactPaneLength="0" Background="#ffff" HorizontalAlignment="Left" DisplayMode="CompactInline"
-                   IsPaneOpen="{Binding IsPaneOpen}">
+				   IsPaneOpen="{Binding IsPaneOpen}">
             <SplitView.Pane>
                 <StackPanel Background="#e95322">
                     <Grid ShowGridLines="True">
@@ -22,15 +22,24 @@
                             <RowDefinition Height="50" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
-                            <RowDefinition Height="50" />
-                            <RowDefinition Height="50" />
-                            <RowDefinition Height="50" />
-                            <RowDefinition Height="50" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
                             <RowDefinition Height="50" />
                             <RowDefinition Height="50" />
                         </Grid.RowDefinitions>
-                        <Label Content="ФИО:" Grid.Row="1" Foreground="#ffff" />
-                        <TextBox Grid.Row="2" CornerRadius="20" Background="#ffff" Height="25" Foreground="Black" />
+                        <Label Content="Город:" Grid.Row="1" Foreground="#ffff" />
+                        <TextBox Name="InvCitySB" Grid.Row="2" CornerRadius="20" Background="#ffff" Height="25" Foreground="Black"  Text="{Binding InvCitySBText}"/>
+						<Label Content="Дата рождения:" Grid.Row="3" Foreground="#ffff" />
+						<ComboBox Name="InvDobCB" Grid.Row="4" Background="#ffff" Foreground="Black" SelectedIndex="{Binding InvDobCBItem}">
+							<ComboBoxItem Content="Больше" Background="#ffff" Foreground="Black"/>
+							<ComboBoxItem Content="Меньше" Background="#ffff" Foreground="Black"/>
+							<ComboBoxItem Content="Равно" Background="#ffff" Foreground="Black"/>
+						</ComboBox>
+						<DatePicker Name="InvDobDP" Grid.Row="5" Background="#ffff" Foreground="Black" SelectedDate="{Binding InvDobDPDate}"/>
+						<Label Content="Регистрация:" Grid.Row="6" Foreground="#ffff" />
+						<TextBox Name="InvRegistrationSB" Grid.Row="7" CornerRadius="20" Background="#ffff" Height="25" Foreground="Black" Text="{Binding InvRegistrationSBText}" />
                     </Grid>
                 </StackPanel>
             </SplitView.Pane>
@@ -74,8 +83,7 @@
                                   GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray" IsReadOnly="True"
                                   HorizontalScrollBarVisibility="Visible" Height="700">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}">
-                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}" />
                                 <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}" />
                                 <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}" />
                                 <DataGridTextColumn Header="Дата рождения" Binding="{Binding Path=DateBirth}" />
@@ -83,6 +91,8 @@
                                 <DataGridTextColumn Header="E-mail" Binding="{Binding Path=Email}" />
                                 <DataGridTextColumn Header="Город" Binding="{Binding Path=City}" />
                                 <DataGridCheckBoxColumn Header="Тип расчета" Binding="{Binding PayType}"/>
+                                <DataGridTextColumn Header="Серия паспорта" Binding="{Binding Path=PassprotSeries}" />
+                                <DataGridTextColumn Header="Номер паспорта" Binding="{Binding Path=PassprotNumber}" />
                             </DataGrid.Columns>
                             <DataGrid.Resources>
 
