@@ -12,7 +12,9 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DynamicData.Binding;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 
 namespace Legion.ViewModels
 {
@@ -20,6 +22,8 @@ namespace Legion.ViewModels
     {
         private ApplicationDbContext _context;
         private bool _isPaneOpen;
+        private string _searchText;
+        private ObservableCollection<Investor> _investors;
 
         public InvestorsViewModel()
         {
@@ -31,6 +35,19 @@ namespace Legion.ViewModels
             _context = context;
             _isPaneOpen = false;
             _context.Investors.Load();
+            Investors = _context.Investors.Local.ToObservableCollection();
+
+            IsSearchTextExist = this.WhenAnyValue(
+                x => x.SearchText,
+                (text) =>
+                    !string.IsNullOrWhiteSpace(text)
+            );
+
+            SearchCommand = ReactiveCommand.Create(() =>
+            {
+                Investors = new ObservableCollection<Investor>(_context.Investors
+                    .Where(inv => (inv.LastName + inv.FirstName + inv.MiddleName).Contains(SearchText) || inv.DateBirth.ToString().Contains(SearchText)).ToList());
+            }, IsSearchTextExist);
 
             PaneCommand = ReactiveCommand.Create(() =>
             {
@@ -62,7 +79,11 @@ namespace Legion.ViewModels
             });
         }
 
-        public ObservableCollection<Investor> Investors => _context.Investors.Local.ToObservableCollection();
+        public ObservableCollection<Investor> Investors
+        {
+            get => _investors;
+            set => this.RaiseAndSetIfChanged(ref _investors, value);
+        }
 
         public override IScreen HostScreen => throw new NotImplementedException();
         public bool IsPaneOpen
@@ -71,8 +92,24 @@ namespace Legion.ViewModels
             set => this.RaiseAndSetIfChanged(ref _isPaneOpen, value);
         }
 
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                if (value.Length == 0)
+                {
+                    Investors = _context.Investors.Local.ToObservableCollection();
+                }
+                this.RaiseAndSetIfChanged(ref _searchText, value);
+            }
+        }
+
+        public IObservable<bool> IsSearchTextExist { get; }
+
         public ReactiveCommand<Unit, Unit> PaneCommand { get;}
         public ReactiveCommand<Unit, Unit> NewInvestorCommand { get; }
+        public ReactiveCommand<Unit, Unit> SearchCommand { get; }
         public ReactiveCommand<Investor, Unit> DataGridPrintActionCommand { get; set; }
         public ReactiveCommand<Investor, Unit> DataGridEditActionCommand { get; set; }
         public ReactiveCommand<Investor, Unit> DataGridRemoveActionCommand { get; set; }

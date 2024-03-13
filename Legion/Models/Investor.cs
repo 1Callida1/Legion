@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Hosting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -29,6 +30,10 @@ namespace Legion.Models
         public string City { get; set; }
         public string Phone { get; set; }
         public string Email {  get; set; }
+        public bool PayType { get; set; }
         public string Note { get; set; }
+
+        public ICollection<Card> Cards { get; } = new List<Card>();
+        public ICollection<Contract> Contracts { get; } = new List<Contract>();
     }
 }

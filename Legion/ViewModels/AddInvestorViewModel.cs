@@ -18,6 +18,7 @@ namespace Legion.ViewModels
     {
         private ApplicationDbContext _context;
         private Investor _investor;
+        private string _cards;
 
         public AddInvestorViewModel(Investor investor, IScreen hostScreen, ApplicationDbContext context) : this(
             hostScreen, context)
@@ -57,6 +58,10 @@ namespace Legion.ViewModels
 
             SaveCommand = ReactiveCommand.Create(() =>
             {
+                if (Cards.Length > 0)
+                {
+                    Cards.Split("\n");
+                }
                 _context.Investors.Add(Investor);
 
                 try
@@ -78,6 +83,7 @@ namespace Legion.ViewModels
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }
         public string SubmitText { get; protected set; }
         public Investor Investor { get => _investor; set => this.RaiseAndSetIfChanged(ref _investor, value); }
+        public string Cards { get => _cards; set => this.RaiseAndSetIfChanged(ref _cards, value); }
 
         public override IScreen HostScreen { get; }
     }
