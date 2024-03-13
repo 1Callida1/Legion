@@ -11,6 +11,10 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Serilog;
+using System.Collections;
+using System.ComponentModel;
+using System.Text.RegularExpressions;
+using ReactiveUI.Validation.Extensions;
 
 namespace Legion.ViewModels
 {
@@ -18,6 +22,7 @@ namespace Legion.ViewModels
     {
         private ApplicationDbContext _context;
         private Investor _investor;
+        private string _card;
 
         public AddInvestorViewModel(Investor investor, IScreen hostScreen, ApplicationDbContext context) : this(
             hostScreen, context)
@@ -72,6 +77,30 @@ namespace Legion.ViewModels
                     BackCommand.Execute();
                 }
             });
+
+            this.ValidationRule(
+                x => x.Card,
+                card =>
+                {
+                    if (string.IsNullOrEmpty(card))
+                        return true;
+
+                    if (Regex.IsMatch(card, "(\\d{4} ){4}.*"))
+                        return true;
+
+                    return false;
+                },
+                "Номер карты 16 или 18 цифр");
+        }
+
+        public string? Card
+        {
+            get => Investor.CardNumber;
+            set
+            {
+                Investor.CardNumber = value;
+                this.RaisePropertyChanged();
+            }
         }
 
         public ReactiveCommand<Unit, Unit> BackCommand { get; }

@@ -8,7 +8,8 @@
 
     <Application.Styles>
         <FluentTheme />
-		<StyleInclude Source="avares://Legion/Icons.axaml" />
+		    <StyleInclude Source="avares://Legion/Icons.axaml" />
+        <StyleInclude Source="Views/ControlTemplates/CorneredTextBox.axaml"></StyleInclude>
         <themes:MaterialTheme
             BaseTheme="Dark"
             PrimaryColor="Purple"

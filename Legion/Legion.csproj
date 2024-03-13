@@ -29,6 +29,7 @@
     <PackageReference Include="Projektanker.Icons.Avalonia" Version="9.0.1" />
     <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.0.1" />
     <PackageReference Include="Projektanker.Icons.Avalonia.MaterialDesign" Version="9.0.1" />
+    <PackageReference Include="ReactiveUI.Validation" Version="3.1.7" />
     <PackageReference Include="Serilog" Version="3.1.1" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />

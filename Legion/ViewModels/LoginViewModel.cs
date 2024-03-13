@@ -38,7 +38,7 @@ namespace Legion.ViewModels
             SubmitCommand = ReactiveCommand.Create(() =>
             {
                 Debug.WriteLine($"{UserName} : {Password}");
-                if (_context.Users.FirstOrDefault(user => user.UserName == UserName && user.Password == Password) == null)
+                if (_context.Users.FirstOrDefault(user => user.UserName == UserName.ToLower() && user.Password == Password) == null)
                 {
                     WrongData = true;
                     return;
