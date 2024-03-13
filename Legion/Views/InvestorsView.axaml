@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Class="Legion.Views.InvestorsView"
              xmlns:i="https://github.com/projektanker/icons.avalonia"
-             Width="800"
-             Height="700"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
+             Width="1000"
+             Height="800"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
              xmlns:vm="using:Legion.ViewModels"
              xmlns:models="clr-namespace:Legion.Models"
              x:DataType="vm:InvestorsViewModel">
@@ -62,9 +62,9 @@
                         Width="180" HorizontalAlignment="Right" Background="#ffff" Foreground="#e95322"
                         Command="{Binding NewInvestorCommand}" />
                 <TextBox Name="SerachBox" Grid.Column="1" Background="#ffff" Foreground="Black" Height="25"
-                         CornerRadius="20" Margin="15, 0,0,0" Text="{Binding SerachBoxText}"/>
+                         CornerRadius="20" Margin="15, 0,0,0" Text="{Binding SearchText}"/>
                 <Button Name="SerachBtn" Grid.Column="2" Content="Найти" Background="#ffff" Foreground="#e95322"
-                        Width="80" Height="35" Margin="25, 0,0,0" Command="{Binding SerachCommand}"/>
+                        Width="80" Height="35" Margin="25, 0,0,0" Command="{Binding SearchCommand}"/>
                 <Button Name="SpTriggerBtn" Background="#ffff" Foreground="#e95322" Width="35"
                         Height="35" Margin="5, 0,0,0" Command="{Binding PaneCommand}">
                     <i:Icon Value="fa-bars" Width="35" Height="35" />
@@ -81,25 +81,22 @@
                         <DataGrid Name="InvestorsGrid" ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20"
                                   ItemsSource="{Binding Investors}" AutoGenerateColumns="False"
                                   GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray" IsReadOnly="True"
-                                  HorizontalScrollBarVisibility="Visible">
+                                  HorizontalScrollBarVisibility="Visible" Height="700">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}" />
                                 <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}" />
                                 <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}" />
                                 <DataGridTextColumn Header="Дата рождения" Binding="{Binding Path=DateBirth}" />
+                                <DataGridTextColumn Header="Телефон" Binding="{Binding Path=Phone}" />
+                                <DataGridTextColumn Header="E-mail" Binding="{Binding Path=Email}" />
+                                <DataGridTextColumn Header="Город" Binding="{Binding Path=City}" />
+                                <DataGridCheckBoxColumn Header="Тип расчета" Binding="{Binding PayType}"/>
                                 <DataGridTextColumn Header="Серия паспорта" Binding="{Binding Path=PassprotSeries}" />
                                 <DataGridTextColumn Header="Номер паспорта" Binding="{Binding Path=PassprotNumber}" />
-								<DataGridTextColumn Header="Кем выдан" Binding="{Binding Path=Given}" />
-								<DataGridTextColumn Header="Дата выдачи" Binding="{Binding Path=PassportDateGiven}" />
-								<DataGridTextColumn Header="Код подразделения" Binding="{Binding Path=PassportUnitCode}" />
-								<DataGridTextColumn Header="Регистрация" Binding="{Binding Path=PassportRegistration}" />
-								<DataGridTextColumn Header="Город" Binding="{Binding Path=City}" />
-                                <DataGridTextColumn Header="Телефон" Binding="{Binding Path=Phone}" />
-								<DataGridTextColumn Header="Почта" Binding="{Binding Path=Email}" />
-								<DataGridTextColumn Header="Заметка" Binding="{Binding Path=Note}" />
                             </DataGrid.Columns>
                             <DataGrid.Resources>
-                                <ContextMenu x:Key="RowMenu">
+
+                              <ContextMenu x:Key="RowMenu">
                                     <MenuItem Header="Печать"
                                               CommandParameter="{Binding (models:Investor)}"
                                               Command="{Binding #InvestorsGrid.((vm:InvestorsViewModel)DataContext).DataGridPrintActionCommand}">

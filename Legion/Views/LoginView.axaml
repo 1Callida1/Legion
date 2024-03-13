@@ -82,6 +82,7 @@
                                 Background="#123"
                                 CornerRadius="7"
                                 Foreground="White"
+                                PasswordChar="*"
                                 Text="{CompiledBinding Password}" />
                         </StackPanel>
 

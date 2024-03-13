@@ -15,6 +15,7 @@ namespace Legion.Models
         }
         public string Id { get; set; }
         public ContractStatus Status { get; set; }
+        public int InvestorId { get; set; }
         public Investor Investor { get; set; }
         public DateOnly DateStart { get; set; }
         public DateOnly DateEnd { get; set; }

@@ -3,10 +3,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Class="Legion.Views.AddInvestorView"
-             Width="800"
-             Height="700"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
+             Width="1000"
+             Height="800"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
              xmlns:vm="using:Legion.ViewModels"
+             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
              x:DataType="vm:AddInvestorViewModel">
     <Grid>
         <Grid.RowDefinitions>
@@ -25,13 +26,13 @@
                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                 HorizontalAlignment="Right" Margin="0,0,5,0" Background="#ffff" Foreground="#e95322"
                 Command="{Binding BackCommand}" />
-        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Transparent">
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Transparent" Margin="20">
             <Label
                 Content="Добавление инвестора"
                 HorizontalAlignment="Center"
                 FontFamily="sans-serif"
                 FontSize="30"
-                Foreground="#e95322"/>
+                Foreground="#e95322" />
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="0.1*" />
@@ -100,13 +101,19 @@
                        FontSize="15" FontWeight="Bold" />
                 <Label Content="Банковские карты" Grid.Column="0" Grid.Row="10" Margin="7" Foreground="Black" />
                 <Label Content="Особые памятки" Grid.Column="2" Grid.Row="10" Margin="7" Foreground="Black" />
-                <TextBox Grid.Column="1" Grid.Row="10" Margin="7" Height="100" Background="Gainsboro"
-                         CornerRadius="20" Foreground="Black" AcceptsReturn="True" TextWrapping="Wrap" />
+              <StackPanel Grid.Column="1" Grid.Row="10" Orientation="Horizontal" Margin="7">
+                  <TextBox Background="Gainsboro" Height="20"
+                           CornerRadius="20" Foreground="Black" VerticalAlignment="Top" Width="180" HorizontalAlignment="Left"/>
+                  <Button Height="20" Width="20" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="#e95322" Margin="14,0,0,0" Foreground="AliceBlue" VerticalAlignment="Top">
+                      <avalonia:Icon Value="fa-plus" Width="20" Height="20" />
+                  </Button>
+              </StackPanel>
+                
                 <TextBox Grid.Column="3" Grid.Row="10" Margin="7" Height="100" Background="Gainsboro"
                          CornerRadius="20" Foreground="Black" AcceptsReturn="True" TextWrapping="Wrap"
                          Text="{Binding Investor.Note}" />
             </Grid>
-            <Button Height="40" Margin="10" CornerRadius="20" Width="220" Content="{Binding SubmitText}"
+            <Button Height="40" Margin="20" CornerRadius="20" Width="220" Content="{Binding SubmitText}"
                     Background="#e95322" Command="{Binding SaveCommand}" />
         </StackPanel>
     </Grid>
