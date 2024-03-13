@@ -12,8 +12,6 @@
              x:DataType="vm:InvestorSerachViewModel">
 	<Grid>
 		<Border Background="#ffff" CornerRadius="20"/>
-	</Grid>
-		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="55" />
 				<RowDefinition Height="*" />

@@ -32,8 +32,8 @@ namespace Legion.Models
         public string Email {  get; set; }
         public bool PayType { get; set; }
         public string Note { get; set; }
+        public string? CardNumber { get; set; }
 
-        public ICollection<Card> Cards { get; } = new List<Card>();
         public ICollection<Contract> Contracts { get; } = new List<Contract>();
     }
 }
