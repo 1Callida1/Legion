@@ -18,7 +18,7 @@ namespace Legion.ViewModels
 {
     public class MainMenuViewModel : ViewModelBase
     {
-
+        private ApplicationDbContext _context;
         public MainMenuViewModel()
         {
             
@@ -26,10 +26,26 @@ namespace Legion.ViewModels
 
         public MainMenuViewModel(IScreen hostScreen, ApplicationDbContext context)
         {
+            _context = context;
+            HostScreen = hostScreen;
 
+            InvestorsCommand = ReactiveCommand.Create(() =>
+            {
+
+                HostScreen.Router.Navigate.Execute(new InvestorsViewModel(HostScreen, _context));
+
+            });
+
+            ContractsCommand = ReactiveCommand.Create(() =>
+            {
+                
+                HostScreen.Router.Navigate.Execute(new ContractsViewModel(HostScreen, _context));
+
+            });
         }
 
-
-        public override IScreen HostScreen => throw new NotImplementedException();
+        public ReactiveCommand<Unit, Unit> InvestorsCommand { get; }
+        public ReactiveCommand<Unit, Unit> ContractsCommand { get; }
+        public override IScreen HostScreen { get; }
     }
 }

@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using DynamicData.Binding;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
+using DynamicData;
 
 namespace Legion.ViewModels
 {
@@ -45,8 +46,9 @@ namespace Legion.ViewModels
 
             SearchCommand = ReactiveCommand.Create(() =>
             {
-                Investors = new ObservableCollection<Investor>(_context.Investors
-                    .Where(inv => (inv.LastName + inv.FirstName + inv.MiddleName).Contains(SearchText) || inv.DateBirth.ToString().Contains(SearchText)).ToList());
+                Investors = new ObservableCollection<Investor>();
+                SearchText.Split(' ').ToList().ForEach(word => Investors.Add(_context.Investors.Where(inv => inv.LastName.Contains(word) || inv.FirstName.Contains(word) || inv.MiddleName.Contains(word) || inv.Email.Contains(word) || inv.Phone.Contains(word) || inv.City.Contains(word) || inv.DateBirth.ToString().Contains(word))));
+                Investors = new ObservableCollection<Investor>(Investors.Distinct());
             }, IsSearchTextExist);
 
             PaneCommand = ReactiveCommand.Create(() =>
@@ -78,15 +80,9 @@ namespace Legion.ViewModels
                 _context.Investors.LoadAsync();
             });
 
-            SerachCommand = ReactiveCommand.Create((Investor inv) =>
+            BackCommand = ReactiveCommand.Create(() =>
             {
-                if(SerachBoxText.Equals("") && InvCitySBText.Equals("") && InvRegistrationSBText.Equals("") && InvRegistrationSBText.Equals(""))
-                {
-                }
-                else
-                {
-
-                }
+                hostScreen.Router.NavigateBack.Execute();
             });
         }
 
@@ -116,9 +112,8 @@ namespace Legion.ViewModels
             }
         }
 
+        public ReactiveCommand<Unit, Unit> BackCommand { get; }
         public IObservable<bool> IsSearchTextExist { get; }
-
-        public string SerachBoxText { get; }
         public string InvCitySBText { get; }
         public string InvRegistrationSBText { get; }
         public DateOnly InvDobDPDate { get; }

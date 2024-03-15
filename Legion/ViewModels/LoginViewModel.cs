@@ -43,9 +43,7 @@ namespace Legion.ViewModels
                     WrongData = true;
                     return;
                 }
-
-                HostScreen.Router.Navigate.Execute(new InvestorsViewModel(HostScreen, _context));
-                //HostScreen.Router.Navigate.Execute(new ContractsViewModel(HostScreen, _context));
+                HostScreen.Router.Navigate.Execute(new MainMenuViewModel(HostScreen, _context));
 
             }, IsInputValid);
 
