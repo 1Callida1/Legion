@@ -46,7 +46,7 @@ namespace Legion.ViewModels
             SearchCommand = ReactiveCommand.Create(() =>
             {
                 Investors = new ObservableCollection<Investor>(_context.Investors
-                    .Where(inv => (inv.LastName + inv.FirstName + inv.MiddleName).Contains(SearchText) || inv.DateBirth.ToString().Contains(SearchText)).ToList());
+                    .Where(inv => inv.LastName.Contains(SearchText) || inv.FirstName.Contains(SearchText) || inv.MiddleName.Contains(SearchText) || inv.Email.Contains(SearchText) || inv.Phone.Contains(SearchText) || inv.City.Contains(SearchText) || inv.DateBirth.ToString().Contains(SearchText)).ToList());
             }, IsSearchTextExist);
 
             PaneCommand = ReactiveCommand.Create(() =>
@@ -78,15 +78,9 @@ namespace Legion.ViewModels
                 _context.Investors.LoadAsync();
             });
 
-            SerachCommand = ReactiveCommand.Create((Investor inv) =>
+            BackCommand = ReactiveCommand.Create(() =>
             {
-                if(SerachBoxText.Equals("") && InvCitySBText.Equals("") && InvRegistrationSBText.Equals("") && InvRegistrationSBText.Equals(""))
-                {
-                }
-                else
-                {
-
-                }
+                hostScreen.Router.NavigateBack.Execute();
             });
         }
 
@@ -116,9 +110,8 @@ namespace Legion.ViewModels
             }
         }
 
+        public ReactiveCommand<Unit, Unit> BackCommand { get; }
         public IObservable<bool> IsSearchTextExist { get; }
-
-        public string SerachBoxText { get; }
         public string InvCitySBText { get; }
         public string InvRegistrationSBText { get; }
         public DateOnly InvDobDPDate { get; }

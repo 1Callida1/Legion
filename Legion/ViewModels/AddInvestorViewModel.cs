@@ -78,7 +78,7 @@ namespace Legion.ViewModels
                 }
             });
 
-            this.ValidationRule(
+           /* this.ValidationRule(
                 x => x.Card,
                 card =>
                 {
@@ -90,7 +90,7 @@ namespace Legion.ViewModels
 
                     return false;
                 },
-                "Номер карты 16 или 18 цифр");
+                "Номер карты 16 или 18 цифр");*/
         }
 
         public string? Card

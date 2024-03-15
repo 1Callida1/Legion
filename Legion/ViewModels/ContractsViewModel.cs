@@ -62,6 +62,11 @@ namespace Legion.ViewModels
                 _context.SaveChangesAsync();
                 _context.Investors.LoadAsync();
             });
+
+            BackCommand = ReactiveCommand.Create(() =>
+            {
+                hostScreen.Router.NavigateBack.Execute();
+            });
         }
 
         public ObservableCollection<Legion.Models.Contract> Contracts => _context.Contracts.Local.ToObservableCollection();
@@ -71,6 +76,8 @@ namespace Legion.ViewModels
             get => _isPaneOpen;
             set => this.RaiseAndSetIfChanged(ref _isPaneOpen, value);
         }
+
+        public ReactiveCommand<Unit, Unit> BackCommand { get; }
 
         public ReactiveCommand<Unit, Unit> PaneCommand { get; }
         public ReactiveCommand<Unit, Unit> NewContractCommand { get; }

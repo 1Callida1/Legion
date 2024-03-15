@@ -74,6 +74,8 @@ namespace Legion.ViewModels
                 }
             });
         }
+        public ObservableCollection<ContractStatus> ContractStatus => _context.ContractStatuses.Local.ToObservableCollection();
+        public ObservableCollection<ContractType> ContractType => _context.ContractTypes.Local.ToObservableCollection();
 
         public ReactiveCommand<Unit, Unit> BackCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }

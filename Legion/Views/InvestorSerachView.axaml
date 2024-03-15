@@ -17,13 +17,48 @@
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
 
-			<Grid Background="#e95322" Grid.Row="0" VerticalAlignment="Center" Height="55">
+			<Grid Background="#e95322" Grid.Row="0" VerticalAlignment="Center" Height="55" ShowGridLines="True">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="40" />
 					<ColumnDefinition Width="200" />
 					<ColumnDefinition Width="50" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
+				<Button Grid.Column="3" Content="Назад" Margin="8" CornerRadius="20" Background="#ffff" Foreground="#e95322"/>
 				</Grid>
+		<Grid ShowGridLines="True">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="55"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<StackPanel Grid.Row="1">
+				<StackPanel.Resources>
+				</StackPanel.Resources>
+				<ListBox ItemsSource="{Binding Investors}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<StackPanel>
+								<Grid>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="15"/>
+										<ColumnDefinition Width="100"/>
+										<ColumnDefinition Width="100"/>
+										<ColumnDefinition Width="100"/>
+										<ColumnDefinition Width="100"/>
+										<ColumnDefinition Width="100"/>
+									</Grid.ColumnDefinitions>
+									<Button Grid.Column="0"/>
+									<Label Content="{Binding Path=LastName}" Grid.Column="1"/>
+									<Label Content="{Binding Path=FirstName}" Grid.Column="2"/>
+									<Label Content="{Binding Path=MiddleName}" Grid.Column="3"/>
+									<Label Content="{Binding Path=Phone}" Grid.Column="4"/>
+									<Label Content="{Binding Path=City}" Grid.Column="5"/>
+								</Grid>
+							</StackPanel>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</StackPanel>
+		</Grid>
 			</Grid>
 </UserControl>

@@ -29,6 +29,8 @@ namespace Legion.ViewModels
         {
             _context = context;
             _context.Investors.Load();
+
+
         }
 
         public ObservableCollection<Investor> Investors => _context.Investors.Local.ToObservableCollection();

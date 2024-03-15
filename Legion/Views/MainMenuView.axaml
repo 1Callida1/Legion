@@ -26,8 +26,8 @@
 					<RowDefinition Height="*"/>
 				</Grid.RowDefinitions>
 				<StackPanel Grid.Row="0" Background="#e95322"/>
-				<Button Grid.Row="1" Margin="6" CornerRadius="20" Content="Инвесторы" Background="#e95322"/>
-				<Button Grid.Row="2" Margin="6" CornerRadius="20" Content="Договоры" Background="#e95322"/>
+				<Button Grid.Row="1" Margin="6" CornerRadius="20" Content="Инвесторы" Background="#e95322" Command="{Binding InvestorsCommand}"/>
+				<Button Grid.Row="2" Margin="6" CornerRadius="20" Content="Договоры" Background="#e95322" Command="{Binding ContractsCommand}"/>
 				<Button Grid.Row="3" Margin="6" CornerRadius="20" Content="Рефералы" Background="#e95322"/>
 				<Button Grid.Row="9" Margin="6" CornerRadius="20" Content="Отчеты" Background="#e95322"/>
 			</Grid>
