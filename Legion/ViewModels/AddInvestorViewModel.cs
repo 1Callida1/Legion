@@ -15,6 +15,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using ReactiveUI.Validation.Extensions;
+using Splat;
 
 namespace Legion.ViewModels
 {
@@ -24,8 +25,8 @@ namespace Legion.ViewModels
         private Investor _investor;
         private string _card;
 
-        public AddInvestorViewModel(Investor investor, IScreen hostScreen, ApplicationDbContext context) : this(
-            hostScreen, context)
+        public AddInvestorViewModel(Investor investor, ApplicationDbContext context, IScreen? hostScreen = null) : this(
+            context, hostScreen)
         {
             Investor = investor;
             SubmitText = "Редактировать инвестора";
@@ -48,9 +49,9 @@ namespace Legion.ViewModels
             });
         }
 
-        public AddInvestorViewModel(IScreen hostScreen, ApplicationDbContext context)
+        public AddInvestorViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
-            HostScreen = hostScreen;
+            HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
             _context = context;
             Investor = new Investor();
             SubmitText = "Добавить инвестора";
@@ -108,6 +109,6 @@ namespace Legion.ViewModels
         public string SubmitText { get; protected set; }
         public Investor Investor { get => _investor; set => this.RaiseAndSetIfChanged(ref _investor, value); }
 
-        public override IScreen HostScreen { get; }
+        public override IScreen HostScreen { get; set; }
     }
 }

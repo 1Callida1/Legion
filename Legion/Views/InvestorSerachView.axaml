@@ -24,7 +24,7 @@
 					<ColumnDefinition Width="50" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
-				<Button Grid.Column="3" Content="Назад" Margin="8" CornerRadius="20" Background="#ffff" Foreground="#e95322"/>
+				<Button Grid.Column="3" Content="Назад" Margin="8" CornerRadius="20" Background="#ffff" Foreground="#e95322" Command="{Binding BackCommand}"/>
 				</Grid>
 		<Grid ShowGridLines="True">
 			<Grid.RowDefinitions>

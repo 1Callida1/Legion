@@ -59,7 +59,6 @@ namespace Legion
                        services.AddSingleton(Configuration);
 
                        services.AddSingleton<MainWindow>();
-                       services.AddSingleton<MainWindowViewModel>();
                        services.AddSingleton<LoginView>();
                        services.AddSingleton<InvestorsView>();
                        services.AddSingleton<InvestorsViewModel>();
@@ -76,6 +75,12 @@ namespace Legion
                 if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
                 {
                     _context.Users.Add(new User() { Password = "123", UserName = "admin" });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "testFormat", Bet = 10, Formula = "asd", Period = 12, TypeName = "test type" });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "наебалово№#", Bet = 0, Formula = "хуй/0", Period = 12, TypeName = "Наебалово" });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "пизда№#", Bet = 0, Formula = "хуй*-10", Period = 6, TypeName = "Еще и должен бушь" });
+                    _context.ContractStatuses.Add(new ContractStatus() {Status = "Открыт"});
+                    _context.ContractStatuses.Add(new ContractStatus() {Status = "Закрыт"});
+                    _context.ContractStatuses.Add(new ContractStatus() {Status = "Приостановлен"});
                     _context.SaveChanges();
                 }
                 else
@@ -85,8 +90,10 @@ namespace Legion
 
                 _context.SaveChanges();
 
+                Locator.CurrentMutable.RegisterConstant<IScreen>(new MainWindowViewModel(_context));
+
                 desktop.MainWindow = host.Services.GetRequiredService<MainWindow>();
-                desktop.MainWindow.DataContext = host.Services.GetRequiredService<MainWindowViewModel>();
+                desktop.MainWindow.DataContext = Locator.Current.GetService<IScreen>();
                 MainWindowViewModel S = (MainWindowViewModel)desktop.MainWindow.DataContext;
                 S.GoNext.Execute();
 

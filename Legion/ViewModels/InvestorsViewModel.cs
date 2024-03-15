@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using DynamicData.Binding;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
+using Splat;
 
 namespace Legion.ViewModels
 {
@@ -30,12 +31,14 @@ namespace Legion.ViewModels
             _context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
         }
 
-        public InvestorsViewModel(IScreen hostScreen, ApplicationDbContext context)
+        public InvestorsViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             _context = context;
             _isPaneOpen = false;
             _context.Investors.Load();
             Investors = _context.Investors.Local.ToObservableCollection();
+
+            HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
 
             IsSearchTextExist = this.WhenAnyValue(
                 x => x.SearchText,
@@ -56,12 +59,12 @@ namespace Legion.ViewModels
 
             NewInvestorCommand = ReactiveCommand.Create(() =>
             {
-                hostScreen.Router.Navigate.Execute(new AddInvestorViewModel(hostScreen, context));
+                HostScreen.Router.Navigate.Execute(new AddInvestorViewModel(context));
             });
 
             DataGridEditActionCommand = ReactiveCommand.Create((Investor inv) =>
             {
-                hostScreen.Router.Navigate.Execute(new AddInvestorViewModel(inv, hostScreen, context));
+                HostScreen.Router.Navigate.Execute(new AddInvestorViewModel(inv, context));
             });
 
 
@@ -80,7 +83,7 @@ namespace Legion.ViewModels
 
             BackCommand = ReactiveCommand.Create(() =>
             {
-                hostScreen.Router.NavigateBack.Execute();
+                HostScreen.Router.NavigateBack.Execute();
             });
         }
 
@@ -90,7 +93,7 @@ namespace Legion.ViewModels
             set => this.RaiseAndSetIfChanged(ref _investors, value);
         }
 
-        public override IScreen HostScreen => throw new NotImplementedException();
+        public sealed override IScreen HostScreen { get; set; }
         public bool IsPaneOpen
         {
             get => _isPaneOpen;

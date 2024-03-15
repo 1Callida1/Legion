@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Legion.Views;
 using System.Diagnostics.Contracts;
+using Splat;
 
 namespace Legion.ViewModels
 {
@@ -28,11 +29,12 @@ namespace Legion.ViewModels
             _context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
         }
 
-        public ContractsViewModel(IScreen hostScreen, ApplicationDbContext context)
+        public ContractsViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             _context = context;
             _isPaneOpen = false;
             _context.Contracts.Load();
+            HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
 
             PaneCommand = ReactiveCommand.Create(() =>
             {
@@ -41,12 +43,12 @@ namespace Legion.ViewModels
 
             NewContractCommand = ReactiveCommand.Create(() =>
             {
-                hostScreen.Router.Navigate.Execute(new AddContractViewModel(hostScreen, context));
+                HostScreen.Router.Navigate.Execute(new AddContractViewModel(context));
             });
 
             DataGridEditActionCommand = ReactiveCommand.Create((Legion.Models.Contract ctr) =>
             {
-                hostScreen.Router.Navigate.Execute(new AddContractViewModel(ctr, hostScreen, context));
+                HostScreen.Router.Navigate.Execute(new AddContractViewModel(ctr, context));
             });
 
 
@@ -65,12 +67,12 @@ namespace Legion.ViewModels
 
             BackCommand = ReactiveCommand.Create(() =>
             {
-                hostScreen.Router.NavigateBack.Execute();
+                HostScreen.Router.NavigateBack.Execute();
             });
         }
 
         public ObservableCollection<Legion.Models.Contract> Contracts => _context.Contracts.Local.ToObservableCollection();
-        public override IScreen HostScreen => throw new NotImplementedException();
+        public sealed override IScreen HostScreen { get; set; }
         public bool IsPaneOpen
         {
             get => _isPaneOpen;
