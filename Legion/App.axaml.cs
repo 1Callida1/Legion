@@ -85,7 +85,7 @@ namespace Legion
                 }
                 else
                 {
-                    Log.Logger.Information($"Finded user {_context.Users.FirstOrDefault().UserName} in database");
+                    Log.Logger.Information($"Finded user {_context.Users.FirstOrDefault()?.UserName} in database");
                 }
 
                 _context.SaveChanges();
@@ -94,8 +94,7 @@ namespace Legion
 
                 desktop.MainWindow = host.Services.GetRequiredService<MainWindow>();
                 desktop.MainWindow.DataContext = Locator.Current.GetService<IScreen>();
-                MainWindowViewModel S = (MainWindowViewModel)desktop.MainWindow.DataContext;
-                S.GoNext.Execute();
+                ((MainWindowViewModel)desktop.MainWindow.DataContext!).GoNext.Execute();
 
                 //desktop.MainWindow = new InvestorsView()
                 //{

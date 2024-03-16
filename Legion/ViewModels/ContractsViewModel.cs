@@ -46,18 +46,18 @@ namespace Legion.ViewModels
                 HostScreen.Router.Navigate.Execute(new AddContractViewModel(context));
             });
 
-            DataGridEditActionCommand = ReactiveCommand.Create((Legion.Models.Contract ctr) =>
+            DataGridEditActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
             {
                 HostScreen.Router.Navigate.Execute(new AddContractViewModel(ctr, context));
             });
 
 
-            DataGridPrintActionCommand = ReactiveCommand.Create((Legion.Models.Contract ctr) =>
+            DataGridPrintActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
             {
                 Debug.WriteLine(ctr.ToString());
             });
 
-            DataGridRemoveActionCommand = ReactiveCommand.Create((Legion.Models.Contract ctr) =>
+            DataGridRemoveActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
             {
                 Debug.WriteLine(ctr.Id.ToString() + "to remove");
                 _context.Contracts.Remove(ctr);
@@ -71,20 +71,21 @@ namespace Legion.ViewModels
             });
         }
 
-        public ObservableCollection<Legion.Models.Contract> Contracts => _context.Contracts.Local.ToObservableCollection();
-        public sealed override IScreen HostScreen { get; set; }
+        public ObservableCollection<Models.Contract> Contracts => _context.Contracts.Local.ToObservableCollection();
+        public sealed override IScreen HostScreen { get; set; } = null!;
+
         public bool IsPaneOpen
         {
             get => _isPaneOpen;
             set => this.RaiseAndSetIfChanged(ref _isPaneOpen, value);
         }
 
-        public ReactiveCommand<Unit, Unit> BackCommand { get; }
+        public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
 
-        public ReactiveCommand<Unit, Unit> PaneCommand { get; }
-        public ReactiveCommand<Unit, Unit> NewContractCommand { get; }
-        public ReactiveCommand<Legion.Models.Contract, Unit> DataGridPrintActionCommand { get; set; }
-        public ReactiveCommand<Legion.Models.Contract, Unit> DataGridEditActionCommand { get; set; }
-        public ReactiveCommand<Legion.Models.Contract, Unit> DataGridRemoveActionCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> PaneCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> NewContractCommand { get; } = null!;
+        public ReactiveCommand<Models.Contract, Unit> DataGridPrintActionCommand { get; set; } = null!;
+        public ReactiveCommand<Models.Contract, Unit> DataGridEditActionCommand { get; set; } = null!;
+        public ReactiveCommand<Models.Contract, Unit> DataGridRemoveActionCommand { get; set; } = null!;
     }
 }

@@ -39,8 +39,8 @@ namespace Legion.ViewModels
         }
 
         public ObservableCollection<Investor> Investors => _context.Investors.Local.ToObservableCollection();
-        public ReactiveCommand<Unit, Unit> BackCommand { get; }
+        public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
 
-        public sealed override IScreen HostScreen { get; set; }
+        public sealed override IScreen HostScreen { get; set; } = null!;
     }
 }

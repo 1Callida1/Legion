@@ -19,9 +19,5 @@ namespace Legion.ViewModels
 
         // Unique identifier for the routable view model.
         public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
-        public IEnumerable GetErrors(string? propertyName)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -19,11 +19,7 @@ namespace Legion.ViewModels
 {
     public class MainMenuViewModel : ViewModelBase
     {
-        private ApplicationDbContext _context;
-        public MainMenuViewModel()
-        {
-            
-        }
+        private readonly ApplicationDbContext _context;
 
         public MainMenuViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {

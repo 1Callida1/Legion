@@ -22,8 +22,8 @@ namespace Legion.ViewModels
     public class AddInvestorViewModel : ViewModelBase
     {
         private ApplicationDbContext _context;
-        private Investor _investor;
-        private string _card;
+        private Investor _investor = null!;
+        private string _card = null!;
 
         public AddInvestorViewModel(Investor investor, ApplicationDbContext context, IScreen? hostScreen = null) : this(
             context, hostScreen)
@@ -58,7 +58,7 @@ namespace Legion.ViewModels
 
             BackCommand = ReactiveCommand.Create(() =>
             {
-                hostScreen.Router.NavigateBack.Execute();
+                HostScreen.Router.NavigateBack.Execute();
             });
 
             SaveCommand = ReactiveCommand.Create(() =>
@@ -109,6 +109,6 @@ namespace Legion.ViewModels
         public string SubmitText { get; protected set; }
         public Investor Investor { get => _investor; set => this.RaiseAndSetIfChanged(ref _investor, value); }
 
-        public override IScreen HostScreen { get; set; }
+        public sealed override IScreen HostScreen { get; set; }
     }
 }

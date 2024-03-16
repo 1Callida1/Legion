@@ -12,7 +12,7 @@ namespace Legion.Helpers
 {
     public class AppViewLocator : IViewLocator
     {
-        public IViewFor ResolveView<T>(T viewModel, string contract = null) => viewModel switch
+        public IViewFor ResolveView<T>(T? viewModel, string? contract = null) => viewModel switch
         {
             AddContractViewModel context => new AddContractView() { DataContext = context },
             AddInvestorViewModel context => new AddInvestorView() { DataContext = context },

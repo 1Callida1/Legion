@@ -23,8 +23,8 @@ namespace Legion.ViewModels
     {
         private ApplicationDbContext _context;
         private bool _isPaneOpen;
-        private string _searchText;
-        private ObservableCollection<Investor> _investors;
+        private string _searchText = null!;
+        private ObservableCollection<Investor> _investors = null!;
 
         public InvestorsViewModel()
         {
@@ -93,7 +93,8 @@ namespace Legion.ViewModels
             set => this.RaiseAndSetIfChanged(ref _investors, value);
         }
 
-        public sealed override IScreen HostScreen { get; set; }
+        public sealed override IScreen HostScreen { get; set; } = null!;
+
         public bool IsPaneOpen
         {
             get => _isPaneOpen;
@@ -113,18 +114,18 @@ namespace Legion.ViewModels
             }
         }
 
-        public ReactiveCommand<Unit, Unit> BackCommand { get; }
-        public IObservable<bool> IsSearchTextExist { get; }
-        public string InvCitySBText { get; }
-        public string InvRegistrationSBText { get; }
+        public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
+        public IObservable<bool> IsSearchTextExist { get; } = null!;
+        public string InvCitySBText { get; } = null!;
+        public string InvRegistrationSBText { get; } = null!;
         public DateOnly InvDobDPDate { get; }
         public int InvDobCBItem { get; }
-        public ReactiveCommand<Investor, Unit> SerachCommand { get; set; }
-        public ReactiveCommand<Unit, Unit> PaneCommand { get;}
-        public ReactiveCommand<Unit, Unit> NewInvestorCommand { get; }
-        public ReactiveCommand<Unit, Unit> SearchCommand { get; }
-        public ReactiveCommand<Investor, Unit> DataGridPrintActionCommand { get; set; }
-        public ReactiveCommand<Investor, Unit> DataGridEditActionCommand { get; set; }
-        public ReactiveCommand<Investor, Unit> DataGridRemoveActionCommand { get; set; }
+        public ReactiveCommand<Investor, Unit> SerachCommand { get; set; } = null!;
+        public ReactiveCommand<Unit, Unit> PaneCommand { get;} = null!;
+        public ReactiveCommand<Unit, Unit> NewInvestorCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> SearchCommand { get; } = null!;
+        public ReactiveCommand<Investor, Unit> DataGridPrintActionCommand { get; set; } = null!;
+        public ReactiveCommand<Investor, Unit> DataGridEditActionCommand { get; set; } = null!;
+        public ReactiveCommand<Investor, Unit> DataGridRemoveActionCommand { get; set; } = null!;
     }
 }

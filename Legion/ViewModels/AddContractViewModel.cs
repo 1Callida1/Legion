@@ -20,7 +20,7 @@ namespace Legion.ViewModels
     public class AddContractViewModel : ViewModelBase
     {
         private ApplicationDbContext _context;
-        private Models.Contract _contract;
+        private Models.Contract _contract = null!;
 
         public AddContractViewModel(Models.Contract contract, ApplicationDbContext context, IScreen? hostScreen = null) : this(
             context, hostScreen)
@@ -50,7 +50,7 @@ namespace Legion.ViewModels
         {
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
             _context = context;
-            Contract = new Legion.Models.Contract();
+            Contract = new Models.Contract() { Manager = Locator.Current.GetService<User>()!};
             SubmitText = "Добавить новый договор";
             _context.ContractTypes.Load();
             _context.ContractStatuses.Load();
@@ -110,8 +110,8 @@ namespace Legion.ViewModels
         public ReactiveCommand<Unit, Unit> BackCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }
         public string SubmitText { get; protected set; }
-        public Legion.Models.Contract Contract { get => _contract; set => this.RaiseAndSetIfChanged(ref _contract, value); }
+        public Models.Contract Contract { get => _contract; set => this.RaiseAndSetIfChanged(ref _contract, value); }
 
-        public override IScreen HostScreen { get; set; }
+        public sealed override IScreen HostScreen { get; set; }
     }
 }

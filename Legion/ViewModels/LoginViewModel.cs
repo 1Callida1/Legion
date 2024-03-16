@@ -40,11 +40,17 @@ namespace Legion.ViewModels
             SubmitCommand = ReactiveCommand.Create(() =>
             {
                 Debug.WriteLine($"{UserName} : {Password}");
-                if (_context.Users.FirstOrDefault(user => user.UserName == UserName.ToLower() && user.Password == Password) == null)
+
+                User? authenticateUser = _context.Users.FirstOrDefault(user =>
+                    user.UserName == UserName.ToLower() && user.Password == Password);
+
+                if (authenticateUser == null)
                 {
                     WrongData = true;
                     return;
                 }
+
+                Locator.CurrentMutable.RegisterConstant(authenticateUser);
                 HostScreen.Router.Navigate.Execute(new MainMenuViewModel(_context));
 
             }, IsInputValid);
@@ -57,7 +63,7 @@ namespace Legion.ViewModels
             }
             else
             {
-                Debug.WriteLine($"Finded user {_context.Users.FirstOrDefault().UserName} in database");
+                Debug.WriteLine($"Finded user {_context.Users.FirstOrDefault()?.UserName} in database");
             }
         }
 
