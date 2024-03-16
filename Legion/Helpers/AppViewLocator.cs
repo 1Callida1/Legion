@@ -22,6 +22,7 @@ namespace Legion.Helpers
             LoginViewModel context => new LoginView() { DataContext = context },
             MainMenuViewModel context => new MainMenuView() { DataContext = context },
             MainWindowViewModel context => new MainWindow() { DataContext = context },
+            ReferralViewModel context => new ReferralView() { DataContext = context },
             _ => throw new ArgumentOutOfRangeException(nameof(viewModel))
         };
         //{

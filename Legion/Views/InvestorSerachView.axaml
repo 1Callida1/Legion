@@ -50,7 +50,7 @@
 										<ColumnDefinition Width="100"/>
 										<ColumnDefinition Width="100"/>
 									</Grid.ColumnDefinitions>
-									<Button Grid.Column="0"/>
+									<Button Grid.Column="0" Command="{Binding $parent[ListBox].((vm:InvestorSerachViewModel)DataContext).SetInvestorCommand}"/>
 									<Label Content="{Binding Path=LastName}" Grid.Column="1"/>
 									<Label Content="{Binding Path=FirstName}" Grid.Column="2"/>
 									<Label Content="{Binding Path=MiddleName}" Grid.Column="3"/>

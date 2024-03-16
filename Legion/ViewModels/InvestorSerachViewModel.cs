@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Splat;
 using DynamicData;
+using Avalonia.Interactivity;
+using Tmds.DBus.Protocol;
 
 namespace Legion.ViewModels
 {
@@ -24,7 +26,7 @@ namespace Legion.ViewModels
         private string _searchText = null!;
         private ObservableCollection<Investor> _investors = null!;
 
-        public InvestorSerachViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
+        public InvestorSerachViewModel(ApplicationDbContext context, ref Investor investor ,IScreen? hostScreen = null)
         {
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
             _context = context;
@@ -41,6 +43,13 @@ namespace Legion.ViewModels
             {
                 HostScreen.Router.NavigateBack.Execute();
             });
+
+            SetInvestorCommand = ReactiveCommand.Create((Investor inv) =>
+            {
+
+                HostScreen.Router.NavigateBack.Execute();
+            });
+
             SearchCommand = ReactiveCommand.Create(() =>
             {
                 Investors = new ObservableCollection<Investor>();
@@ -70,7 +79,7 @@ namespace Legion.ViewModels
             get => _investors;
             set => this.RaiseAndSetIfChanged(ref _investors, value);
         }
-
+        public ReactiveCommand<Investor, Unit> SetInvestorCommand { get; } = null!;
         public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
 
         public sealed override IScreen HostScreen { get; set; } = null!;

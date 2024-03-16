@@ -56,10 +56,13 @@ namespace Legion.ViewModels
             _context.ContractStatuses.Load();
             Contract.ContractType = ContractTypes.First();
             Contract.Status = ContractStatuses.First();
+            Investor CalledInvestor = null!;
+            Investor InvestorInvited = null!;
+
             SearchInvestorCommand = ReactiveCommand.Create(() =>
             {
                 var a = HostScreen.Router.CurrentViewModel;
-                HostScreen.Router.Navigate.Execute(new InvestorSerachViewModel(context));
+                HostScreen.Router.Navigate.Execute(new InvestorSerachViewModel(context, ref InvestorInvited));
             });
 
             BackCommand = ReactiveCommand.Create(() =>
