@@ -21,13 +21,8 @@ namespace Legion.ViewModels
     public class InvestorSerachViewModel : ViewModelBase
     {
         private ApplicationDbContext _context;
-        private string _searchText;
-        private ObservableCollection<Investor> _investors;
-
-        public InvestorSerachViewModel()
-        {
-            _context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
-        }
+        private string _searchText = null!;
+        private ObservableCollection<Investor> _investors = null!;
 
         public InvestorSerachViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
@@ -49,7 +44,10 @@ namespace Legion.ViewModels
             SearchCommand = ReactiveCommand.Create(() =>
             {
                 Investors = new ObservableCollection<Investor>();
-                SearchText.Split(' ').ToList().ForEach(word => Investors.Add(_context.Investors.Where(inv => inv.LastName.Contains(word) || inv.FirstName.Contains(word) || inv.MiddleName.Contains(word) || inv.Email.Contains(word) || inv.Phone.Contains(word) || inv.City.Contains(word) || inv.DateBirth.ToString().Contains(word))));
+                SearchText.Split(' ').ToList().ForEach(word => Investors.Add(_context.Investors.Where(inv =>
+                    inv.LastName.Contains(word) || inv.FirstName.Contains(word) || inv.MiddleName.Contains(word) ||
+                    inv.Email.Contains(word) || inv.Phone.Contains(word) || inv.City.Contains(word) ||
+                    inv.DateBirth.ToString().Contains(word))));
                 Investors = new ObservableCollection<Investor>(Investors.Distinct());
             }, IsSearchTextExist);
         }
@@ -72,12 +70,11 @@ namespace Legion.ViewModels
             get => _investors;
             set => this.RaiseAndSetIfChanged(ref _investors, value);
         }
-        public ObservableCollection<Investor> Investors => _context.Investors.Local.ToObservableCollection();
+
         public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
 
         public sealed override IScreen HostScreen { get; set; } = null!;
-        public IObservable<bool> IsSearchTextExist { get; }
-        public ReactiveCommand<Unit, Unit> SearchCommand { get; }
-        public override IScreen HostScreen => throw new NotImplementedException();
+        public IObservable<bool> IsSearchTextExist { get; } = null!;
+        public ReactiveCommand<Unit, Unit> SearchCommand { get; } = null!;
     }
 }
