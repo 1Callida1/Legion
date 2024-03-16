@@ -23,6 +23,7 @@ namespace Legion.ViewModels
         private ApplicationDbContext _context;
         private string _searchText = null!;
         private ObservableCollection<Investor> _investors = null!;
+        private Investor _selectedInvestor = null!;
 
         public InvestorSerachViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
@@ -37,10 +38,7 @@ namespace Legion.ViewModels
                     !string.IsNullOrWhiteSpace(text)
             );
 
-            BackCommand = ReactiveCommand.Create(() =>
-            {
-                HostScreen.Router.NavigateBack.Execute();
-            });
+            BackCommand = ReactiveCommand.Create(() => new Investor());
             SearchCommand = ReactiveCommand.Create(() =>
             {
                 Investors = new ObservableCollection<Investor>();
@@ -50,6 +48,8 @@ namespace Legion.ViewModels
                     inv.DateBirth.ToString().Contains(word))));
                 Investors = new ObservableCollection<Investor>(Investors.Distinct());
             }, IsSearchTextExist);
+
+            SelectInvestor = ReactiveCommand.Create(() => SelectedInvestor!);
         }
 
         public string SearchText
@@ -65,13 +65,21 @@ namespace Legion.ViewModels
             }
         }
 
+        public Investor SelectedInvestor
+        { 
+            get => _selectedInvestor;
+            set => this.RaiseAndSetIfChanged(ref _selectedInvestor, value);
+        }
+
         public ObservableCollection<Investor> Investors
         {
             get => _investors;
             set => this.RaiseAndSetIfChanged(ref _investors, value);
         }
 
-        public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
+        public ReactiveCommand<Unit, Investor> SelectInvestor { get; }
+
+        public ReactiveCommand<Unit, Investor> BackCommand { get; }
 
         public sealed override IScreen HostScreen { get; set; } = null!;
         public IObservable<bool> IsSearchTextExist { get; } = null!;

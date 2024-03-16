@@ -91,9 +91,10 @@ namespace Legion
                 _context.SaveChanges();
 
                 Locator.CurrentMutable.RegisterConstant<IScreen>(new MainWindowViewModel(_context));
+                Locator.CurrentMutable.RegisterConstant(new MainWindow());
 
-                desktop.MainWindow = host.Services.GetRequiredService<MainWindow>();
-                desktop.MainWindow.DataContext = Locator.Current.GetService<IScreen>();
+                desktop.MainWindow = Locator.Current.GetService<MainWindow>();
+                desktop.MainWindow!.DataContext = Locator.Current.GetService<IScreen>();
                 ((MainWindowViewModel)desktop.MainWindow.DataContext!).GoNext.Execute();
 
                 //desktop.MainWindow = new InvestorsView()

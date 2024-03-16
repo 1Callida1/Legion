@@ -30,6 +30,7 @@ namespace Legion.ViewModels
         {
             Investor = investor;
             SubmitText = "Редактировать инвестора";
+            //SaveCommand = ReactiveCommand.Create(UpdInvestor(ref investor, investor))
             SaveCommand = ReactiveCommand.Create(() =>
             {
                 _context.Investors.Update(Investor);
@@ -47,6 +48,11 @@ namespace Legion.ViewModels
                     BackCommand.Execute();
                 }
             });
+        }
+
+        private void UpdInvestor(ref Investor investor, Investor incInvestor)
+        {
+            investor = incInvestor;
         }
 
         public AddInvestorViewModel(ApplicationDbContext context, IScreen? hostScreen = null)

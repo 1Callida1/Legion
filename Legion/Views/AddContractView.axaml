@@ -19,6 +19,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="80" />
         </Grid.ColumnDefinitions>
+        <Panel Grid.ColumnSpan="2" Grid.RowSpan="2" Background="#CB000000" IsVisible="{Binding BackgroundPaneVisible}" ZIndex="10"></Panel>
         <Panel
             Background="#e95322"
             Grid.Row="0" Grid.ColumnSpan="2" Height="55" />
@@ -113,6 +114,10 @@
                             SelectedDate="{Binding Contract.DateEnd}" />
                 <Label Content="Инвестор" Grid.Column="1" Grid.Row="5" Margin="7" Foreground="Black"
                        FontSize="15" FontWeight="Bold" />
+
+                <Label Content="{Binding InvestorData}" Grid.Column="1" Grid.Row="6" Margin="7" Foreground="Black"
+                       FontSize="15" />
+
                 <Button Height="40" Margin="10" CornerRadius="20" Width="110" Grid.Column="2" Grid.Row="6"
                         Content="Найти" Background="#e95322" Command="{Binding SearchInvestorCommand}"/>
                 <Button Height="40" Margin="10" CornerRadius="20" Width="110" Grid.Column="3" Grid.Row="6"
