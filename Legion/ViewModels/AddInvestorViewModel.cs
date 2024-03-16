@@ -14,6 +14,7 @@ using Serilog;
 using System.Collections;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using ReactiveUI.Validation.Extensions;
 using Splat;
 
@@ -23,7 +24,6 @@ namespace Legion.ViewModels
     {
         private ApplicationDbContext _context;
         private Investor _investor = null!;
-        private string _card = null!;
 
         public AddInvestorViewModel(Investor investor, ApplicationDbContext context, IScreen? hostScreen = null) : this(
             context, hostScreen)
@@ -103,6 +103,8 @@ namespace Legion.ViewModels
                 this.RaisePropertyChanged();
             }
         }
+
+        public List<string> Cities => _context.Investors.Select(i => i.City).Distinct().ToListAsync().Result;
 
         public ReactiveCommand<Unit, Unit> BackCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }

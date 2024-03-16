@@ -71,8 +71,12 @@
                 <Label Content="Номер телефона" Grid.Column="2" Grid.Row="2" Margin="7" Foreground="Black" />
                 <Label Content="Почта" Grid.Column="2" Grid.Row="3" Margin="7" Foreground="Black" />
                 <DatePicker Grid.Column="1" Grid.Row="4" DayFormat="ddd dd" Foreground="Black" />
-                <TextBox Grid.Column="3" Grid.Row="1" Margin="7" Height="20" Background="Gainsboro"
-                         CornerRadius="20" Foreground="Black" Text="{Binding Investor.City}" />
+                
+                <Border Grid.Column="3" Grid.Row="1" CornerRadius="20" Height="20" Background="Gainsboro" Margin="7" Padding="10, 0">
+                    <AutoCompleteBox   Height="20" Background="Gainsboro" BorderBrush="Gainsboro"
+                                       CornerRadius="20" Foreground="Black" ItemsSource="{Binding Cities}" Text="{Binding Investor.City}" />
+                </Border>
+
                 <MaskedTextBox Mask="+79999999999" Grid.Column="3" Grid.Row="2" Margin="7" Height="20"
                                Background="Gainsboro" CornerRadius="20" Foreground="Black"
                                Text="{Binding Investor.Phone}" />
@@ -101,16 +105,15 @@
                 <Label Content="Особые данные" Grid.Column="1" Grid.Row="9" Margin="7" Foreground="Black"
                        FontSize="15" FontWeight="Bold" />
                 <Label Content="Банковская карта" Grid.Column="0" Grid.Row="10" Margin="7" Foreground="Black" />
-                <Label Content="Особые пометки" Grid.Column="2" Grid.Row="10" Margin="7" Foreground="Black" />
+                <Label Content="Особые заметки" Grid.Column="2" Grid.Row="10" Margin="7" Foreground="Black" />
 
                 <TextBox Grid.Column="3" Grid.Row="10" Margin="7" Height="100" Background="Gainsboro"
                          CornerRadius="20" Foreground="Black" AcceptsReturn="True" TextWrapping="Wrap"
                          Text="{Binding Investor.Note}" />
                 <controlTemplates:CorneredTextBox Grid.Column="1" Grid.Row="10" Height="20" VerticalAlignment="Top" TextPadding="10" MaxLength="18" Margin="7" Text="{Binding Card}"/>
-				<TextBox Grid.Column="1" Grid.Row="10" Height="20" VerticalAlignment="Top" MaxLength="18" Margin="7" Text="{Binding Card}"/>
             </Grid>
             <Button Height="40" Margin="20" CornerRadius="20" Width="220" Content="{Binding SubmitText}"
-                    Background="#e95322" Command="{Binding SaveCommand}" />
+                    Background="#e95322" Command="{Binding SaveCommand}" HotKey="Ctrl+S"/>
         </StackPanel>
     </Grid>
 </UserControl>
