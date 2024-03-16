@@ -8,16 +8,11 @@ namespace Legion.Models
 {
     public class Contract
     {
-        public Contract()
-        {
-            Id = string.Empty;
-            DateStart = DateOnly.FromDateTime(DateTime.Now);
-        }
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         public ContractStatus Status { get; set; } = null!;
         public int InvestorId { get; set; }
         public Investor Investor { get; set; } = null!;
-        public DateOnly DateStart { get; set; }
+        public DateOnly DateStart { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public DateOnly DateEnd { get; set; }
         public int Amount { get; set; }
         public ContractType ContractType { get; set; } = null!;
