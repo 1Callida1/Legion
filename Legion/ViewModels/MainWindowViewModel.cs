@@ -18,7 +18,7 @@ namespace Legion.ViewModels
         public ReactiveCommand<Unit, IRoutableViewModel> GoNext { get; }
 
         // The command that navigates a user back.
-        public ReactiveCommand<Unit, IRoutableViewModel> GoBack => Router.NavigateBack;
+        public ReactiveCommand<Unit, IRoutableViewModel> GoBack => Router.NavigateBack!;
 
         public MainWindowViewModel(ApplicationDbContext context)
         {
@@ -30,11 +30,10 @@ namespace Legion.ViewModels
             // your view models, or to reuse existing view models.
             //
 
-
             GoNext = ReactiveCommand.CreateFromObservable(
-                () => Router.Navigate.Execute(new LoginViewModel(this, context))
+                () => Router.Navigate.Execute(new LoginViewModel(context))
             );
-            Router.Navigate.Execute(new LoginViewModel(this, context));
+            Router.Navigate.Execute(new LoginViewModel(context));
         }
     }
 }

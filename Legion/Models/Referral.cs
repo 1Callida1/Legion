@@ -9,9 +9,10 @@ namespace Legion.Models
     public class Referral
     {
         public int Id { get; set; }
-        public Investor InvestorCalled { get; set; }
-        public Investor InvestorInvited { get; set; }
-        public int Bonus {  get; set; }
-        public string Note { get; set; }
+        public Investor InvestorCalled { get; set; } = null!;
+        public Investor InvestorInvited { get; set; } = null!;
+        public int Bonus { get; set; }
+        public bool BonusClaim {  get; set; }
+        public string Note { get; set; } = null!;
     }
 }

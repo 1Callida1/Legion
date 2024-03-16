@@ -9,6 +9,6 @@ namespace Legion.Models
     public class Repeated
     {
         public int Id { get; set; }
-        public string Type { get; set; }
+        public string Type { get; set; } = null!;
     }
 }

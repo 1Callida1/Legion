@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Legion.Views;
 using System.Diagnostics.Contracts;
+using Splat;
 
 namespace Legion.ViewModels
 {
@@ -28,11 +29,12 @@ namespace Legion.ViewModels
             _context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
         }
 
-        public ContractsViewModel(IScreen hostScreen, ApplicationDbContext context)
+        public ContractsViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             _context = context;
             _isPaneOpen = false;
             _context.Contracts.Load();
+            HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
 
             PaneCommand = ReactiveCommand.Create(() =>
             {
@@ -41,21 +43,21 @@ namespace Legion.ViewModels
 
             NewContractCommand = ReactiveCommand.Create(() =>
             {
-                hostScreen.Router.Navigate.Execute(new AddContractViewModel(hostScreen, context));
+                HostScreen.Router.Navigate.Execute(new AddContractViewModel(context));
             });
 
-            DataGridEditActionCommand = ReactiveCommand.Create((Legion.Models.Contract ctr) =>
+            DataGridEditActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
             {
-                hostScreen.Router.Navigate.Execute(new AddContractViewModel(ctr, hostScreen, context));
+                HostScreen.Router.Navigate.Execute(new AddContractViewModel(ctr, context));
             });
 
 
-            DataGridPrintActionCommand = ReactiveCommand.Create((Legion.Models.Contract ctr) =>
+            DataGridPrintActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
             {
                 Debug.WriteLine(ctr.ToString());
             });
 
-            DataGridRemoveActionCommand = ReactiveCommand.Create((Legion.Models.Contract ctr) =>
+            DataGridRemoveActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
             {
                 Debug.WriteLine(ctr.Id.ToString() + "to remove");
                 _context.Contracts.Remove(ctr);
@@ -65,24 +67,25 @@ namespace Legion.ViewModels
 
             BackCommand = ReactiveCommand.Create(() =>
             {
-                hostScreen.Router.NavigateBack.Execute();
+                HostScreen.Router.NavigateBack.Execute();
             });
         }
 
-        public ObservableCollection<Legion.Models.Contract> Contracts => _context.Contracts.Local.ToObservableCollection();
-        public override IScreen HostScreen => throw new NotImplementedException();
+        public ObservableCollection<Models.Contract> Contracts => _context.Contracts.Local.ToObservableCollection();
+        public sealed override IScreen HostScreen { get; set; } = null!;
+
         public bool IsPaneOpen
         {
             get => _isPaneOpen;
             set => this.RaiseAndSetIfChanged(ref _isPaneOpen, value);
         }
 
-        public ReactiveCommand<Unit, Unit> BackCommand { get; }
+        public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
 
-        public ReactiveCommand<Unit, Unit> PaneCommand { get; }
-        public ReactiveCommand<Unit, Unit> NewContractCommand { get; }
-        public ReactiveCommand<Legion.Models.Contract, Unit> DataGridPrintActionCommand { get; set; }
-        public ReactiveCommand<Legion.Models.Contract, Unit> DataGridEditActionCommand { get; set; }
-        public ReactiveCommand<Legion.Models.Contract, Unit> DataGridRemoveActionCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> PaneCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> NewContractCommand { get; } = null!;
+        public ReactiveCommand<Models.Contract, Unit> DataGridPrintActionCommand { get; set; } = null!;
+        public ReactiveCommand<Models.Contract, Unit> DataGridEditActionCommand { get; set; } = null!;
+        public ReactiveCommand<Models.Contract, Unit> DataGridRemoveActionCommand { get; set; } = null!;
     }
 }

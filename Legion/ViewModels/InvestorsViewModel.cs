@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using DynamicData.Binding;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
+using Splat;
 using DynamicData;
 
 namespace Legion.ViewModels
@@ -23,20 +24,22 @@ namespace Legion.ViewModels
     {
         private ApplicationDbContext _context;
         private bool _isPaneOpen;
-        private string _searchText;
-        private ObservableCollection<Investor> _investors;
+        private string _searchText = null!;
+        private ObservableCollection<Investor> _investors = null!;
 
         public InvestorsViewModel()
         {
             _context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
         }
 
-        public InvestorsViewModel(IScreen hostScreen, ApplicationDbContext context)
+        public InvestorsViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             _context = context;
             _isPaneOpen = false;
             _context.Investors.Load();
             Investors = _context.Investors.Local.ToObservableCollection();
+
+            HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
 
             IsSearchTextExist = this.WhenAnyValue(
                 x => x.SearchText,
@@ -58,12 +61,12 @@ namespace Legion.ViewModels
 
             NewInvestorCommand = ReactiveCommand.Create(() =>
             {
-                hostScreen.Router.Navigate.Execute(new AddInvestorViewModel(hostScreen, context));
+                HostScreen.Router.Navigate.Execute(new AddInvestorViewModel(context));
             });
 
             DataGridEditActionCommand = ReactiveCommand.Create((Investor inv) =>
             {
-                hostScreen.Router.Navigate.Execute(new AddInvestorViewModel(inv, hostScreen, context));
+                HostScreen.Router.Navigate.Execute(new AddInvestorViewModel(inv, context));
             });
 
 
@@ -82,7 +85,7 @@ namespace Legion.ViewModels
 
             BackCommand = ReactiveCommand.Create(() =>
             {
-                hostScreen.Router.NavigateBack.Execute();
+                HostScreen.Router.NavigateBack.Execute();
             });
         }
 
@@ -92,7 +95,8 @@ namespace Legion.ViewModels
             set => this.RaiseAndSetIfChanged(ref _investors, value);
         }
 
-        public override IScreen HostScreen => throw new NotImplementedException();
+        public sealed override IScreen HostScreen { get; set; } = null!;
+
         public bool IsPaneOpen
         {
             get => _isPaneOpen;
@@ -112,18 +116,18 @@ namespace Legion.ViewModels
             }
         }
 
-        public ReactiveCommand<Unit, Unit> BackCommand { get; }
-        public IObservable<bool> IsSearchTextExist { get; }
-        public string InvCitySBText { get; }
-        public string InvRegistrationSBText { get; }
+        public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
+        public IObservable<bool> IsSearchTextExist { get; } = null!;
+        public string InvCitySBText { get; } = null!;
+        public string InvRegistrationSBText { get; } = null!;
         public DateOnly InvDobDPDate { get; }
         public int InvDobCBItem { get; }
-        public ReactiveCommand<Investor, Unit> SerachCommand { get; set; }
-        public ReactiveCommand<Unit, Unit> PaneCommand { get;}
-        public ReactiveCommand<Unit, Unit> NewInvestorCommand { get; }
-        public ReactiveCommand<Unit, Unit> SearchCommand { get; }
-        public ReactiveCommand<Investor, Unit> DataGridPrintActionCommand { get; set; }
-        public ReactiveCommand<Investor, Unit> DataGridEditActionCommand { get; set; }
-        public ReactiveCommand<Investor, Unit> DataGridRemoveActionCommand { get; set; }
+        public ReactiveCommand<Investor, Unit> SerachCommand { get; set; } = null!;
+        public ReactiveCommand<Unit, Unit> PaneCommand { get;} = null!;
+        public ReactiveCommand<Unit, Unit> NewInvestorCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> SearchCommand { get; } = null!;
+        public ReactiveCommand<Investor, Unit> DataGridPrintActionCommand { get; set; } = null!;
+        public ReactiveCommand<Investor, Unit> DataGridEditActionCommand { get; set; } = null!;
+        public ReactiveCommand<Investor, Unit> DataGridRemoveActionCommand { get; set; } = null!;
     }
 }

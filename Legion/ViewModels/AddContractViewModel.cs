@@ -12,16 +12,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Serilog;
 using System.Diagnostics.Contracts;
+using Microsoft.EntityFrameworkCore;
+using Splat;
 
 namespace Legion.ViewModels
 {
     public class AddContractViewModel : ViewModelBase
     {
         private ApplicationDbContext _context;
-        private Legion.Models.Contract _contract;
+        private Models.Contract _contract = null!;
 
-        public AddContractViewModel(Legion.Models.Contract contract, IScreen hostScreen, ApplicationDbContext context) : this(
-            hostScreen, context)
+        public AddContractViewModel(Models.Contract contract, ApplicationDbContext context, IScreen? hostScreen = null) : this(
+            context, hostScreen)
         {
             Contract = contract;
             SubmitText = "Редактировать договор";
@@ -44,16 +46,28 @@ namespace Legion.ViewModels
             });
         }
 
-        public AddContractViewModel(IScreen hostScreen, ApplicationDbContext context)
+        public AddContractViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
-            HostScreen = hostScreen;
+            HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
             _context = context;
-            Contract = new Legion.Models.Contract();
+            Contract = new Models.Contract() { Manager = Locator.Current.GetService<User>()!};
             SubmitText = "Добавить новый договор";
+            _context.ContractTypes.Load();
+            _context.ContractStatuses.Load();
+            Contract.ContractType = ContractTypes.First();
+            Contract.Status = ContractStatuses.First();
+            Investor CalledInvestor = null!;
+            Investor InvestorInvited = null!;
+
+            SearchInvestorCommand = ReactiveCommand.Create(() =>
+            {
+                var a = HostScreen.Router.CurrentViewModel;
+                HostScreen.Router.Navigate.Execute(new InvestorSerachViewModel(context, ref InvestorInvited));
+            });
 
             BackCommand = ReactiveCommand.Create(() =>
             {
-                hostScreen.Router.NavigateBack.Execute();
+                HostScreen.Router.NavigateBack.Execute();
             });
 
             SaveCommand = ReactiveCommand.Create(() =>
@@ -74,14 +88,33 @@ namespace Legion.ViewModels
                 }
             });
         }
-        public ObservableCollection<ContractStatus> ContractStatus => _context.ContractStatuses.Local.ToObservableCollection();
-        public ObservableCollection<ContractType> ContractType => _context.ContractTypes.Local.ToObservableCollection();
 
+        public int? Amount
+        {
+            get => Contract.Amount;
+            set
+            {
+                if (value == null || value < 0)
+                {
+                    Contract.Amount = 0;
+                }
+                else
+                {
+                    Contract.Amount = value.Value;
+                }
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public ObservableCollection<ContractStatus> ContractStatuses => _context.ContractStatuses.Local.ToObservableCollection();
+        public ObservableCollection<ContractType> ContractTypes => _context.ContractTypes.Local.ToObservableCollection();
+
+        public ReactiveCommand<Unit, Unit> SearchInvestorCommand { get; }
         public ReactiveCommand<Unit, Unit> BackCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }
         public string SubmitText { get; protected set; }
-        public Legion.Models.Contract Contract { get => _contract; set => this.RaiseAndSetIfChanged(ref _contract, value); }
+        public Models.Contract Contract { get => _contract; set => this.RaiseAndSetIfChanged(ref _contract, value); }
 
-        public override IScreen HostScreen { get; }
+        public sealed override IScreen HostScreen { get; set; }
     }
 }

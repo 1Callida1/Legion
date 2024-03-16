@@ -17,7 +17,7 @@
       <ControlTemplate>
         <Border CornerRadius="20" Background="Gainsboro" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" Padding="{TemplateBinding TextPadding, Converter={StaticResource ThicknessConverter}}">
           <TextBox  Background="Gainsboro" Height="{TemplateBinding Height}"
-                Foreground="Black" MaxLength="{TemplateBinding MaxLength}" VerticalAlignment="Top" Text="{TemplateBinding Text}"/>
+                Foreground="Black" MaxLength="{TemplateBinding MaxLength}" VerticalAlignment="Top" Text="{TemplateBinding Text, Mode=TwoWay}"/>
         </Border>
       </ControlTemplate>
     </Setter>

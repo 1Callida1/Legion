@@ -13,23 +13,22 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Splat;
 using DynamicData;
+using Avalonia.Interactivity;
+using Tmds.DBus.Protocol;
 
 namespace Legion.ViewModels
 {
     public class InvestorSerachViewModel : ViewModelBase
     {
         private ApplicationDbContext _context;
-        private string _searchText;
-        private ObservableCollection<Investor> _investors;
+        private string _searchText = null!;
+        private ObservableCollection<Investor> _investors = null!;
 
-        public InvestorSerachViewModel()
+        public InvestorSerachViewModel(ApplicationDbContext context, ref Investor investor ,IScreen? hostScreen = null)
         {
-            _context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
-        }
-
-        public InvestorSerachViewModel(IScreen hostScreen, ApplicationDbContext context)
-        {
+            HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
             _context = context;
             _context.Investors.Load();
             Investors = _context.Investors.Local.ToObservableCollection();
@@ -40,10 +39,24 @@ namespace Legion.ViewModels
                     !string.IsNullOrWhiteSpace(text)
             );
 
+            BackCommand = ReactiveCommand.Create(() =>
+            {
+                HostScreen.Router.NavigateBack.Execute();
+            });
+
+            SetInvestorCommand = ReactiveCommand.Create((Investor inv) =>
+            {
+
+                HostScreen.Router.NavigateBack.Execute();
+            });
+
             SearchCommand = ReactiveCommand.Create(() =>
             {
                 Investors = new ObservableCollection<Investor>();
-                SearchText.Split(' ').ToList().ForEach(word => Investors.Add(_context.Investors.Where(inv => inv.LastName.Contains(word) || inv.FirstName.Contains(word) || inv.MiddleName.Contains(word) || inv.Email.Contains(word) || inv.Phone.Contains(word) || inv.City.Contains(word) || inv.DateBirth.ToString().Contains(word))));
+                SearchText.Split(' ').ToList().ForEach(word => Investors.Add(_context.Investors.Where(inv =>
+                    inv.LastName.Contains(word) || inv.FirstName.Contains(word) || inv.MiddleName.Contains(word) ||
+                    inv.Email.Contains(word) || inv.Phone.Contains(word) || inv.City.Contains(word) ||
+                    inv.DateBirth.ToString().Contains(word))));
                 Investors = new ObservableCollection<Investor>(Investors.Distinct());
             }, IsSearchTextExist);
         }
@@ -66,9 +79,11 @@ namespace Legion.ViewModels
             get => _investors;
             set => this.RaiseAndSetIfChanged(ref _investors, value);
         }
+        public ReactiveCommand<Investor, Unit> SetInvestorCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
 
-        public IObservable<bool> IsSearchTextExist { get; }
-        public ReactiveCommand<Unit, Unit> SearchCommand { get; }
-        public override IScreen HostScreen => throw new NotImplementedException();
+        public sealed override IScreen HostScreen { get; set; } = null!;
+        public IObservable<bool> IsSearchTextExist { get; } = null!;
+        public ReactiveCommand<Unit, Unit> SearchCommand { get; } = null!;
     }
 }

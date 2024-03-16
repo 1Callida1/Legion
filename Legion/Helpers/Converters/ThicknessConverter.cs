@@ -10,12 +10,12 @@ namespace Legion.Helpers.Converters
 {
     public class ThicknessConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
         {
-            return new Thickness((int)value, 0, (int)value, 0);
+            return new Thickness((int)value!, 0, (int)value, 0);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotImplementedException();
         }

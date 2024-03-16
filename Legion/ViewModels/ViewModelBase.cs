@@ -15,13 +15,9 @@ namespace Legion.ViewModels
     public abstract class ViewModelBase : ReactiveValidationObject, IRoutableViewModel
     {
         // Reference to IScreen that owns the routable view model.
-        public abstract IScreen HostScreen { get; }
+        public abstract IScreen HostScreen { get; set; }
 
         // Unique identifier for the routable view model.
         public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
-        public IEnumerable GetErrors(string? propertyName)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

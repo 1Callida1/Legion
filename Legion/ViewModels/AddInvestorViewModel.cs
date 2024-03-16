@@ -15,17 +15,18 @@ using System.Collections;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using ReactiveUI.Validation.Extensions;
+using Splat;
 
 namespace Legion.ViewModels
 {
     public class AddInvestorViewModel : ViewModelBase
     {
         private ApplicationDbContext _context;
-        private Investor _investor;
-        private string _card;
+        private Investor _investor = null!;
+        private string _card = null!;
 
-        public AddInvestorViewModel(Investor investor, IScreen hostScreen, ApplicationDbContext context) : this(
-            hostScreen, context)
+        public AddInvestorViewModel(Investor investor, ApplicationDbContext context, IScreen? hostScreen = null) : this(
+            context, hostScreen)
         {
             Investor = investor;
             SubmitText = "Редактировать инвестора";
@@ -48,16 +49,16 @@ namespace Legion.ViewModels
             });
         }
 
-        public AddInvestorViewModel(IScreen hostScreen, ApplicationDbContext context)
+        public AddInvestorViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
-            HostScreen = hostScreen;
+            HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
             _context = context;
             Investor = new Investor();
             SubmitText = "Добавить инвестора";
 
             BackCommand = ReactiveCommand.Create(() =>
             {
-                hostScreen.Router.NavigateBack.Execute();
+                HostScreen.Router.NavigateBack.Execute();
             });
 
             SaveCommand = ReactiveCommand.Create(() =>
@@ -108,6 +109,6 @@ namespace Legion.ViewModels
         public string SubmitText { get; protected set; }
         public Investor Investor { get => _investor; set => this.RaiseAndSetIfChanged(ref _investor, value); }
 
-        public override IScreen HostScreen { get; }
+        public sealed override IScreen HostScreen { get; set; }
     }
 }

@@ -13,39 +13,44 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Splat;
 
 namespace Legion.ViewModels
 {
     public class MainMenuViewModel : ViewModelBase
     {
-        private ApplicationDbContext _context;
-        public MainMenuViewModel()
-        {
-            
-        }
+        private readonly ApplicationDbContext _context;
 
-        public MainMenuViewModel(IScreen hostScreen, ApplicationDbContext context)
+        public MainMenuViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             _context = context;
-            HostScreen = hostScreen;
+            HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
 
             InvestorsCommand = ReactiveCommand.Create(() =>
             {
 
-                HostScreen.Router.Navigate.Execute(new InvestorsViewModel(HostScreen, _context));
+                HostScreen.Router.Navigate.Execute(new InvestorsViewModel(_context));
 
             });
 
             ContractsCommand = ReactiveCommand.Create(() =>
             {
                 
-                HostScreen.Router.Navigate.Execute(new ContractsViewModel(HostScreen, _context));
+                HostScreen.Router.Navigate.Execute(new ContractsViewModel(_context));
+
+            });
+
+            ReferralsCommand = ReactiveCommand.Create(() =>
+            {
+
+                HostScreen.Router.Navigate.Execute(new ReferralViewModel(_context));
 
             });
         }
 
         public ReactiveCommand<Unit, Unit> InvestorsCommand { get; }
         public ReactiveCommand<Unit, Unit> ContractsCommand { get; }
-        public override IScreen HostScreen { get; }
+        public ReactiveCommand<Unit, Unit> ReferralsCommand { get; }
+        public sealed override IScreen HostScreen { get; set; }
     }
 }

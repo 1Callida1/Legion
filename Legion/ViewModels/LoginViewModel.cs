@@ -12,19 +12,21 @@ using System.Text;
 using System.Threading.Tasks;
 using Legion.Views;
 using System.Reactive.Disposables;
+using Avalonia.Platform;
+using Splat;
 
 namespace Legion.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {
         private ApplicationDbContext _context;
-        public override IScreen HostScreen { get; }
+        public override IScreen HostScreen { get; set; }
 
-        public LoginViewModel(IScreen hostScreen, ApplicationDbContext context)
+        public LoginViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             Activator = new ViewModelActivator();
             _context = context;
-            HostScreen = hostScreen;
+            HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
 
 
             IsInputValid = this.WhenAnyValue(
@@ -38,12 +40,18 @@ namespace Legion.ViewModels
             SubmitCommand = ReactiveCommand.Create(() =>
             {
                 Debug.WriteLine($"{UserName} : {Password}");
-                if (_context.Users.FirstOrDefault(user => user.UserName == UserName.ToLower() && user.Password == Password) == null)
+
+                User? authenticateUser = _context.Users.FirstOrDefault(user =>
+                    user.UserName == UserName.ToLower() && user.Password == Password);
+
+                if (authenticateUser == null)
                 {
                     WrongData = true;
                     return;
                 }
-                HostScreen.Router.Navigate.Execute(new MainMenuViewModel(HostScreen, _context));
+
+                Locator.CurrentMutable.RegisterConstant(authenticateUser);
+                HostScreen.Router.Navigate.Execute(new MainMenuViewModel(_context));
 
             }, IsInputValid);
 
@@ -55,7 +63,7 @@ namespace Legion.ViewModels
             }
             else
             {
-                Debug.WriteLine($"Finded user {_context.Users.FirstOrDefault().UserName} in database");
+                Debug.WriteLine($"Finded user {_context.Users.FirstOrDefault()?.UserName} in database");
             }
         }
 
