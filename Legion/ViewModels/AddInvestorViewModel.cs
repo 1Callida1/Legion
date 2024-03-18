@@ -14,6 +14,7 @@ using Serilog;
 using System.Collections;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using ReactiveUI.Validation.Extensions;
 using Splat;
 
@@ -23,13 +24,15 @@ namespace Legion.ViewModels
     {
         private ApplicationDbContext _context;
         private Investor _investor = null!;
-        private string _card = null!;
+        private DateTimeOffset _passportGivenDate;
+        private DateTimeOffset _birthDate;
 
         public AddInvestorViewModel(Investor investor, ApplicationDbContext context, IScreen? hostScreen = null) : this(
             context, hostScreen)
         {
             Investor = investor;
             SubmitText = "Редактировать инвестора";
+            //SaveCommand = ReactiveCommand.Create(UpdInvestor(ref investor, investor))
             SaveCommand = ReactiveCommand.Create(() =>
             {
                 _context.Investors.Update(Investor);
@@ -47,6 +50,11 @@ namespace Legion.ViewModels
                     BackCommand.Execute();
                 }
             });
+        }
+
+        private void UpdInvestor(ref Investor investor, Investor incInvestor)
+        {
+            investor = incInvestor;
         }
 
         public AddInvestorViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
@@ -68,18 +76,15 @@ namespace Legion.ViewModels
                 try
                 {
                     _context.SaveChanges();
+                    HostScreen.Router.NavigateBack.Execute();
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex.Message);
                 }
-                finally
-                {
-                    BackCommand.Execute();
-                }
             });
 
-           /* this.ValidationRule(
+            this.ValidationRule(
                 x => x.Card,
                 card =>
                 {
@@ -91,7 +96,35 @@ namespace Legion.ViewModels
 
                     return false;
                 },
-                "Номер карты 16 или 18 цифр");*/
+                "Номер карты 16 или 18 цифр");
+        }
+
+        public DateTimeOffset PassportGivenDate
+        {
+            get => new(Investor.PassportDateGiven);
+            set
+            {
+                if (value == null)
+                    return;
+
+                _passportGivenDate = value;
+                Investor.PassportDateGiven = _passportGivenDate.Date;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public DateTimeOffset BirthDate
+        {
+            get => new(Investor.DateBirth);
+            set
+            {
+                if (value == null)
+                    return;
+
+                _birthDate = value;
+                Investor.DateBirth = _birthDate.Date;
+                this.RaisePropertyChanged();
+            }
         }
 
         public string? Card
@@ -103,6 +136,8 @@ namespace Legion.ViewModels
                 this.RaisePropertyChanged();
             }
         }
+
+        public List<string> Cities => _context.Investors.Select(i => i.City).Distinct().ToListAsync().Result;
 
         public ReactiveCommand<Unit, Unit> BackCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }

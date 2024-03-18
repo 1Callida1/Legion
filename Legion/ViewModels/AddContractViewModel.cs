@@ -19,8 +19,16 @@ namespace Legion.ViewModels
 {
     public class AddContractViewModel : ViewModelBase
     {
-        private ApplicationDbContext _context;
+        private ApplicationDbContext _context = null!;
         private Models.Contract _contract = null!;
+        private bool _backgroundPaneVisible = false;
+        private DateTimeOffset _startDateTime = new(DateTime.Now);
+        private DateTimeOffset _endDateTime = new(DateTime.Now);
+
+        public AddContractViewModel()
+        {
+            BackgroundPaneVisible = false;
+        }
 
         public AddContractViewModel(Models.Contract contract, ApplicationDbContext context, IScreen? hostScreen = null) : this(
             context, hostScreen)
@@ -51,18 +59,38 @@ namespace Legion.ViewModels
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
             _context = context;
             Contract = new Models.Contract() { Manager = Locator.Current.GetService<User>()!};
+            Contract.DateStart = DateTime.Now;
+            Contract.DateEnd = DateTime.Now;
             SubmitText = "Добавить новый договор";
             _context.ContractTypes.Load();
             _context.ContractStatuses.Load();
             Contract.ContractType = ContractTypes.First();
             Contract.Status = ContractStatuses.First();
-            Investor CalledInvestor = null!;
-            Investor InvestorInvited = null!;
 
-            SearchInvestorCommand = ReactiveCommand.Create(() =>
+            ShowDialog = new Interaction<InvestorSerachViewModel, Investor?>();
+
+            SearchInvestorCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                var a = HostScreen.Router.CurrentViewModel;
-                HostScreen.Router.Navigate.Execute(new InvestorSerachViewModel(context, ref InvestorInvited));
+                BackgroundPaneVisible = true;
+                Investor? result = await ShowDialog.Handle(new InvestorSerachViewModel(context));
+                BackgroundPaneVisible = false;
+                if (result != null && !string.IsNullOrWhiteSpace(result.FirstName))
+                    Contract.Investor = result;
+
+                this.RaisePropertyChanged(nameof(InvestorData));
+            });
+
+            SearchRefferalCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                BackgroundPaneVisible = true;
+                Investor? result = await ShowDialog.Handle(new InvestorSerachViewModel(context));
+                BackgroundPaneVisible = false;
+                if (result != null && !string.IsNullOrWhiteSpace(result.FirstName))
+                {
+                    Contract.Referral = new Referral() { Bonus = 3, BonusClaim = false, InvestorCalled = result, InvestorInvited = Contract.Investor };
+                }
+
+                this.RaisePropertyChanged(nameof(RefferalData));
             });
 
             BackCommand = ReactiveCommand.Create(() =>
@@ -77,16 +105,47 @@ namespace Legion.ViewModels
                 try
                 {
                     _context.SaveChanges();
+                    HostScreen.Router.NavigateBack.Execute();
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex.Message);
                 }
-                finally
-                {
-                    BackCommand.Execute();
-                }
             });
+        }
+
+        public DateTimeOffset StartDateTime
+        {
+            get => new(Contract.DateStart);
+            set
+            {
+                if (value == null)
+                    return;
+
+                _startDateTime = value;
+                Contract.DateStart = _startDateTime.Date;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public DateTimeOffset EndDateTime
+        {
+            get => new(Contract.DateEnd);
+            set
+            {
+                if(value == null)
+                    return;
+
+                _endDateTime = value;
+                Contract.DateEnd = _endDateTime.Date;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public bool BackgroundPaneVisible
+        {
+            get => _backgroundPaneVisible;
+            set => this.RaiseAndSetIfChanged(ref _backgroundPaneVisible, value);
         }
 
         public int? Amount
@@ -106,15 +165,42 @@ namespace Legion.ViewModels
             }
         }
 
+        public string InvestorData
+        {
+            get
+            {
+                if (Contract.Investor != null && !string.IsNullOrWhiteSpace(Contract.Investor.LastName))
+                    return
+                        $"{Contract.Investor.LastName} {Contract.Investor.FirstName[0]}.{Contract.Investor.MiddleName[0]}. {Contract.Investor.PassprotSeries} {Contract.Investor.PassprotNumber}";
+                
+                return string.Empty;
+            }
+        }
+
+        public string RefferalData
+        {
+            get
+            {
+                if (Contract.Referral != null && !string.IsNullOrWhiteSpace(Contract.Referral.InvestorCalled.LastName))
+                    return
+                        $"{Contract.Referral.InvestorCalled.LastName} {Contract.Referral.InvestorCalled.FirstName[0]}.{Contract.Referral.InvestorCalled.MiddleName[0]}. {Contract.Referral.InvestorCalled.PassprotSeries} {Contract.Referral.InvestorCalled.PassprotNumber}";
+
+                return string.Empty;
+            }
+        }
+
         public ObservableCollection<ContractStatus> ContractStatuses => _context.ContractStatuses.Local.ToObservableCollection();
         public ObservableCollection<ContractType> ContractTypes => _context.ContractTypes.Local.ToObservableCollection();
 
-        public ReactiveCommand<Unit, Unit> SearchInvestorCommand { get; }
-        public ReactiveCommand<Unit, Unit> BackCommand { get; }
-        public ReactiveCommand<Unit, Unit> SaveCommand { get; }
-        public string SubmitText { get; protected set; }
+        public ReactiveCommand<Unit, Unit> SearchInvestorCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> SearchRefferalCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> SaveCommand { get; } = null!;
+        public string SubmitText { get; protected set; } = null!;
         public Models.Contract Contract { get => _contract; set => this.RaiseAndSetIfChanged(ref _contract, value); }
 
-        public sealed override IScreen HostScreen { get; set; }
+        public Interaction<InvestorSerachViewModel, Investor?> ShowDialog { get; } = null!;
+
+        public sealed override IScreen HostScreen { get; set; } = null!;
     }
 }

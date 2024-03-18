@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,12 +10,16 @@ namespace Legion.Models
 {
     public class Contract
     {
-        public string Id { get; set; } = string.Empty;
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, Column(Order = 0)]
+        public int Id { get; set; }
+
+        public string CustomId { get; set; } = string.Empty;
         public ContractStatus Status { get; set; } = null!;
         public int InvestorId { get; set; }
         public Investor Investor { get; set; } = null!;
-        public DateOnly DateStart { get; set; } = DateOnly.FromDateTime(DateTime.Now);
-        public DateOnly DateEnd { get; set; }
+        public DateTime DateStart { get; set; } = DateTime.Now;
+        public DateTime DateEnd { get; set; }
         public int Amount { get; set; }
         public ContractType ContractType { get; set; } = null!;
         public User Manager { get; set; } = null!;

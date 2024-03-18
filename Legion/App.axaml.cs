@@ -74,10 +74,10 @@ namespace Legion
 
                 if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
                 {
-                    _context.Users.Add(new User() { Password = "123", UserName = "admin" });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "testFormat", Bet = 10, Formula = "asd", Period = 12, TypeName = "test type" });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "наебалово№#", Bet = 0, Formula = "хуй/0", Period = 12, TypeName = "Наебалово" });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "пизда№#", Bet = 0, Formula = "хуй*-10", Period = 6, TypeName = "Еще и должен бушь" });
+                    _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba"});
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "testFormat", Bet = 10, Formula = "x*1.1", Period = 12, TypeName = "test type" });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "2№#", Bet = 0, Formula = "x*1.5", Period = 12, TypeName = "Тип 2" });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "3№#", Bet = 0, Formula = "x*2", Period = 6, TypeName = "Тип 3" });
                     _context.ContractStatuses.Add(new ContractStatus() {Status = "Открыт"});
                     _context.ContractStatuses.Add(new ContractStatus() {Status = "Закрыт"});
                     _context.ContractStatuses.Add(new ContractStatus() {Status = "Приостановлен"});
@@ -91,9 +91,10 @@ namespace Legion
                 _context.SaveChanges();
 
                 Locator.CurrentMutable.RegisterConstant<IScreen>(new MainWindowViewModel(_context));
+                Locator.CurrentMutable.RegisterConstant(new MainWindow());
 
-                desktop.MainWindow = host.Services.GetRequiredService<MainWindow>();
-                desktop.MainWindow.DataContext = Locator.Current.GetService<IScreen>();
+                desktop.MainWindow = Locator.Current.GetService<MainWindow>();
+                desktop.MainWindow!.DataContext = Locator.Current.GetService<IScreen>();
                 ((MainWindowViewModel)desktop.MainWindow.DataContext!).GoNext.Execute();
 
                 //desktop.MainWindow = new InvestorsView()

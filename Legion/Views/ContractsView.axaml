@@ -9,8 +9,13 @@
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
 			 xmlns:vm="using:Legion.ViewModels"
 			 xmlns:models="clr-namespace:Legion.Models"
-			 x:DataType="vm:ContractsViewModel">
-	<Grid>
+			 xmlns:converters="clr-namespace:Legion.Helpers.Converters"
+             x:DataType="vm:ContractsViewModel">
+		<UserControl.Resources>
+      <converters:ContractInvestorConverter x:Key="ContractInvestorConverter"></converters:ContractInvestorConverter>
+      <converters:DateTimeToDateConverter x:Key="DateConverter"></converters:DateTimeToDateConverter>
+        </UserControl.Resources>
+    <Grid>
 		<Border Background="#ffff" CornerRadius="20"/>
 		<SplitView VerticalAlignment="Bottom" Height="645" ZIndex="1" Name="SVLeft" OpenPaneLength="260"
                    CompactPaneLength="0" Background="#ffff" HorizontalAlignment="Left" DisplayMode="CompactInline" IsPaneOpen="{Binding IsPaneOpen}">
@@ -73,20 +78,21 @@
 							<RowDefinition Height="0.1*" />
 							<RowDefinition />
 						</Grid.RowDefinitions>
-						<DataGrid Name="ContractGrid" ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20"
+						<DataGrid Name="ContractGrid" ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20" Height="700"
                                   ItemsSource="{Binding Contracts}" AutoGenerateColumns="False"
                                   GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray" IsReadOnly="True"
                                   HorizontalScrollBarVisibility="Visible">
 							<DataGrid.Columns>
-								<DataGridTextColumn Header="Номер договора" Binding="{Binding Path=Id}" />
-								<DataGridTextColumn Header="Статус" Binding="{Binding Path=Status}" />
-								<DataGridTextColumn Header="Вкладчик" Binding="{Binding Path=Investor}" />
-								<DataGridTextColumn Header="Дата начала" Binding="{Binding Path=DateStart}" />
-								<DataGridTextColumn Header="Дата окончания" Binding="{Binding Path=DateEnd}" />
+                <DataGridTextColumn Header="Номер договора" Binding="{Binding Path=CustomId}" />
+                <DataGridTextColumn Header="Менеджер" Binding="{Binding Path=Manager.EmployerFirstName}" />
+                <DataGridTextColumn Header="Статус" Binding="{Binding Path=Status.Status}" />
+								<DataGridTextColumn Header="Вкладчик" Binding="{Binding ., Converter={StaticResource ContractInvestorConverter}}" />
+								<DataGridTextColumn Header="Дата начала" Binding="{Binding Path=DateStart, Converter={StaticResource DateConverter}}" />
+								<DataGridTextColumn Header="Дата окончания" Binding="{Binding Path=DateEnd, Converter={StaticResource DateConverter}}" />
 								<DataGridTextColumn Header="Сумма вклада" Binding="{Binding Path=Amount}" />
 								<DataGridTextColumn Header="Тип вклада" Binding="{Binding Path=ContractType.TypeName}" />
 								<DataGridTextColumn Header="Повторный?" Binding="{Binding Path=Repeated}" />
-								<DataGridTextColumn Header="Реферал" Binding="{Binding Path=Referral}" />
+								<DataGridTextColumn Header="Реферал" Binding="{Binding Path=Referral.InvestorCalled.FirstName}" />
 								<DataGridTextColumn Header="Заметка" Binding="{Binding Path=Note}" />
 							</DataGrid.Columns>
 							<DataGrid.Resources>

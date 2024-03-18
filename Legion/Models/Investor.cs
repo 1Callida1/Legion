@@ -14,11 +14,11 @@ namespace Legion.Models
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string MiddleName { get; set; } = null!;
-        public DateOnly DateBirth { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateTime DateBirth { get; set; } = DateTime.Now;
         public int PassprotSeries { get; set; }
         public int PassprotNumber { get; set; }
         public string Given { get; set; } = null!;
-        public DateOnly PassportDateGiven { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateTime PassportDateGiven { get; set; } = DateTime.Now;
         public string PassportUnitCode { get; set; } = null!;
         public string PassportRegistration {  get; set; } = null!;
         public string City { get; set; } = null!;
