@@ -27,7 +27,7 @@ namespace Legion.ViewModels
         private ObservableCollection<Investor> _investors = null!;
         private Investor _selectedInvestor = null!;
 
-        public InvestorSerachViewModel(ApplicationDbContext context, ref Investor investor ,IScreen? hostScreen = null)
+        public InvestorSerachViewModel(ApplicationDbContext context,IScreen? hostScreen = null)
         {
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
             _context = context;

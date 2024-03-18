@@ -22,6 +22,8 @@ namespace Legion.ViewModels
         private ApplicationDbContext _context = null!;
         private Models.Contract _contract = null!;
         private bool _backgroundPaneVisible = false;
+        private DateTimeOffset _startDateTime = new(DateTime.Now);
+        private DateTimeOffset _endDateTime = new(DateTime.Now);
 
         public AddContractViewModel()
         {
@@ -57,6 +59,8 @@ namespace Legion.ViewModels
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
             _context = context;
             Contract = new Models.Contract() { Manager = Locator.Current.GetService<User>()!};
+            Contract.DateStart = DateTime.Now;
+            Contract.DateEnd = DateTime.Now;
             SubmitText = "Добавить новый договор";
             _context.ContractTypes.Load();
             _context.ContractStatuses.Load();
@@ -76,6 +80,19 @@ namespace Legion.ViewModels
                 this.RaisePropertyChanged(nameof(InvestorData));
             });
 
+            SearchRefferalCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                BackgroundPaneVisible = true;
+                Investor? result = await ShowDialog.Handle(new InvestorSerachViewModel(context));
+                BackgroundPaneVisible = false;
+                if (result != null && !string.IsNullOrWhiteSpace(result.FirstName))
+                {
+                    Contract.Referral = new Referral() { Bonus = 3, BonusClaim = false, InvestorCalled = result, InvestorInvited = Contract.Investor };
+                }
+
+                this.RaisePropertyChanged(nameof(RefferalData));
+            });
+
             BackCommand = ReactiveCommand.Create(() =>
             {
                 HostScreen.Router.NavigateBack.Execute();
@@ -88,16 +105,41 @@ namespace Legion.ViewModels
                 try
                 {
                     _context.SaveChanges();
+                    HostScreen.Router.NavigateBack.Execute();
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex.Message);
                 }
-                finally
-                {
-                    BackCommand.Execute();
-                }
             });
+        }
+
+        public DateTimeOffset StartDateTime
+        {
+            get => new(Contract.DateStart);
+            set
+            {
+                if (value == null)
+                    return;
+
+                _startDateTime = value;
+                Contract.DateStart = _startDateTime.Date;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public DateTimeOffset EndDateTime
+        {
+            get => new(Contract.DateEnd);
+            set
+            {
+                if(value == null)
+                    return;
+
+                _endDateTime = value;
+                Contract.DateEnd = _endDateTime.Date;
+                this.RaisePropertyChanged();
+            }
         }
 
         public bool BackgroundPaneVisible
@@ -133,12 +175,25 @@ namespace Legion.ViewModels
                 
                 return string.Empty;
             }
-        } 
+        }
+
+        public string RefferalData
+        {
+            get
+            {
+                if (Contract.Referral != null && !string.IsNullOrWhiteSpace(Contract.Referral.InvestorCalled.LastName))
+                    return
+                        $"{Contract.Referral.InvestorCalled.LastName} {Contract.Referral.InvestorCalled.FirstName[0]}.{Contract.Referral.InvestorCalled.MiddleName[0]}. {Contract.Referral.InvestorCalled.PassprotSeries} {Contract.Referral.InvestorCalled.PassprotNumber}";
+
+                return string.Empty;
+            }
+        }
 
         public ObservableCollection<ContractStatus> ContractStatuses => _context.ContractStatuses.Local.ToObservableCollection();
         public ObservableCollection<ContractType> ContractTypes => _context.ContractTypes.Local.ToObservableCollection();
 
         public ReactiveCommand<Unit, Unit> SearchInvestorCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> SearchRefferalCommand { get; } = null!;
         public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
         public ReactiveCommand<Unit, Unit> SaveCommand { get; } = null!;
         public string SubmitText { get; protected set; } = null!;

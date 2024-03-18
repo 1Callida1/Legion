@@ -24,6 +24,8 @@ namespace Legion.ViewModels
     {
         private ApplicationDbContext _context;
         private Investor _investor = null!;
+        private DateTimeOffset _passportGivenDate;
+        private DateTimeOffset _birthDate;
 
         public AddInvestorViewModel(Investor investor, ApplicationDbContext context, IScreen? hostScreen = null) : this(
             context, hostScreen)
@@ -95,6 +97,34 @@ namespace Legion.ViewModels
                     return false;
                 },
                 "Номер карты 16 или 18 цифр");
+        }
+
+        public DateTimeOffset PassportGivenDate
+        {
+            get => new(Investor.PassportDateGiven);
+            set
+            {
+                if (value == null)
+                    return;
+
+                _passportGivenDate = value;
+                Investor.PassportDateGiven = _passportGivenDate.Date;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public DateTimeOffset BirthDate
+        {
+            get => new(Investor.DateBirth);
+            set
+            {
+                if (value == null)
+                    return;
+
+                _birthDate = value;
+                Investor.DateBirth = _birthDate.Date;
+                this.RaisePropertyChanged();
+            }
         }
 
         public string? Card

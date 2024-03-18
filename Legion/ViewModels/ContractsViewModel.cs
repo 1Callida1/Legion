@@ -23,17 +23,14 @@ namespace Legion.ViewModels
     {
         private ApplicationDbContext _context;
         private bool _isPaneOpen;
-
-        public ContractsViewModel()
-        {
-            _context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
-        }
+        private ObservableCollection<Models.Contract> _contracts;
 
         public ContractsViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             _context = context;
             _isPaneOpen = false;
             _context.Contracts.Load();
+            Contracts = _context.Contracts.Local.ToObservableCollection();
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
 
             PaneCommand = ReactiveCommand.Create(() =>
@@ -71,7 +68,12 @@ namespace Legion.ViewModels
             });
         }
 
-        public ObservableCollection<Models.Contract> Contracts => _context.Contracts.Local.ToObservableCollection();
+
+        public ObservableCollection<Models.Contract> Contracts
+        {
+            get => _contracts;
+            set => this.RaiseAndSetIfChanged(ref _contracts, value);
+        }
         public sealed override IScreen HostScreen { get; set; } = null!;
 
         public bool IsPaneOpen
