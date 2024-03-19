@@ -13,6 +13,6 @@ namespace Legion.Models
         public Investor InvestorInvited { get; set; } = null!;
         public int Bonus { get; set; }
         public bool BonusClaim {  get; set; }
-        public string Note { get; set; } = null!;
+        public string? Note { get; set; } = string.Empty;
     }
 }

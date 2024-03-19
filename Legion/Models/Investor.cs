@@ -25,6 +25,7 @@ namespace Legion.Models
         public string Phone { get; set; } = null!;
         public string Email {  get; set; } = null!;
         public bool PayType { get; set; }
+        public bool IsCurrentInvestor { get; set; } = false;
         public string Note { get; set; } = null!;
         public string? CardNumber { get; set; }
 

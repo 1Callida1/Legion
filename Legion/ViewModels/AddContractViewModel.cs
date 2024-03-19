@@ -87,7 +87,12 @@ namespace Legion.ViewModels
                 BackgroundPaneVisible = false;
                 if (result != null && !string.IsNullOrWhiteSpace(result.FirstName))
                 {
-                    Contract.Referral = new Referral() { Bonus = 3, BonusClaim = false, InvestorCalled = result, InvestorInvited = Contract.Investor };
+                    _context.Referrals.Add(new Referral()
+                    {
+                        Bonus = 3, BonusClaim = false, InvestorCalled = result, InvestorInvited = Contract.Investor
+                    });
+                    _context.SaveChanges();
+                    
                 }
 
                 this.RaisePropertyChanged(nameof(RefferalData));
