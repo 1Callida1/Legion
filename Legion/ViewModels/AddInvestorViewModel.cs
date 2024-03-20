@@ -163,7 +163,7 @@ namespace Legion.ViewModels
             this.ValidationRule(
                 x => x.PassportGiven,
                 pNumber => !string.IsNullOrWhiteSpace(pNumber),
-                "Некорректный орган");
+                "Некорректное значение");
         }
 
         public DateTimeOffset PassportGivenDate
