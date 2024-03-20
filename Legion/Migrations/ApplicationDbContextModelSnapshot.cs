@@ -53,7 +53,6 @@ namespace Legion.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("ReferralId")
@@ -163,7 +162,6 @@ namespace Legion.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Given")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("IsCurrentInvestor")
@@ -178,7 +176,6 @@ namespace Legion.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("PassportDateGiven")
@@ -188,15 +185,12 @@ namespace Legion.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PassportUnitCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PassprotNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PassprotSeries")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("PayType")
@@ -293,9 +287,6 @@ namespace Legion.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Admin")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("EmployerFirstName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -308,9 +299,31 @@ namespace Legion.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("UserRoleId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("UserRoleId");
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Legion.Models.UserRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("Legion.Models.Contract", b =>
@@ -388,6 +401,17 @@ namespace Legion.Migrations
                         .IsRequired();
 
                     b.Navigation("Contract");
+                });
+
+            modelBuilder.Entity("Legion.Models.User", b =>
+                {
+                    b.HasOne("Legion.Models.UserRole", "UserRole")
+                        .WithMany()
+                        .HasForeignKey("UserRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserRole");
                 });
 
             modelBuilder.Entity("Legion.Models.Investor", b =>

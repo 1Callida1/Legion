@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Serilog;
 using System.Diagnostics.Contracts;
+using Legion.Helpers.Calculations;
 using Microsoft.EntityFrameworkCore;
 using Splat;
 
@@ -62,10 +63,14 @@ namespace Legion.ViewModels
             Contract.DateStart = DateTime.Now;
             Contract.DateEnd = DateTime.Now;
             SubmitText = "Добавить новый договор";
+            _context.Investors.Load();
             _context.ContractTypes.Load();
             _context.ContractStatuses.Load();
             Contract.ContractType = ContractTypes.First();
-            Contract.Status = ContractStatuses.First();
+            Contract.Status = ContractStatuses.First(s => s.Status == "Открыт");
+            CustomId = ContractId.Generate(Contract.ContractType.ContractIdFormat,
+                _context.Contracts.Count(c => c.ContractType.Id == Contract.ContractType.Id));
+            EndDateTime = DateTime.Now.AddMonths(Contract.ContractType.Period);
 
             ShowDialog = new Interaction<InvestorSerachViewModel, Investor?>();
 
@@ -78,6 +83,7 @@ namespace Legion.ViewModels
                     Contract.Investor = result;
 
                 this.RaisePropertyChanged(nameof(InvestorData));
+                this.RaisePropertyChanged(nameof(Contract));
             });
 
             SearchRefferalCommand = ReactiveCommand.CreateFromTask(async () =>
@@ -99,6 +105,7 @@ namespace Legion.ViewModels
                 }
 
                 this.RaisePropertyChanged(nameof(RefferalData));
+                this.RaisePropertyChanged(nameof(Contract));
             });
 
             BackCommand = ReactiveCommand.Create(() =>
@@ -120,6 +127,29 @@ namespace Legion.ViewModels
                     Log.Error(ex.Message);
                 }
             });
+        }
+
+        public string CustomId
+        {
+            get => Contract.CustomId;
+            set
+            {
+                Contract.CustomId = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public ContractType SelectedContractType
+        {
+            get => Contract.ContractType;
+            set
+            {
+                Contract.ContractType = value;
+                EndDateTime = DateTime.Now.AddMonths(Contract.ContractType.Period);
+                CustomId = ContractId.Generate(value.ContractIdFormat,
+                    _context.Contracts.Count(c => c.ContractType.Id == value.Id));
+                this.RaisePropertyChanged();
+            }
         }
 
         public DateTimeOffset StartDateTime

@@ -13,6 +13,7 @@ namespace Legion.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key, Column(Order = 0)]
         public int Id { get; set; }
+        
         public UserRole UserRole {  get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }

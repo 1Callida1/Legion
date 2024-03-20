@@ -16,8 +16,7 @@ namespace Legion.Models
 
         public string CustomId { get; set; } = string.Empty;
         public ContractStatus Status { get; set; } = null!;
-        public int InvestorId { get; set; }
-        public Investor Investor { get; set; } = null!;
+        public Investor Investor { get; set; }
         public DateTime DateStart { get; set; } = DateTime.Now;
         public DateTime DateEnd { get; set; }
         public int Amount { get; set; }
@@ -25,6 +24,6 @@ namespace Legion.Models
         public User Manager { get; set; } = null!;
         public Repeat? Repeated { get; set; }
         public Referral? Referral { get; set; } = null!;
-        public string Note {  get; set; } = null!;
+        public string? Note {  get; set; } = null!;
     }
 }
