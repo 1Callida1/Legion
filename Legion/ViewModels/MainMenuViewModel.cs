@@ -46,11 +46,19 @@ namespace Legion.ViewModels
                 HostScreen.Router.Navigate.Execute(new ReferralViewModel(_context));
 
             });
+
+            UsersCommand = ReactiveCommand.Create(() =>
+            {
+
+                HostScreen.Router.Navigate.Execute(new UserViewModel(_context));
+
+            });
         }
 
         public ReactiveCommand<Unit, Unit> InvestorsCommand { get; }
         public ReactiveCommand<Unit, Unit> ContractsCommand { get; }
         public ReactiveCommand<Unit, Unit> ReferralsCommand { get; }
+        public ReactiveCommand<Unit, Unit> UsersCommand { get; }
         public sealed override IScreen HostScreen { get; set; }
     }
 }

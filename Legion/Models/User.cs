@@ -12,7 +12,7 @@ namespace Legion.Models
     {
         public User()
         {
-            Admin = false;
+            //Admin = false;
             UserName = string.Empty;
             Password = string.Empty;
             EmployerFirstName = string.Empty;

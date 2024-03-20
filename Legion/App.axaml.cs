@@ -75,6 +75,7 @@ namespace Legion
                 if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
                 {
                     _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba"});
+                    _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba" });
                     _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "testFormat", Bet = 10, Formula = "x*1.1", Period = 12, TypeName = "test type" });
                     _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "2π#", Bet = 0, Formula = "x*1.5", Period = 12, TypeName = "“ËÔ 2" });
                     _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "3π#", Bet = 0, Formula = "x*2", Period = 6, TypeName = "“ËÔ 3" });
