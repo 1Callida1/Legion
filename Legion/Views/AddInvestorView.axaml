@@ -126,19 +126,26 @@
                 <Label Content="Код подразделения" Grid.Column="2" Grid.Row="7" Margin="7" Foreground="Black" />
                 <Label Content="Место регистрации" Grid.Column="2" Grid.Row="8" Margin="7" Foreground="Black" />
                 <DatePicker Grid.Column="3" Grid.Row="6" DayFormat="ddd dd" Foreground="Black" SelectedDate="{Binding PassportGivenDate}"/>
-                <MaskedTextBox Mask="999-999" Grid.Column="3" Grid.Row="7" Margin="7" Height="20"
-                               Background="Gainsboro" CornerRadius="20" Foreground="Black"
-                               Text="{Binding Investor.PassportUnitCode}" />
+
+              <Border Grid.Column="3" Grid.Row="7" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
+                  <MaskedTextBox Mask="999-999" Margin="7" Height="28"
+                                 Background="Gainsboro" Foreground="Black"
+                                 Text="{Binding Investor.PassportUnitCode}" />
+              </Border>
+
+                <Border Grid.Column="3" Grid.Row="8" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
+                    <TextBox Margin="7" Height="28"
+                             Background="Gainsboro" Foreground="Black"
+                             Text="{Binding Investor.PassportRegistration}" />
+                </Border>
 
                 <Border Grid.Column="3" Grid.Row="10" CornerRadius="20" VerticalAlignment="Top" Height="100"
                         Background="Gainsboro" Margin="7" Padding="10, 0">
-                  <TextBox Height="95" Background="Gainsboro"
-                           Foreground="Black" AcceptsReturn="True" TextWrapping="Wrap"
-                           Text="{Binding Investor.Note}" />
+                    <TextBox Height="95" Background="Gainsboro"
+                             Foreground="Black" AcceptsReturn="True" TextWrapping="Wrap"
+                             Text="{Binding Investor.Note}" />
                 </Border>
 
-                <TextBox Grid.Column="3" Grid.Row="8" Margin="7" Height="20" Background="Gainsboro"
-                         CornerRadius="20" Foreground="Black" Text="{Binding Investor.PassportRegistration}" />
                 <Label Content="Особые данные" Grid.Column="1" Grid.Row="9" Margin="7" Foreground="Black"
                        FontSize="15" FontWeight="Bold" />
                 <Label Content="Банковская карта" Grid.Column="0" Grid.Row="10" Margin="7" Foreground="Black" />
@@ -146,7 +153,7 @@
 
                 <Border Grid.Column="1" Grid.Row="10" CornerRadius="20" VerticalAlignment="Top" Height="30"
                         Background="Gainsboro" Margin="7" Padding="10, 0">
-                    <TextBox Height="28" Background="Gainsboro" Foreground="Black" MaxLength="22" Text="{Binding Card}" />
+                    <TextBox Height="28" Background="Gainsboro" Foreground="Black" Text="{Binding Card}" />
                 </Border>
 
             </Grid>
