@@ -17,6 +17,7 @@ using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using ReactiveUI.Validation.Extensions;
 using Splat;
+using Material.Styles.Controls;
 
 namespace Legion.ViewModels
 {
@@ -71,6 +72,9 @@ namespace Legion.ViewModels
 
             SaveCommand = ReactiveCommand.Create(() =>
             {
+                if (!string.IsNullOrWhiteSpace(Investor.CardNumber))
+                    Investor.PayType = true;
+
                 _context.Investors.Add(Investor);
 
                 try
@@ -82,7 +86,7 @@ namespace Legion.ViewModels
                 {
                     Log.Error(ex.Message);
                 }
-            });
+            }, this.IsValid());
 
             this.ValidationRule(
                 x => x.Card,
@@ -91,12 +95,89 @@ namespace Legion.ViewModels
                     if (string.IsNullOrEmpty(card))
                         return true;
 
-                    if (Regex.IsMatch(card, "(\\d{4} ){4}.*"))
+                    if (Regex.IsMatch(card, "(\\d{4} ){3}\\d{4}.*"))
                         return true;
 
                     return false;
                 },
                 "Номер карты 16 или 18 цифр");
+
+            this.ValidationRule(
+                x => x.Card,
+                card =>
+                {
+                    if (string.IsNullOrEmpty(card))
+                        return true;
+
+                    if (Regex.IsMatch(card, "(\\d{4} ){3}\\d{4}.*"))
+                        return true;
+
+                    return false;
+                },
+                "Номер карты 16 или 18 цифр");
+
+            this.ValidationRule(
+                x => x.FirstName,
+                firstName => !string.IsNullOrWhiteSpace(firstName),
+                "Некорректное имя");
+
+            this.ValidationRule(
+                x => x.LastName,
+                lastName => !string.IsNullOrWhiteSpace(lastName),
+                "Некорректная фамилия");
+
+            this.ValidationRule(
+                x => x.MiddleName,
+                middleName => !string.IsNullOrWhiteSpace(middleName),
+                "Некорректное отчество");
+
+            this.ValidationRule(
+                x => x.City,
+                city => !string.IsNullOrWhiteSpace(city),
+                "Некорректный город");
+
+            this.ValidationRule(
+                x => x.Phone,
+                phone => !string.IsNullOrWhiteSpace(phone),
+                "Некорректный телефон");
+
+            this.ValidationRule(
+                x => x.Email,
+                firstName =>
+                {
+                    if (!string.IsNullOrWhiteSpace(firstName) && Regex.IsMatch(Email, ".*@.*\\..*"))
+                        return true;
+
+                    return false;
+                },
+                "Некорректный Email");
+
+            this.ValidationRule(
+                x => x.PassportSeries,
+                pSeries =>
+                {
+                    if (!string.IsNullOrWhiteSpace(pSeries) && Regex.IsMatch(pSeries, "\\d{4}"))
+                        return true;
+
+                    return false;
+                },
+                "Некорректная серия");
+
+            this.ValidationRule(
+                x => x.PassportNumber,
+                pNumber =>
+                {
+                    if (!string.IsNullOrWhiteSpace(pNumber) && Regex.IsMatch(pNumber, "\\d{6}"))
+                        return true;
+
+                    return false;
+                },
+                "Некорректный номер");
+
+            this.ValidationRule(
+                x => x.PassportGiven,
+                pNumber => !string.IsNullOrWhiteSpace(pNumber),
+                "Некорректный орган");
         }
 
         public DateTimeOffset PassportGivenDate
@@ -137,7 +218,123 @@ namespace Legion.ViewModels
             }
         }
 
-        public List<string> Cities => _context.Investors.Select(i => i.City).Distinct().ToListAsync().Result;
+        public string? FirstName
+        {
+            get => Investor.FirstName;
+            set
+            {
+                if(value == null)
+                    return;
+
+                Investor.FirstName = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public string? LastName
+        {
+            get => Investor.LastName;
+            set
+            {
+                if(value == null)
+                    return;
+                Investor.LastName = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public string? MiddleName
+        {
+            get => Investor.MiddleName;
+            set
+            {
+                if (value == null)
+                    return;
+
+                Investor.MiddleName = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public string? City
+        {
+            get => Investor.City;
+            set
+            {
+                if (value == null)
+                    return;
+
+                Investor.City = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public string? Phone
+        {
+            get => Investor.Phone;
+            set
+            {
+                if (value == null)
+                    return;
+
+                Investor.Phone = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public string? Email
+        {
+            get => Investor.Email;
+            set
+            {
+                if (value == null)
+                    return;
+
+                Investor.Email = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public string? PassportSeries
+        {
+            get => Investor.PassprotSeries;
+            set
+            {
+                if (value == null)
+                    return;
+
+                Investor.PassprotSeries = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public string? PassportNumber
+        {
+            get => Investor.PassprotNumber;
+            set
+            {
+                if (value == null)
+                    return;
+
+                Investor.PassprotNumber = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public string? PassportGiven
+        {
+            get => Investor.Given;
+            set
+            {
+                if (value == null)
+                    return;
+
+                Investor.Given = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public List<string> Cities => _context.Investors.Select(i => i.City).Distinct().ToList();
 
         public ReactiveCommand<Unit, Unit> BackCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }

@@ -50,7 +50,7 @@ namespace Legion.ViewModels
             SearchCommand = ReactiveCommand.Create(() =>
             {
                 Investors = new ObservableCollection<Investor>();
-                SearchText.Split(' ').ToList().ForEach(word => Investors.Add(_context.Investors.Where(inv => inv.LastName.Contains(word) || inv.FirstName.Contains(word) || inv.MiddleName.Contains(word) || inv.Email.Contains(word) || inv.Phone.Contains(word) || inv.City.Contains(word) || inv.DateBirth.ToString().Contains(word))));
+                SearchText.Split(' ').ToList().ForEach(word => Investors.Add(_context.Investors.Where(inv => inv.LastName.ToLower().Contains(word.ToLower()) || inv.FirstName.ToLower().Contains(word.ToLower()) || inv.MiddleName.ToLower().Contains(word.ToLower()) || inv.Email.ToLower().Contains(word.ToLower()) || inv.Phone.ToLower().Contains(word.ToLower()) || inv.City.ToLower().Contains(word.ToLower()) || inv.DateBirth.ToString().Contains(word.ToLower()))));
                 Investors = new ObservableCollection<Investor>(Investors.Distinct());
             }, IsSearchTextExist);
 

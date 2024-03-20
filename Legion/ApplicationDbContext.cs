@@ -1,5 +1,6 @@
 ﻿using Legion.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Numerics;
 
 public class ApplicationDbContext : DbContext
@@ -7,6 +8,7 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
 
     public DbSet<User> Users { get; set; }
@@ -16,5 +18,5 @@ public class ApplicationDbContext : DbContext
     public DbSet<ContractType> ContractTypes { get; set; }
     public DbSet<Referral> Referrals { get; set; }
     public DbSet<RenewalContract> RenewalContracts { get; set; }
-    public DbSet<Repeated> Repeateds { get; set; }
+    public DbSet<Repeat> Repeats { get; set; }
 }
