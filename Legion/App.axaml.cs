@@ -74,8 +74,11 @@ namespace Legion
 
                 if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
                 {
-                    _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba"});
-                    _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba" });
+                    _context.UserRoles.Add(new UserRole() { Role = "Админ"});
+                    _context.UserRoles.Add(new UserRole() { Role = "Босс качалки" });
+                    _context.SaveChanges();
+                    _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Админ")) });
+                    _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Босс качалки")) });
                     _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "testFormat", Bet = 10, Formula = "x*1.1", Period = 12, TypeName = "test type" });
                     _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "2№#", Bet = 0, Formula = "x*1.5", Period = 12, TypeName = "Тип 2" });
                     _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "3№#", Bet = 0, Formula = "x*2", Period = 6, TypeName = "Тип 3" });

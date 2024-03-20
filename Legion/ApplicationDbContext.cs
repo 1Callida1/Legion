@@ -19,4 +19,5 @@ public class ApplicationDbContext : DbContext
     public DbSet<Referral> Referrals { get; set; }
     public DbSet<RenewalContract> RenewalContracts { get; set; }
     public DbSet<Repeat> Repeats { get; set; }
+    public DbSet<UserRole> UserRoles { get; set; }
 }

@@ -47,6 +47,7 @@
 								<DataGridTextColumn Header="Логин" Binding="{Binding Path=UserName}"/>
 								<DataGridTextColumn Header="Пароль" Binding="{Binding Path=Password}"/>
 								<DataGridTextColumn Header="Имя" Binding="{Binding Path=EmployerFirstName}"/>
+								<DataGridTextColumn Header="Роль" Binding="{Binding Path=UserRole.Role}"/>
 							</DataGrid.Columns>
 							<DataGrid.Styles>
 								<Style Selector="DataGridColumnHeader">
