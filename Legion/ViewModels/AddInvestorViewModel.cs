@@ -103,20 +103,6 @@ namespace Legion.ViewModels
                 "Номер карты 16 или 18 цифр");
 
             this.ValidationRule(
-                x => x.Card,
-                card =>
-                {
-                    if (string.IsNullOrEmpty(card))
-                        return true;
-
-                    if (Regex.IsMatch(card, "(\\d{4} ){3}\\d{4}.*"))
-                        return true;
-
-                    return false;
-                },
-                "Номер карты 16 или 18 цифр");
-
-            this.ValidationRule(
                 x => x.FirstName,
                 firstName => !string.IsNullOrWhiteSpace(firstName),
                 "Некорректное имя");
@@ -177,7 +163,7 @@ namespace Legion.ViewModels
             this.ValidationRule(
                 x => x.PassportGiven,
                 pNumber => !string.IsNullOrWhiteSpace(pNumber),
-                "Некорректный орган");
+                "Некорректное значение");
         }
 
         public DateTimeOffset PassportGivenDate
