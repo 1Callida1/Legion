@@ -23,8 +23,8 @@ namespace Legion.Models
         public int Amount { get; set; }
         public ContractType ContractType { get; set; } = null!;
         public User Manager { get; set; } = null!;
-        public Repeated? Repeated { get; set; }
-        public Referral Referral { get; set; } = null!;
+        public Repeat? Repeated { get; set; }
+        public Referral? Referral { get; set; } = null!;
         public string Note {  get; set; } = null!;
     }
 }

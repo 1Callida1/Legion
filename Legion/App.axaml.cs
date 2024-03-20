@@ -36,15 +36,15 @@ namespace Legion
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                IConfigurationBuilder builder = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                //IConfigurationBuilder builder = new ConfigurationBuilder()
+                //    .SetBasePath(Directory.GetCurrentDirectory())
+                //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-                Configuration = builder.Build();
+                //Configuration = builder.Build();
 
                 // Specifying the configuration for serilog
                 Log.Logger = new LoggerConfiguration() // initiate the logger configuration
-                    .ReadFrom.Configuration(Configuration) // connect serilog to our configuration folder
+                    //.ReadFrom.Configuration(Configuration) // connect serilog to our configuration folder
                     .Enrich.FromLogContext() //Adds more information to our logs from built in Serilog 
                     .WriteTo.Debug()
                     .WriteTo.File("Logs/debug.txt", rollingInterval: RollingInterval.Day,
@@ -56,14 +56,14 @@ namespace Legion
 
                 IHost host = Host.CreateDefaultBuilder() // Initializing the Host 
                    .ConfigureServices((context, services) => { // Adding the DI container for configuration
-                       services.AddSingleton(Configuration);
+                       //services.AddSingleton(Configuration);
 
                        services.AddSingleton<MainWindow>();
                        services.AddSingleton<LoginView>();
                        services.AddSingleton<InvestorsView>();
                        services.AddSingleton<InvestorsViewModel>();
 
-                       services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("name=ConnectionStrings:DefaultConnection"));
+                       services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql("Host=localhost;Database=main;Port=5432;Username=postgres;Password=postgres"));
                    })
                    .UseSerilog() // Add Serilog
                    .Build(); // Build the Host

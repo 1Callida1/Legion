@@ -82,12 +82,20 @@ namespace Legion.ViewModels
 
             SearchRefferalCommand = ReactiveCommand.CreateFromTask(async () =>
             {
+                Referral refer;
                 BackgroundPaneVisible = true;
                 Investor? result = await ShowDialog.Handle(new InvestorSerachViewModel(context));
                 BackgroundPaneVisible = false;
                 if (result != null && !string.IsNullOrWhiteSpace(result.FirstName))
                 {
-                    Contract.Referral = new Referral() { Bonus = 3, BonusClaim = false, InvestorCalled = result, InvestorInvited = Contract.Investor };
+                    refer = _context.Referrals.Add(new Referral()
+                    {
+                        Bonus = 3, BonusClaim = false, InvestorCalled = result, InvestorInvited = Contract.Investor
+                    }).Entity;
+                    _context.SaveChanges();
+
+                    Contract.Referral = refer;
+                    _context.SaveChanges();
                 }
 
                 this.RaisePropertyChanged(nameof(RefferalData));
