@@ -57,9 +57,8 @@
 				</Grid.ColumnDefinitions>
 				<Label Content="Логин" Grid.Column="0" Grid.Row="1" Margin="7" Foreground="Black" />
 				<Label Content="Пароль" Grid.Column="0" Grid.Row="2" Margin="7" Foreground="Black" />
-				<Label Content="Имя" Grid.Column="0" Grid.Row="3" Margin="7" Foreground="Black" />
-				<Label Content="Роль" Grid.Column="0" Grid.Row="4" Margin="7" Foreground="Black" />
-				
+				<Label Content="Роль" Grid.Column="0" Grid.Row="3" Margin="7" Foreground="Black" />
+				<Label Content="Имя" Grid.Column="0" Grid.Row="4" Margin="7" Foreground="Black" />
 				</Grid>
 		</StackPanel>
 	</Grid>
