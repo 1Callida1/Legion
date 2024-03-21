@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using Legion.ViewModels;
 using ReactiveUI;
+using Splat;
 using System;
 
 namespace Legion.Views
@@ -12,8 +13,10 @@ namespace Legion.Views
     {
         public ContractsView()
         {
-            this.WhenActivated(disposables => { });
             AvaloniaXamlLoader.Load(this);
+
+            this.WhenActivated(action =>
+                action(ViewModel!.ShowDialog.RegisterHandler(Locator.Current.GetService<MainWindow>()!.DoShowMoneyDialogAsync)));
         }
     }
 }

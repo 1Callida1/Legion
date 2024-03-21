@@ -52,6 +52,8 @@ namespace Legion.ViewModels
                 Contracts = new ObservableCollection<Contract>(Contracts.Distinct());
             }, IsSearchTextExist);
 
+            ShowDialog = new Interaction<AddIntegerViewModel, object>();
+
             PaneCommand = ReactiveCommand.Create(() =>
             {
                 IsPaneOpen = !IsPaneOpen;
@@ -84,9 +86,25 @@ namespace Legion.ViewModels
                 //TODO: Распечатать бланк закрытия договора
             });
 
-            DataGridProlongationActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
+            DataGridProlongationActionCommand = ReactiveCommand.CreateFromTask(async (Models.Contract ctr) =>
             {
-                //TODO: Распечатать бланк продления договора
+                object? result = await ShowDialog.Handle(new AddIntegerViewModel("Введите количество месяцев:", "Добавить"));
+
+                if (result == null)
+                    return;
+
+                ctr.DateEnd = ctr.DateEnd.AddMonths(int.Parse((string)result));
+                _context.Contracts.Update(ctr);
+                _context.SaveChanges();
+
+                Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
+                _context.RenewalContracts.ToList().ForEach(rc =>
+                {
+                    Contract tempContract = rc.Contract;
+                    tempContract.DateEnd = rc.NewDateEnd;
+
+                    Contracts.Add(tempContract);
+                });
             });
 
             DataGridShowPaymentsActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
@@ -94,9 +112,25 @@ namespace Legion.ViewModels
                 HostScreen.Router.Navigate.Execute(new AddContractViewModel(ctr, context));
             });
 
-            DataGridAddMoneyActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
+            DataGridAddMoneyActionCommand = ReactiveCommand.CreateFromTask(async (Contract ctr) =>
             {
-                //HostScreen.Router.Navigate.Execute(new AddContractViewModel(ctr, context));
+                object? result = await ShowDialog.Handle(new AddIntegerViewModel("Введите сумму пополнения:", "Пополнить"));
+
+                if (result == null)
+                    return;
+
+                ctr.Amount += int.Parse((string)result);
+                _context.Contracts.Update(ctr);
+                _context.SaveChanges();
+
+                Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
+                _context.RenewalContracts.ToList().ForEach(rc =>
+                {
+                    Contract tempContract = rc.Contract;
+                    tempContract.DateEnd = rc.NewDateEnd;
+
+                    Contracts.Add(tempContract);
+                });
             });
 
             DataGridPrintActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
@@ -152,7 +186,9 @@ namespace Legion.ViewModels
         
         public ReactiveCommand<Unit, Unit> SearchCommand { get; } = null!;
         public IObservable<bool> IsSearchTextExist { get; } = null!;
-        
+
+        public Interaction<AddIntegerViewModel, object?> ShowDialog { get; } = null!;
+
         public ReactiveCommand<Models.Contract, Unit> DataGridPrintActionCommand { get; set; } = null!;
         public ReactiveCommand<Models.Contract, Unit> DataGridCloseActionCommand { get; set; } = null!;
         public ReactiveCommand<Models.Contract, Unit> DataGridProlongationActionCommand { get; set; } = null!;
