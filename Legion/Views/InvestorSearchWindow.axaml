@@ -49,17 +49,17 @@
               <StackPanel>
                 <Grid>
                   <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="100"/>
                   </Grid.ColumnDefinitions>
-                  <Button Grid.Column="0"/>
-                  <Label Content="{Binding Path=LastName}" Grid.Column="1"/>
-                  <Label Content="{Binding Path=FirstName}" Grid.Column="2"/>
-                  <Label Content="{Binding Path=MiddleName}" Grid.Column="3"/>
+                  <Label Content="{Binding Path=LastName}" Grid.Column="0"/>
+                  <Label Content="{Binding Path=FirstName}" Grid.Column="1"/>
+                  <Label Content="{Binding Path=MiddleName}" Grid.Column="2"/>
+					<Label Content="{Binding Path=DateBirth, StringFormat='{}{0:dd/MM/yyyy}'}" Grid.Column="3"/>
                   <Label Content="{Binding Path=Phone}" Grid.Column="4"/>
                   <Label Content="{Binding Path=City}" Grid.Column="5"/>
                 </Grid>

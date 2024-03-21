@@ -59,8 +59,36 @@
 				<Label Content="Пароль" Grid.Column="0" Grid.Row="2" Margin="7" Foreground="Black" />
 				<Label Content="Имя" Grid.Column="0" Grid.Row="3" Margin="7" Foreground="Black" />
 				<Label Content="Роль" Grid.Column="0" Grid.Row="4" Margin="7" Foreground="Black" />
+
+				<Border Grid.Column="1" Grid.Row="1" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
+					<TextBox  Height="28" Background="Gainsboro"
+							  Foreground="Black" Text="{Binding User.UserName}"/>
+				</Border>
+
+				<Border Grid.Column="1" Grid.Row="2" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
+					<TextBox  Height="28" Background="Gainsboro"
+							  Foreground="Black" Text="{Binding User.Password}"/>
+				</Border>
+
+				<Border Grid.Column="1" Grid.Row="3" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
+					<TextBox  Height="28" Background="Gainsboro"
+							  Foreground="Black" Text="{Binding User.EmployerFirstName}"/>
+				</Border>
+
+				<ComboBox Grid.Column="1" Grid.Row="4" Margin="7" Height="20" Background="Gainsboro"
+                          CornerRadius="20" Foreground="Black" SelectedItem="{Binding User.UserRole}" ItemsSource="{Binding UserRoles}">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<Panel>
+								<Label Content="{Binding Path=Role}" VerticalContentAlignment="Center" />
+							</Panel>
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
 				
-				</Grid>
+			</Grid>
+			<Button Height="40" Margin="20" CornerRadius="20" Width="220" Content="{Binding SubmitText}"
+                    Background="#e95322" Command="{Binding SaveCommand}" HotKey="Ctrl+S" />
 		</StackPanel>
 	</Grid>
 </UserControl>

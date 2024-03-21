@@ -33,6 +33,24 @@ namespace Legion.ViewModels
             {
                 HostScreen.Router.NavigateBack.Execute();
             });
+
+            NewUserCommand = ReactiveCommand.Create(() =>
+            {
+                HostScreen.Router.Navigate.Execute(new AddUserViewModel(context));
+            });
+
+            DataGridEditActionCommand = ReactiveCommand.Create((User us) =>
+            {
+                HostScreen.Router.Navigate.Execute(new AddUserViewModel(us, context));
+            });
+
+            DataGridRemoveActionCommand = ReactiveCommand.Create((User us) =>
+            {
+                Debug.WriteLine(us.Id.ToString() + "to remove");
+                _context.Users.Remove(us);
+                _context.SaveChangesAsync();
+                _context.Users.LoadAsync();
+            });
         }
 
         public ObservableCollection<User> Users
@@ -40,7 +58,10 @@ namespace Legion.ViewModels
             get => _user;
             set => this.RaiseAndSetIfChanged(ref _user, value);
         }
+        public ReactiveCommand<Unit, Unit> NewUserCommand { get; } = null!;
         public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
         public sealed override IScreen HostScreen { get; set; }
+        public ReactiveCommand<User, Unit> DataGridEditActionCommand { get; set; } = null!;
+        public ReactiveCommand<User, Unit> DataGridRemoveActionCommand { get; set; } = null!;
     }
 }
