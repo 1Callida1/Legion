@@ -93,8 +93,10 @@ namespace Legion.ViewModels
                 if (result == null)
                     return;
 
-                ctr.DateEnd = ctr.DateEnd.AddMonths(int.Parse((string)result));
-                _context.Contracts.Update(ctr);
+                _context.RenewalContracts.Add(new RenewalContract()
+                    { Contract = ctr, NewDateEnd = ctr.DateEnd.AddMonths(int.Parse((string)result)) });
+
+                _context.RenewalContracts.Load();
                 _context.SaveChanges();
 
                 Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
