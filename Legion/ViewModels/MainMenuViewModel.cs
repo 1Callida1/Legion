@@ -47,6 +47,13 @@ namespace Legion.ViewModels
 
             });
 
+            ExpiringContractCommand = ReactiveCommand.Create(() =>
+            {
+
+                HostScreen.Router.Navigate.Execute(new ExpiringContractViewModel(_context));
+
+            });
+
             UsersCommand = ReactiveCommand.Create(() =>
             {
 
@@ -59,6 +66,7 @@ namespace Legion.ViewModels
         public ReactiveCommand<Unit, Unit> ContractsCommand { get; }
         public ReactiveCommand<Unit, Unit> ReferralsCommand { get; }
         public ReactiveCommand<Unit, Unit> UsersCommand { get; }
+        public ReactiveCommand<Unit, Unit> ExpiringContractCommand { get; }
         public sealed override IScreen HostScreen { get; set; }
     }
 }

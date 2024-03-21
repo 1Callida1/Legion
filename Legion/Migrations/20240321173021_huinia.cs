@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Legion.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class huinia : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,8 +53,8 @@ namespace Legion.Migrations
                     LastName = table.Column<string>(type: "text", nullable: false),
                     MiddleName = table.Column<string>(type: "text", nullable: false),
                     DateBirth = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    PassprotSeries = table.Column<int>(type: "integer", nullable: false),
-                    PassprotNumber = table.Column<int>(type: "integer", nullable: false),
+                    PassprotSeries = table.Column<string>(type: "text", nullable: false),
+                    PassprotNumber = table.Column<string>(type: "text", nullable: false),
                     Given = table.Column<string>(type: "text", nullable: false),
                     PassportDateGiven = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     PassportUnitCode = table.Column<string>(type: "text", nullable: false),
@@ -86,19 +86,16 @@ namespace Legion.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "UserRoles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Admin = table.Column<bool>(type: "boolean", nullable: false),
-                    UserName = table.Column<string>(type: "text", nullable: false),
-                    Password = table.Column<string>(type: "text", nullable: false),
-                    EmployerFirstName = table.Column<string>(type: "text", nullable: false)
+                    Role = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_UserRoles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -126,6 +123,28 @@ namespace Legion.Migrations
                         name: "FK_Referrals_Investors_InvestorInvitedId",
                         column: x => x.InvestorInvitedId,
                         principalTable: "Investors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserRoleId = table.Column<int>(type: "integer", nullable: false),
+                    UserName = table.Column<string>(type: "text", nullable: false),
+                    Password = table.Column<string>(type: "text", nullable: false),
+                    EmployerFirstName = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_UserRoles_UserRoleId",
+                        column: x => x.UserRoleId,
+                        principalTable: "UserRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -251,6 +270,11 @@ namespace Legion.Migrations
                 name: "IX_RenewalContracts_ContractId",
                 table: "RenewalContracts",
                 column: "ContractId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_UserRoleId",
+                table: "Users",
+                column: "UserRoleId");
         }
 
         /// <inheritdoc />
@@ -279,6 +303,9 @@ namespace Legion.Migrations
 
             migrationBuilder.DropTable(
                 name: "Investors");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles");
         }
     }
 }
