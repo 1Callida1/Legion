@@ -60,10 +60,10 @@
                         Height="35"
                         Width="180" HorizontalAlignment="Right" Background="#ffff" Foreground="#e95322"
 						Command="{Binding NewContractCommand}" />
-				<TextBox Name="SerachBoxContract" Grid.Column="1" Background="#ffff" Foreground="Black" Height="25"
-                         CornerRadius="20" Margin="15, 0,0,0" />
+				<TextBox Grid.Column="1" Background="#ffff" Foreground="Black" Height="25"
+                         CornerRadius="20" Margin="15, 0,0,0" Text="{Binding SearchText}"/>
 				<Button Name="SerachBtnContract" Grid.Column="2" Content="Найти" Background="#ffff" Foreground="#e95322"
-                        Width="80" Height="35" Margin="25, 0,0,0" />
+                        Width="80" Height="35" Margin="25, 0,0,0" Command="{Binding SearchCommand}"/>
 				<Button Name="SpTriggerBtnContract" Background="#ffff" Foreground="#e95322" Width="35"
                         Height="35" Margin="5, 0,0,0" Command="{Binding PaneCommand}">
 					<i:Icon Value="fa-bars" Width="35" Height="35" />
@@ -79,7 +79,7 @@
 							<RowDefinition />
 						</Grid.RowDefinitions>
 						<DataGrid Name="ContractGrid" ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20" Height="700"
-                                  ItemsSource="{Binding Contracts}" AutoGenerateColumns="False"
+                                  ItemsSource="{Binding Contracts, Mode=TwoWay}" AutoGenerateColumns="False"
                                   GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray" IsReadOnly="True"
                                   HorizontalScrollBarVisibility="Visible">
 							<DataGrid.Columns>
@@ -118,7 +118,37 @@
 											<i:Icon Value="fa-pen" Width="35" Height="35"/>
 										</MenuItem.Icon>
 									</MenuItem>
+
+                  <MenuItem Header="Добавление средств" IsVisible="{Binding (models:Contract).ContractType.CanAddMoney}"
+                            CommandParameter="{Binding (models:Contract)}"
+                            Command="{Binding #ContractGrid.((vm:ContractsViewModel)DataContext).DataGridAddMoneyActionCommand}">
+                      <MenuItem.Icon>
+                          <i:Icon Value="fa-pen" Width="35" Height="35"/>
+                      </MenuItem.Icon>
+                  </MenuItem>
+
 									<Separator />
+
+                <MenuItem Header="Закрытие договора" CommandParameter="{Binding (models:Contract)}"
+                          Command="{Binding #ContractGrid.((vm:ContractsViewModel)DataContext).DataGridCloseActionCommand}">
+                    <MenuItem.Icon>
+                        <i:Icon Value="fa-times" Width="35" Height="35" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                  <MenuItem Header="Просмотр выплат" CommandParameter="{Binding (models:Contract)}"
+                            Command="{Binding #ContractGrid.((vm:ContractsViewModel)DataContext).DataGridShowPaymentsActionCommand}">
+                    <MenuItem.Icon>
+                      <i:Icon Value="fa-credit-card" Width="35" Height="35" />
+                    </MenuItem.Icon>
+                  </MenuItem>
+
+                <MenuItem Header="Продление" CommandParameter="{Binding (models:Contract)}"
+                          Command="{Binding #ContractGrid.((vm:ContractsViewModel)DataContext).DataGridProlongationActionCommand}">
+                    <MenuItem.Icon>
+                        <i:Icon Value="fa-plus" Width="35" Height="35" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
 									<MenuItem Header="Удалить" CommandParameter="{Binding (models:Contract)}"
                                               Command="{Binding #ContractGrid.((vm:ContractsViewModel)DataContext).DataGridRemoveActionCommand}">
 										<MenuItem.Icon>

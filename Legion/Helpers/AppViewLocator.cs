@@ -26,6 +26,7 @@ namespace Legion.Helpers
             ReportsViewModel context => new ReportsView() { DataContext = context },
             UserViewModel context => new UserView() { DataContext = context },
             AddUserViewModel context => new AddUserView() { DataContext = context },
+            AddIntegerViewModel context => new AddIntegerWindow() {DataContext = context},
             ExpiringContractViewModel context => new ExpiringContractView() { DataContext = context },
             _ => throw new ArgumentOutOfRangeException(nameof(viewModel))
         };

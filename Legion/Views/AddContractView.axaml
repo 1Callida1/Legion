@@ -58,9 +58,9 @@
                 <Label Content="Основная информация" Grid.Column="1" Grid.Row="0" Margin="7" Foreground="Black"
                        FontSize="15" FontWeight="Bold" />
                 <Label Content="Номер договора" Grid.Column="0" Grid.Row="1" Margin="7" Foreground="Black" />
-                <controlTemplates:CorneredTextBox Grid.Column="1" Grid.Row="1" Height="20" VerticalAlignment="Top"
+                <controlTemplates:CorneredTextBox Grid.Column="1" Grid.Row="1" Height="30" VerticalAlignment="Top"
                                                   TextPadding="10" MaxLength="18" Margin="7"
-                                                  Text="{Binding Contract.CustomId, Mode=TwoWay}" />
+                                                  Text="{Binding CustomId, Mode=TwoWay}" />
                 <Label Content="Статус договора" Grid.Column="0" Grid.Row="2" Margin="7" Foreground="Black" />
                 <ComboBox Grid.Column="1" Grid.Row="2" Margin="7" Height="20" Background="Gainsboro"
                           CornerRadius="20" Foreground="Black" SelectedItem="{Binding Contract.Status}" ItemsSource="{Binding ContractStatuses}">
@@ -77,7 +77,7 @@
                             SelectedDate="{Binding StartDateTime, Mode=TwoWay}" />
                 <Label Content="Тип договора" Grid.Column="0" Grid.Row="4" Margin="7" Foreground="Black" />
                 <ComboBox Grid.Column="1" Grid.Row="4" Margin="7" Height="20" Background="Gainsboro"
-                          CornerRadius="20"  Foreground="Black" SelectedItem="{Binding Contract.ContractType}" ItemsSource="{Binding ContractTypes}">
+                          CornerRadius="20"  Foreground="Black" SelectedItem="{Binding SelectedContractType}" ItemsSource="{Binding ContractTypes}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <Grid>

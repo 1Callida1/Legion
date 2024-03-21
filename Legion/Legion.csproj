@@ -45,6 +45,9 @@
 
 
   <ItemGroup>
+    <Compile Update="Views\AddIntegerWindow.axaml.cs">
+      <DependentUpon>AddIntegerWindow.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\LoginView.axaml.cs">
       <DependentUpon>LoginView.axaml</DependentUpon>
     </Compile>

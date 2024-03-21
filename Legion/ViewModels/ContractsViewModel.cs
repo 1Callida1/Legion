@@ -1,21 +1,16 @@
-﻿using Avalonia;
-using Legion.Models;
-using Legion.ViewModels;
+﻿using Legion.Models;
+using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
+using Splat;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Legion.Views;
-using System.Diagnostics.Contracts;
-using Splat;
+using DynamicData;
+using Contract = Legion.Models.Contract;
 
 namespace Legion.ViewModels
 {
@@ -24,14 +19,40 @@ namespace Legion.ViewModels
         private ApplicationDbContext _context;
         private bool _isPaneOpen;
         private ObservableCollection<Models.Contract> _contracts;
+        private string _searchText;
 
         public ContractsViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             _context = context;
             _isPaneOpen = false;
             _context.Contracts.Load();
+            _context.RenewalContracts.Load();
             Contracts = _context.Contracts.Local.ToObservableCollection();
+
+            _context.RenewalContracts.ToList().ForEach(rc =>
+            {
+                Contract tempContract = rc.Contract;
+                tempContract.DateEnd = rc.NewDateEnd;
+
+                Contracts.Add(tempContract);
+            });
+
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
+
+            IsSearchTextExist = this.WhenAnyValue(
+                x => x.SearchText,
+                (text) =>
+                    !string.IsNullOrWhiteSpace(text)
+            );
+
+            SearchCommand = ReactiveCommand.Create(() =>
+            {
+                Contracts = new ObservableCollection<Contract>();
+                SearchText.Split(' ').ToList().ForEach(word => Contracts.AddRange(_context.Contracts.Where(c => c.CustomId.ToLower().Contains(word.ToLower()) || c.Investor.FirstName.ToLower().Contains(word.ToLower()) || c.Investor.MiddleName.ToLower().Contains(word.ToLower()) || c.Investor.LastName.ToLower().Contains(word.ToLower()) )));
+                Contracts = new ObservableCollection<Contract>(Contracts.Distinct());
+            }, IsSearchTextExist);
+
+            ShowDialog = new Interaction<AddIntegerViewModel, object>();
 
             PaneCommand = ReactiveCommand.Create(() =>
             {
@@ -48,6 +69,69 @@ namespace Legion.ViewModels
                 HostScreen.Router.Navigate.Execute(new AddContractViewModel(ctr, context));
             });
 
+            DataGridCloseActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
+            {
+                ctr.Status = _context.ContractStatuses.First(s => s.Status == "Закрыт");
+                _context.Contracts.Update(ctr);
+                _context.SaveChanges();
+
+                Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
+                _context.RenewalContracts.ToList().ForEach(rc =>
+                {
+                    Contract tempContract = rc.Contract;
+                    tempContract.DateEnd = rc.NewDateEnd;
+
+                    Contracts.Add(tempContract);
+                });
+                //TODO: Распечатать бланк закрытия договора
+            });
+
+            DataGridProlongationActionCommand = ReactiveCommand.CreateFromTask(async (Models.Contract ctr) =>
+            {
+                object? result = await ShowDialog.Handle(new AddIntegerViewModel("Введите количество месяцев:", "Добавить"));
+
+                if (result == null)
+                    return;
+
+                ctr.DateEnd = ctr.DateEnd.AddMonths(int.Parse((string)result));
+                _context.Contracts.Update(ctr);
+                _context.SaveChanges();
+
+                Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
+                _context.RenewalContracts.ToList().ForEach(rc =>
+                {
+                    Contract tempContract = rc.Contract;
+                    tempContract.DateEnd = rc.NewDateEnd;
+
+                    Contracts.Add(tempContract);
+                });
+            });
+
+            DataGridShowPaymentsActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
+            {
+                HostScreen.Router.Navigate.Execute(new AddContractViewModel(ctr, context));
+            });
+
+            DataGridAddMoneyActionCommand = ReactiveCommand.CreateFromTask(async (Contract ctr) =>
+            {
+                object? result = await ShowDialog.Handle(new AddIntegerViewModel("Введите сумму пополнения:", "Пополнить"));
+
+                if (result == null)
+                    return;
+
+                ctr.Amount += int.Parse((string)result);
+                _context.Contracts.Update(ctr);
+                _context.SaveChanges();
+
+                Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
+                _context.RenewalContracts.ToList().ForEach(rc =>
+                {
+                    Contract tempContract = rc.Contract;
+                    tempContract.DateEnd = rc.NewDateEnd;
+
+                    Contracts.Add(tempContract);
+                });
+            });
 
             DataGridPrintActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
             {
@@ -68,6 +152,19 @@ namespace Legion.ViewModels
             });
         }
 
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                if (value.Length == 0)
+                {
+                    Contracts = _context.Contracts.Local.ToObservableCollection();
+                }
+                this.RaiseAndSetIfChanged(ref _searchText, value);
+            }
+        }
+
 
         public ObservableCollection<Models.Contract> Contracts
         {
@@ -86,8 +183,18 @@ namespace Legion.ViewModels
 
         public ReactiveCommand<Unit, Unit> PaneCommand { get; } = null!;
         public ReactiveCommand<Unit, Unit> NewContractCommand { get; } = null!;
+        
+        public ReactiveCommand<Unit, Unit> SearchCommand { get; } = null!;
+        public IObservable<bool> IsSearchTextExist { get; } = null!;
+
+        public Interaction<AddIntegerViewModel, object?> ShowDialog { get; } = null!;
+
         public ReactiveCommand<Models.Contract, Unit> DataGridPrintActionCommand { get; set; } = null!;
+        public ReactiveCommand<Models.Contract, Unit> DataGridCloseActionCommand { get; set; } = null!;
+        public ReactiveCommand<Models.Contract, Unit> DataGridProlongationActionCommand { get; set; } = null!;
+        public ReactiveCommand<Models.Contract, Unit> DataGridShowPaymentsActionCommand { get; set; } = null!;
         public ReactiveCommand<Models.Contract, Unit> DataGridEditActionCommand { get; set; } = null!;
         public ReactiveCommand<Models.Contract, Unit> DataGridRemoveActionCommand { get; set; } = null!;
+        public ReactiveCommand<Models.Contract, Unit> DataGridAddMoneyActionCommand { get; set; } = null!;
     }
 }

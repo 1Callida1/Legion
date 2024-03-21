@@ -28,6 +28,16 @@ namespace Legion.Views
             var result = await dialog.ShowDialog<Investor?>(this);
             interaction.SetOutput(result);
         }
+
+        public async Task DoShowMoneyDialogAsync(InteractionContext<AddIntegerViewModel,
+            object> interaction)
+        {
+            var dialog = new AddIntegerWindow();
+            dialog.DataContext = interaction.Input;
+
+            var result = await dialog.ShowDialog<object>(this);
+            interaction.SetOutput(result);
+        }
     }
 }
 

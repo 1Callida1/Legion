@@ -15,6 +15,6 @@ namespace Legion.Models
         public int Id { get; set; }
 
         public Contract Contract { get; set; } = null!;
-        public DateOnly NewDateEnd { get; set; }
+        public DateTime NewDateEnd { get; set; }
     }
 }

@@ -79,12 +79,12 @@ namespace Legion
                     _context.SaveChanges();
                     _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Админ")) });
                     _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Босс качалки")) });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "testFormat", Bet = 10, Formula = "x*1.1", Period = 12, TypeName = "test type" });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "2№#", Bet = 0, Formula = "x*1.5", Period = 12, TypeName = "Тип 2" });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "3№#", Bet = 0, Formula = "x*2", Period = 6, TypeName = "Тип 3" });
-                    _context.ContractStatuses.Add(new ContractStatus() {Status = "Открыт"});
-                    _context.ContractStatuses.Add(new ContractStatus() {Status = "Закрыт"});
-                    _context.ContractStatuses.Add(new ContractStatus() {Status = "Приостановлен"});
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 10, Formula = "x*p", Period = 12, TypeName = "Накопительный", CanAddMoney = true });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 0, Formula = "x*p", Period = 12, TypeName = "Инвестиционный", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 0, Formula = "x*p", Period = 6, TypeName = "Тип 3", CanAddMoney = false });
+                    _context.ContractStatuses.Add(new ContractStatus() { Status = "Открыт" });
+                    _context.ContractStatuses.Add(new ContractStatus() { Status = "Закрыт" });
+                    _context.ContractStatuses.Add(new ContractStatus() { Status = "Приостановлен" });
                     _context.SaveChanges();
                 }
                 else

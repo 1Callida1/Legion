@@ -9,6 +9,22 @@ public class ApplicationDbContext : DbContext
         : base(options)
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // Navigation
+        modelBuilder.Entity<Contract>().Navigation(c => c.Investor).AutoInclude();
+        modelBuilder.Entity<Contract>().Navigation(c => c.Manager).AutoInclude();
+        modelBuilder.Entity<Contract>().Navigation(c => c.ContractType).AutoInclude();
+        modelBuilder.Entity<Contract>().Navigation(c => c.Status).AutoInclude();
+        modelBuilder.Entity<Contract>().Navigation(c => c.Referral).AutoInclude();
+        modelBuilder.Entity<Contract>().Navigation(c => c.Repeated).AutoInclude();
+
+        modelBuilder.Entity<Referral>().Navigation(c => c.InvestorCalled).AutoInclude();
+        modelBuilder.Entity<Referral>().Navigation(c => c.InvestorInvited).AutoInclude();
+
     }
 
     public DbSet<User> Users { get; set; }
