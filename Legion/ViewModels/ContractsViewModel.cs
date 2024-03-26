@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
 using Splat;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
@@ -23,10 +24,15 @@ namespace Legion.ViewModels
         private bool _isPaneOpen;
         private ObservableCollection<Models.Contract> _contracts;
         private string _searchText;
+        private List<ContractType> _contractTypes;
+        private ContractType _selectedContractType;
 
         public ContractsViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             _context = context;
+            ContractTypes = context.ContractTypes.ToList();
+            ContractTypes.Add(new ContractType() {TypeName = "Все", Bet = 0, CanAddMoney = false, ContractIdFormat = "", Formula = "", Period = 0});
+            _selectedContractType = ContractTypes.First(t => t.TypeName == "Все");
             _isPaneOpen = false;
             
             Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
@@ -169,6 +175,29 @@ namespace Legion.ViewModels
         {
             get => _isPaneOpen;
             set => this.RaiseAndSetIfChanged(ref _isPaneOpen, value);
+        }
+
+        public ContractType SelectedContractType
+        {
+            get => _selectedContractType;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _selectedContractType, value);
+
+                if (value.TypeName != "Все")
+                {
+                    Contracts = new ObservableCollection<Contract>(_context.Contracts
+                        .Where(c => c.ContractType.Id == value.Id).ToList());
+                }
+                else
+                    Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
+            }
+        }
+
+        public List<ContractType> ContractTypes
+        {
+            get => _contractTypes;
+            set => this.RaiseAndSetIfChanged(ref _contractTypes, value);
         }
 
         public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;

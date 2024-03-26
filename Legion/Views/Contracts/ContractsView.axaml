@@ -53,6 +53,14 @@
                     <ColumnDefinition Width="50" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+                <ComboBox Grid.Column="3"  Height="20" Background="Gainsboro" Margin="30,0,0,0"
+                          CornerRadius="20" Foreground="Black" ItemsSource="{Binding ContractTypes}" Width="200" HorizontalAlignment="Left" SelectedItem="{Binding SelectedContractType}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding Path=TypeName}" Grid.Column="0" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
                 <Button Margin="80,0,5,0" Grid.Column="3" IsVisible="True" Content="Назад"
                         Height="35"
                         Width="80" HorizontalAlignment="Center" Background="#ffff" Foreground="#e95322"
@@ -72,7 +80,6 @@
                     <i:Icon Value="fa-bars" Width="35" Height="35" />
                 </Button>
             </Grid>
-
 
             <StackPanel Grid.Row="1">
                 <StackPanel IsVisible="True" Background="Transparent" Name="SPInvestorDG">

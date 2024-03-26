@@ -11,8 +11,8 @@
 		    <StyleInclude Source="avares://Legion/Icons.axaml" />
         <StyleInclude Source="Views/ControlTemplates/CorneredTextBox.axaml"></StyleInclude>
         <themes:MaterialTheme
-            BaseTheme="Dark"
-            PrimaryColor="Purple"
+            BaseTheme="Light"
+            PrimaryColor="Grey"
             SecondaryColor="Lime" />
 
     </Application.Styles>
