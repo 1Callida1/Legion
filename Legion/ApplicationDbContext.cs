@@ -20,11 +20,11 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Contract>().Navigation(c => c.ContractType).AutoInclude();
         modelBuilder.Entity<Contract>().Navigation(c => c.Status).AutoInclude();
         modelBuilder.Entity<Contract>().Navigation(c => c.Referral).AutoInclude();
-        modelBuilder.Entity<Contract>().Navigation(c => c.Repeated).AutoInclude();
 
         modelBuilder.Entity<Referral>().Navigation(c => c.InvestorCalled).AutoInclude();
         modelBuilder.Entity<Referral>().Navigation(c => c.InvestorInvited).AutoInclude();
-
+        ;
+        modelBuilder.Entity<AdditionalPayment>().Navigation(c => c.Contract).AutoInclude();
     }
 
     public DbSet<User> Users { get; set; }
@@ -33,7 +33,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<ContractStatus> ContractStatuses { get; set; }
     public DbSet<ContractType> ContractTypes { get; set; }
     public DbSet<Referral> Referrals { get; set; }
-    public DbSet<RenewalContract> RenewalContracts { get; set; }
+    public DbSet<AdditionalPayment> AdditionalPayments { get; set; }
     public DbSet<Repeat> Repeats { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
 }

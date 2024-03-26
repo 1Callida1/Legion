@@ -28,6 +28,8 @@ namespace Legion.Helpers
             AddUserViewModel context => new AddUserView() { DataContext = context },
             AddIntegerViewModel context => new AddIntegerWindow() {DataContext = context},
             ExpiringContractViewModel context => new ExpiringContractView() { DataContext = context },
+            AdditionalPaymentsHistoryViewModel context => new AdditionalPaymentsHistoryWindow() { DataContext = context },
+            PaymentsHistoryViewModel context => new PaymentsHistoryWindow() { DataContext = context },
             _ => throw new ArgumentOutOfRangeException(nameof(viewModel))
         };
         //{

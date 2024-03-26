@@ -27,6 +27,7 @@ namespace Legion.ViewModels
         {
             _context = context;
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
+            _context.Users.LoadAsync();
             Users = _context.Users.Local.ToObservableCollection();
 
             BackCommand = ReactiveCommand.Create(() =>

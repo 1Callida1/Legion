@@ -10,7 +10,10 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using DynamicData;
+using Legion.Helpers;
 using Contract = Legion.Models.Contract;
+using SkiaSharp;
+using System.Security.Principal;
 
 namespace Legion.ViewModels
 {
@@ -25,17 +28,8 @@ namespace Legion.ViewModels
         {
             _context = context;
             _isPaneOpen = false;
-            _context.Contracts.Load();
-            _context.RenewalContracts.Load();
-            Contracts = _context.Contracts.Local.ToObservableCollection();
-
-            _context.RenewalContracts.ToList().ForEach(rc =>
-            {
-                Contract tempContract = rc.Contract;
-                tempContract.DateEnd = rc.NewDateEnd;
-
-                Contracts.Add(tempContract);
-            });
+            
+            Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
 
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
 
@@ -52,7 +46,9 @@ namespace Legion.ViewModels
                 Contracts = new ObservableCollection<Contract>(Contracts.Distinct());
             }, IsSearchTextExist);
 
-            ShowDialog = new Interaction<AddIntegerViewModel, object>();
+            ShowDialog = new Interaction<AddIntegerViewModel, object>()!;
+            ShowAdditionalPaymentsDialog = new Interaction<AdditionalPaymentsHistoryViewModel, object>()!;
+            ShowPaymentsDialog = new Interaction<PaymentsHistoryViewModel, object>()!;
 
             PaneCommand = ReactiveCommand.Create(() =>
             {
@@ -76,42 +72,32 @@ namespace Legion.ViewModels
                 _context.SaveChanges();
 
                 Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
-                _context.RenewalContracts.ToList().ForEach(rc =>
-                {
-                    Contract tempContract = rc.Contract;
-                    tempContract.DateEnd = rc.NewDateEnd;
-
-                    Contracts.Add(tempContract);
-                });
+                
                 //TODO: Распечатать бланк закрытия договора
             });
 
             DataGridProlongationActionCommand = ReactiveCommand.CreateFromTask(async (Models.Contract ctr) =>
             {
-                object? result = await ShowDialog.Handle(new AddIntegerViewModel("Введите количество месяцев:", "Добавить"));
+                string? result = (string?) await ShowDialog.Handle(new AddIntegerViewModel("Введите количество месяцев:", "Добавить"));
 
                 if (result == null)
                     return;
 
-                _context.RenewalContracts.Add(new RenewalContract()
-                    { Contract = ctr, NewDateEnd = ctr.DateEnd.AddMonths(int.Parse((string)result)) });
+                Contract copyContract = _context.Contracts.First(c => c.Id == ctr.Id);
+                copyContract.Id = 0;
+                copyContract.DateEnd = copyContract.DateEnd.AddMonths(int.Parse(result));
+                copyContract.Repeated = true;
+                copyContract.RepeatNumber = _context.Contracts.Count(c => c.CustomId == ctr.CustomId) + 1;
+                await _context.Contracts.AddAsync(copyContract);
 
-                _context.RenewalContracts.Load();
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
-                Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
-                _context.RenewalContracts.ToList().ForEach(rc =>
-                {
-                    Contract tempContract = rc.Contract;
-                    tempContract.DateEnd = rc.NewDateEnd;
-
-                    Contracts.Add(tempContract);
-                });
+                Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
             });
 
-            DataGridShowPaymentsActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
+            DataGridShowPaymentsActionCommand = ReactiveCommand.CreateFromTask(async (Models.Contract ctr) =>
             {
-                HostScreen.Router.Navigate.Execute(new AddContractViewModel(ctr, context));
+                await ShowPaymentsDialog.Handle(new PaymentsHistoryViewModel(context, ctr));
             });
 
             DataGridAddMoneyActionCommand = ReactiveCommand.CreateFromTask(async (Contract ctr) =>
@@ -122,17 +108,14 @@ namespace Legion.ViewModels
                     return;
 
                 ctr.Amount += int.Parse((string)result);
+
+                await _context.AdditionalPayments.AddAsync(new AdditionalPayment()
+                    { Amount = int.Parse((string)result), Contract = ctr, Date = DateTime.Now });
+
                 _context.Contracts.Update(ctr);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
-                Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
-                _context.RenewalContracts.ToList().ForEach(rc =>
-                {
-                    Contract tempContract = rc.Contract;
-                    tempContract.DateEnd = rc.NewDateEnd;
-
-                    Contracts.Add(tempContract);
-                });
+                Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
             });
 
             DataGridPrintActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
@@ -140,12 +123,19 @@ namespace Legion.ViewModels
                 Debug.WriteLine(ctr.ToString());
             });
 
-            DataGridRemoveActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
+            DataGridRemoveActionCommand = ReactiveCommand.CreateFromTask(async (Models.Contract ctr) =>
             {
                 Debug.WriteLine(ctr.Id.ToString() + "to remove");
+
                 _context.Contracts.Remove(ctr);
-                _context.SaveChangesAsync();
-                _context.Investors.LoadAsync();
+
+                await _context.SaveChangesAsync();
+                await _context.Investors.LoadAsync();
+            });
+
+            DataGridAddMoneyHistoryActionCommand = ReactiveCommand.CreateFromTask(async (Models.Contract ctr) =>
+            {
+                await ShowAdditionalPaymentsDialog.Handle(new AdditionalPaymentsHistoryViewModel(context, ctr));
             });
 
             BackCommand = ReactiveCommand.Create(() =>
@@ -190,6 +180,8 @@ namespace Legion.ViewModels
         public IObservable<bool> IsSearchTextExist { get; } = null!;
 
         public Interaction<AddIntegerViewModel, object?> ShowDialog { get; } = null!;
+        public Interaction<AdditionalPaymentsHistoryViewModel, object?> ShowAdditionalPaymentsDialog { get; } = null!;
+        public Interaction<PaymentsHistoryViewModel, object?> ShowPaymentsDialog { get; } = null!;
 
         public ReactiveCommand<Models.Contract, Unit> DataGridPrintActionCommand { get; set; } = null!;
         public ReactiveCommand<Models.Contract, Unit> DataGridCloseActionCommand { get; set; } = null!;
@@ -198,5 +190,7 @@ namespace Legion.ViewModels
         public ReactiveCommand<Models.Contract, Unit> DataGridEditActionCommand { get; set; } = null!;
         public ReactiveCommand<Models.Contract, Unit> DataGridRemoveActionCommand { get; set; } = null!;
         public ReactiveCommand<Models.Contract, Unit> DataGridAddMoneyActionCommand { get; set; } = null!;
+        public ReactiveCommand<Models.Contract, Unit> DataGridAddMoneyHistoryActionCommand { get; set; } = null!;
+        
     }
 }

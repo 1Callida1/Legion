@@ -1,0 +1,39 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Width="300"
+        Height="170"
+        mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="100"
+        xmlns:vm="using:Legion.ViewModels"
+        x:DataType="vm:AddIntegerViewModel"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        SystemDecorations="None"
+        Background="Transparent"
+        WindowStartupLocation="CenterOwner"
+        x:Class="Legion.Views.AddIntegerWindow"
+        Title="AddIntegerWindow">
+
+  <Border CornerRadius="20" Background="#464866">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="50"/>
+        <RowDefinition Height="50"/>
+        <RowDefinition Height="50"/>
+      </Grid.RowDefinitions>
+
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+
+      <Label Grid.Row="0" Grid.ColumnSpan="2" Height="50" Content="{Binding HelpText}" FontWeight="Bold" VerticalContentAlignment="Center"/>
+      <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Amount, Mode=TwoWay}" Margin="5"/>
+      <Button CornerRadius="20" Margin="5" Grid.Row="2" Grid.Column="0" Content="{Binding ButtonText}" Command="{Binding SetCommand}"/>
+      <Button CornerRadius="20" Margin="5" Grid.Row="2" Grid.Column="1" Content="Отмена" Command="{Binding CancelCommand}"/>
+    </Grid>
+  </Border>
+
+
+</Window>

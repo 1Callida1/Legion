@@ -17,15 +17,15 @@
         Background="Transparent"
         WindowStartupLocation="CenterScreen">
   <Grid>
-      <Border Background="#464866" CornerRadius="20" />
-      <Grid.RowDefinitions>
-          <RowDefinition Height="*" />
-          <RowDefinition Height="Auto" />
-      </Grid.RowDefinitions>
+    <Border Background="#464866" CornerRadius="20" />
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
     <reactiveUi:RoutedViewHost Grid.Row="0" Router="{Binding Router}">
-        <reactiveUi:RoutedViewHost.DefaultContent>
-            <TextBlock Text="Default Content" />
-        </reactiveUi:RoutedViewHost.DefaultContent>
+      <reactiveUi:RoutedViewHost.DefaultContent>
+        <TextBlock Text="Default Content" />
+      </reactiveUi:RoutedViewHost.DefaultContent>
     </reactiveUi:RoutedViewHost>
   </Grid>
 </Window>

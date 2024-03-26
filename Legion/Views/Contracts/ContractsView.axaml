@@ -1,0 +1,205 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="Legion.Views.ContractsView"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
+             Width="1000"
+             Height="800"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
+             xmlns:vm="using:Legion.ViewModels"
+             xmlns:models="clr-namespace:Legion.Models"
+             xmlns:converters="clr-namespace:Legion.Helpers.Converters"
+             x:DataType="vm:ContractsViewModel">
+    <UserControl.Resources>
+        <converters:ContractInvestorConverter x:Key="ContractInvestorConverter" />
+        <converters:DateTimeToDateConverter x:Key="DateConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Border Background="#ffff" CornerRadius="20" />
+        <SplitView VerticalAlignment="Bottom" Height="645" ZIndex="1" Name="SVLeft" OpenPaneLength="260"
+                   CompactPaneLength="0" Background="#ffff" HorizontalAlignment="Left" DisplayMode="CompactInline"
+                   IsPaneOpen="{Binding IsPaneOpen}">
+            <SplitView.Pane>
+                <StackPanel Background="#e95322">
+                    <Grid ShowGridLines="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+                        <Label Content="ФИО:" Grid.Row="1" Foreground="#ffff" />
+                        <TextBox Grid.Row="2" CornerRadius="20" Background="#ffff" Height="25" Foreground="Black" />
+                    </Grid>
+                </StackPanel>
+            </SplitView.Pane>
+        </SplitView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="55" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Background="#e95322" Grid.Row="0" VerticalAlignment="Center" Height="55">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Margin="80,0,5,0" Grid.Column="3" IsVisible="True" Content="Назад"
+                        Height="35"
+                        Width="80" HorizontalAlignment="Center" Background="#ffff" Foreground="#e95322"
+                        Command="{Binding BackCommand}" />
+                <Button Name="BtnAddNewContract" Margin="0,0,5,0" Grid.Column="3" IsVisible="True"
+                        Content="Новый договор"
+                        Height="35"
+                        Width="180" HorizontalAlignment="Right" Background="#ffff" Foreground="#e95322"
+                        Command="{Binding NewContractCommand}" />
+                <TextBox Grid.Column="1" Background="#ffff" Foreground="Black" Height="25"
+                         CornerRadius="20" Margin="15, 0,0,0" Text="{Binding SearchText}" />
+                <Button Name="SerachBtnContract" Grid.Column="2" Content="Найти" Background="#ffff"
+                        Foreground="#e95322"
+                        Width="80" Height="35" Margin="25, 0,0,0" Command="{Binding SearchCommand}" />
+                <Button Name="SpTriggerBtnContract" Background="#ffff" Foreground="#e95322" Width="35"
+                        Height="35" Margin="5, 0,0,0" Command="{Binding PaneCommand}">
+                    <i:Icon Value="fa-bars" Width="35" Height="35" />
+                </Button>
+            </Grid>
+
+
+            <StackPanel Grid.Row="1">
+                <StackPanel IsVisible="True" Background="Transparent" Name="SPInvestorDG">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.1*" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <DataGrid Name="ContractGrid" ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20"
+                                  Height="700"
+                                  ItemsSource="{Binding Contracts, Mode=TwoWay}" AutoGenerateColumns="False"
+                                  GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray" IsReadOnly="True"
+                                  HorizontalScrollBarVisibility="Visible">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Номер договора" Binding="{Binding Path=CustomId}" />
+                                <DataGridTextColumn Header="Менеджер"
+                                                    Binding="{Binding Path=Manager.EmployerFirstName}" />
+                                <DataGridTextColumn Header="Статус" Binding="{Binding Path=Status.Status}" />
+                                <DataGridTextColumn Header="Вкладчик"
+                                                    Binding="{Binding ., Converter={StaticResource ContractInvestorConverter}}" />
+                                <DataGridTextColumn Header="Дата начала"
+                                                    Binding="{Binding Path=DateStart, Converter={StaticResource DateConverter}}" />
+                                <DataGridTextColumn Header="Дата окончания"
+                                                    Binding="{Binding Path=DateEnd, Converter={StaticResource DateConverter}}" />
+                                <DataGridTextColumn Header="Сумма вклада" Binding="{Binding Path=Amount}" />
+                                <DataGridTextColumn Header="Тип вклада" Binding="{Binding Path=ContractType.TypeName}" />
+                                <DataGridCheckBoxColumn Header="Повторный?" Binding="{Binding Path=Repeated}" />
+                                <DataGridTextColumn Header="Реферал"
+                                                    Binding="{Binding Path=Referral.InvestorCalled.FirstName}" />
+                                <DataGridTextColumn Header="Заметка" Binding="{Binding Path=Note}" />
+                            </DataGrid.Columns>
+                            <DataGrid.Resources>
+                                <ContextMenu x:Key="RowMenu">
+                                  
+                                    <MenuItem Header="Печать"
+                                              CommandParameter="{Binding (models:Contract)}"
+                                              Command="{Binding #ContractGrid.((vm:ContractsViewModel)DataContext).DataGridPrintActionCommand}">
+                                        <MenuItem.Icon>
+                                            <i:Icon Value="fa-print" Width="35" Height="35" />
+                                        </MenuItem.Icon>
+
+                                        <MenuItem Header="Договор" />
+                                        <MenuItem Header="График" />
+                                    </MenuItem>
+
+                                    <Separator />
+                                    <MenuItem Header="Добавление средств"
+                                              IsVisible="{Binding (models:Contract).ContractType.CanAddMoney}"
+                                              CommandParameter="{Binding (models:Contract)}"
+                                              Command="{Binding #ContractGrid.((vm:ContractsViewModel)DataContext).DataGridAddMoneyActionCommand}">
+                                        <MenuItem.Icon>
+                                            <i:Icon Value="fa-notes-medical" Width="35" Height="35" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+
+                                    <MenuItem Header="История пополнений"
+                                              IsVisible="{Binding (models:Contract).ContractType.CanAddMoney}"
+                                              CommandParameter="{Binding (models:Contract)}"
+                                              Command="{Binding #ContractGrid.((vm:ContractsViewModel)DataContext).DataGridAddMoneyHistoryActionCommand}">
+                                        <MenuItem.Icon>
+                                            <i:Icon Value="fa-clock-rotate-left" Width="35" Height="35" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+
+                                    <MenuItem Header="Просмотр выплат" CommandParameter="{Binding (models:Contract)}"
+                                              Command="{Binding #ContractGrid.((vm:ContractsViewModel)DataContext).DataGridShowPaymentsActionCommand}">
+                                        <MenuItem.Icon>
+                                            <i:Icon Value="fa-credit-card" Width="35" Height="35" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+
+                                    <Separator />
+                                    <MenuItem Header="Продление" CommandParameter="{Binding (models:Contract)}"
+                                              Command="{Binding #ContractGrid.((vm:ContractsViewModel)DataContext).DataGridProlongationActionCommand}">
+                                        <MenuItem.Icon>
+                                            <i:Icon Value="fa-plus" Width="35" Height="35" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+
+
+                                    <MenuItem Header="Закрытие договора" CommandParameter="{Binding (models:Contract)}"
+                                              Command="{Binding #ContractGrid.((vm:ContractsViewModel)DataContext).DataGridCloseActionCommand}">
+                                        <MenuItem.Icon>
+                                            <i:Icon Value="fa-times" Width="35" Height="35" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <Separator />
+                                    <MenuItem Header="Редактировать"
+                                              CommandParameter="{Binding (models:Contract)}"
+                                              Command="{Binding #ContractGrid.((vm:ContractsViewModel)DataContext).DataGridEditActionCommand}">
+                                        <MenuItem.Icon>
+                                            <i:Icon Value="fa-pen" Width="35" Height="35" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+
+                                    <MenuItem Header="Удалить" CommandParameter="{Binding (models:Contract)}"
+                                              Command="{Binding #ContractGrid.((vm:ContractsViewModel)DataContext).DataGridRemoveActionCommand}">
+                                        <MenuItem.Icon>
+                                            <i:Icon Value="fa-trash" Width="35" Height="35" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </DataGrid.Resources>
+                            <DataGrid.Styles>
+                                <Style Selector="DataGridRow">
+                                    <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+                                </Style>
+                                <Style Selector="DataGridColumnHeader">
+                                    <Setter Property="Foreground" Value="Black" />
+                                </Style>
+                                <Style Selector="ScrollBar:horizontal">
+                                    <Setter Property="Background" Value="Gray" />
+                                </Style>
+                                <Style Selector="ScrollBar:vertical">
+                                    <Setter Property="Background" Value="Gray" />
+
+                                </Style>
+                                <Style Selector="Thumb">
+                                    <Setter Property="Background" Value="Black" />
+                                    <Setter Property="Foreground" Value="Wheat" />
+
+                                </Style>
+                            </DataGrid.Styles>
+                        </DataGrid>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

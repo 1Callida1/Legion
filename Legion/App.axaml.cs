@@ -63,7 +63,7 @@ namespace Legion
                        services.AddSingleton<InvestorsView>();
                        services.AddSingleton<InvestorsViewModel>();
 
-                       services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql("Host=localhost;Database=main;Port=5432;Username=postgres;Password=postgres"));
+                       services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql("Host=localhost;Database=main;Port=5432;Username=postgres;Password=postgres;IncludeErrorDetail=True"));
                    })
                    .UseSerilog() // Add Serilog
                    .Build(); // Build the Host

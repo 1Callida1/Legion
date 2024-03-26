@@ -13,103 +13,103 @@
     Background="Transparent"
     mc:Ignorable="d">
 
-    <Grid>
-        <Grid Width="300" Height="400">
-            <Border Background="#ffff" CornerRadius="20" />
-            <Grid Width="300" Height="400">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="25" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <StackPanel
-                    Grid.Row="0"
-                    Background="#e95322">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="31" />
-                        </Grid.ColumnDefinitions>
+  <Grid>
+    <Grid Width="300" Height="400">
+      <Border Background="#ffff" CornerRadius="20" />
+      <Grid Width="300" Height="400">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="25" />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel
+            Grid.Row="0"
+            Background="#e95322">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition />
+              <ColumnDefinition Width="31" />
+            </Grid.ColumnDefinitions>
 
-                        <Button
-                            Background="#e95322"
-                            Grid.Column="1"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Width="25"
-                            Height="25">
-                        </Button>
-                    </Grid>
-                </StackPanel>
-                <StackPanel Grid.Row="1">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="75" />
-                            <RowDefinition Height="180" />
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="50" />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="4*" />
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+            <Button
+                Background="#e95322"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Width="25"
+                Height="25">
+            </Button>
+          </Grid>
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="75" />
+              <RowDefinition Height="180" />
+              <RowDefinition Height="30" />
+              <RowDefinition Height="50" />
+              <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="4*" />
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-                        <Label
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Content="Вход"
-                            FontFamily="sans-serif"
-                            FontSize="30"
-                            Foreground="#e95322" />
+            <Label
+                Grid.Row="0"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="Вход"
+                FontFamily="sans-serif"
+                FontSize="30"
+                Foreground="#e95322" />
 
-                        <StackPanel
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            VerticalAlignment="Center">
-                            <Label Content="Логин:" Foreground="Black" />
-                            <TextBox
-                                Height="30"
-                                Background="#123"
-                                CornerRadius="7"
-                                Foreground="White"
-                                Text="{CompiledBinding UserName}" />
-                            <Label Content="Пароль:" Foreground="Black" />
-                            <TextBox
-                                Height="30"
-                                Background="#123"
-                                CornerRadius="7"
-                                Foreground="White"
-                                PasswordChar="*"
-                                Text="{CompiledBinding Password}" />
-                        </StackPanel>
+            <StackPanel
+                Grid.Row="1"
+                Grid.Column="1"
+                VerticalAlignment="Center">
+              <Label Content="Логин:" Foreground="Black" />
+              <TextBox
+                  Height="30"
+                  Background="#123"
+                  CornerRadius="7"
+                  Foreground="White"
+                  Text="{CompiledBinding UserName}" />
+              <Label Content="Пароль:" Foreground="Black" />
+              <TextBox
+                  Height="30"
+                  Background="#123"
+                  CornerRadius="7"
+                  Foreground="White"
+                  PasswordChar="*"
+                  Text="{CompiledBinding Password}" />
+            </StackPanel>
 
-                        <Label
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="3"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Top"
-                            Content="Неверный логин или пароль!"
-                            Foreground="Red"
-                            IsVisible="{Binding WrongData}" />
+            <Label
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Content="Неверный логин или пароль!"
+                Foreground="Red"
+                IsVisible="{Binding WrongData}" />
 
-                        <Button
-                            Grid.Row="3"
-                            Grid.Column="1"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Background="#e95322"
-                            ClickMode="Press"
-                            Command="{CompiledBinding SubmitCommand}"
-                            Content="Войти"
-                            CornerRadius="20"
-                            FontFamily="TildaSans" HotKey="Enter"/>
-                    </Grid>
-                </StackPanel>
-            </Grid>
-        </Grid>
+            <Button
+                Grid.Row="3"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="#e95322"
+                ClickMode="Press"
+                Command="{CompiledBinding SubmitCommand}"
+                Content="Войти"
+                CornerRadius="20"
+                FontFamily="TildaSans" HotKey="Enter"/>
+          </Grid>
+        </StackPanel>
+      </Grid>
     </Grid>
+  </Grid>
 </UserControl>

@@ -38,6 +38,26 @@ namespace Legion.Views
             var result = await dialog.ShowDialog<object>(this);
             interaction.SetOutput(result);
         }
+
+        public async Task DoShowAdditionalPaymentsDialogAsync(InteractionContext<AdditionalPaymentsHistoryViewModel,
+            object> interaction)
+        {
+            var dialog = new AdditionalPaymentsHistoryWindow();
+            dialog.DataContext = interaction.Input;
+
+            var result = await dialog.ShowDialog<object>(this);
+            interaction.SetOutput(result);
+        }
+
+        public async Task DoShowPaymentsDialogAsync(InteractionContext<PaymentsHistoryViewModel,
+            object> interaction)
+        {
+            var dialog = new PaymentsHistoryWindow();
+            dialog.DataContext = interaction.Input;
+
+            var result = await dialog.ShowDialog<object>(this);
+            interaction.SetOutput(result);
+        }
     }
 }
 

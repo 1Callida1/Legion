@@ -1,20 +1,15 @@
-﻿using Avalonia;
+﻿using Legion.Helpers.Calculations;
 using Legion.Models;
-using Legion.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
+using Serilog;
+using Splat;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Serilog;
-using System.Diagnostics.Contracts;
-using Legion.Helpers.Calculations;
-using Microsoft.EntityFrameworkCore;
-using Splat;
 
 namespace Legion.ViewModels
 {
@@ -59,7 +54,9 @@ namespace Legion.ViewModels
         {
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
             _context = context;
-            Contract = new Models.Contract() { Manager = Locator.Current.GetService<User>()!};
+            User curUser = Locator.Current.GetService<User>()!;
+            Contract = new Models.Contract()
+                { Manager = _context.Users.First(u => u.Id == curUser.Id) };
             Contract.DateStart = DateTime.Now;
             Contract.DateEnd = DateTime.Now;
             SubmitText = "Добавить новый договор";

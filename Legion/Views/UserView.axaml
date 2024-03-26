@@ -11,91 +11,91 @@
              xmlns:models="clr-namespace:Legion.Models"
              x:DataType="vm:UserViewModel">
 
-	<Grid>
-		<Border Background="#ffff" CornerRadius="20" />
-		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="55" />
-				<RowDefinition Height="*" />
-			</Grid.RowDefinitions>
+  <Grid>
+    <Border Background="#ffff" CornerRadius="20" />
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="55" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
 
-			<Grid Background="#e95322" Grid.Row="0" VerticalAlignment="Center" Height="55">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="40" />
-					<ColumnDefinition Width="200" />
-					<ColumnDefinition Width="50" />
-					<ColumnDefinition Width="*" />
-				</Grid.ColumnDefinitions>
-				<Button Margin="80,0,5,0" Grid.Column="3" IsVisible="True" Content="Назад"
+      <Grid Background="#e95322" Grid.Row="0" VerticalAlignment="Center" Height="55">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="40" />
+          <ColumnDefinition Width="200" />
+          <ColumnDefinition Width="50" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Button Margin="80,0,5,0" Grid.Column="3" IsVisible="True" Content="Назад"
                         Height="35"
                         Width="80" HorizontalAlignment="Center" Background="#ffff" Foreground="#e95322"
 						Command="{Binding BackCommand}"/>
-				<Button Name="BtnAddNew" Margin="0,0,5,0" Grid.Column="3" IsVisible="True" Content="Добавить инвестора"
+        <Button Name="BtnAddNew" Margin="0,0,5,0" Grid.Column="3" IsVisible="True" Content="Добавить инвестора"
                         Height="35"
                         Width="180" HorizontalAlignment="Right" Background="#ffff" Foreground="#e95322"
                         Command="{Binding NewUserCommand}" />
-			</Grid>
+      </Grid>
 
-			<StackPanel Grid.Row="1">
-				<StackPanel IsVisible="True" Background="Transparent" Name="SPInvestorDG">
-					<Grid>
-						<Grid.RowDefinitions>
-							<RowDefinition Height="0.1*" />
-							<RowDefinition />
-						</Grid.RowDefinitions>
-						<DataGrid Name="UserGrid" ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20"
+      <StackPanel Grid.Row="1">
+        <StackPanel IsVisible="True" Background="Transparent" Name="SPInvestorDG">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="0.1*" />
+              <RowDefinition />
+            </Grid.RowDefinitions>
+            <DataGrid Name="UserGrid" ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20"
                                   ItemsSource="{Binding Users}" AutoGenerateColumns="False"
                                   GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray" IsReadOnly="True"
                                   HorizontalScrollBarVisibility="Visible" Height="700">
-							<DataGrid.Columns>
-								<DataGridTextColumn Header="Логин" Binding="{Binding Path=UserName}"/>
-								<DataGridTextColumn Header="Пароль" Binding="{Binding Path=Password}"/>
-								<DataGridTextColumn Header="Имя" Binding="{Binding Path=EmployerFirstName}"/>
-								<DataGridTextColumn Header="Роль" Binding="{Binding Path=UserRole.Role}"/>
-							</DataGrid.Columns>
-							<DataGrid.Resources>
+              <DataGrid.Columns>
+                <DataGridTextColumn Header="Логин" Binding="{Binding Path=UserName}"/>
+                <DataGridTextColumn Header="Пароль" Binding="{Binding Path=Password}"/>
+                <DataGridTextColumn Header="Имя" Binding="{Binding Path=EmployerFirstName}"/>
+                <DataGridTextColumn Header="Роль" Binding="{Binding Path=UserRole.Role}"/>
+              </DataGrid.Columns>
+              <DataGrid.Resources>
 
-								<ContextMenu x:Key="RowMenu">
-									<MenuItem Header="Редактировать"
+                <ContextMenu x:Key="RowMenu">
+                  <MenuItem Header="Редактировать"
                                               CommandParameter="{Binding (models:User)}"
                                               Command="{Binding #UserGrid.((vm:UserViewModel)DataContext).DataGridEditActionCommand}">
-										<MenuItem.Icon>
-											<i:Icon Value="fa-pen" Width="35" Height="35"/>
-										</MenuItem.Icon>
-									</MenuItem>
-									<Separator />
-									<MenuItem Header="Удалить" CommandParameter="{Binding (models:User)}"
+                    <MenuItem.Icon>
+                      <i:Icon Value="fa-pen" Width="35" Height="35"/>
+                    </MenuItem.Icon>
+                  </MenuItem>
+                  <Separator />
+                  <MenuItem Header="Удалить" CommandParameter="{Binding (models:User)}"
                                               Command="{Binding #UserGrid.((vm:UserViewModel)DataContext).DataGridRemoveActionCommand}">
-										<MenuItem.Icon>
-											<i:Icon Value="fa-trash" Width="35" Height="35" />
-										</MenuItem.Icon>
-									</MenuItem>
-								</ContextMenu>
-							</DataGrid.Resources>
-							<DataGrid.Styles>
-								<Style Selector="DataGridRow">
-									<Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
-								</Style>
-								<Style Selector="DataGridColumnHeader">
-									<Setter Property="Foreground" Value="Black" />
-								</Style>
-								<Style Selector="ScrollBar:horizontal">
-									<Setter Property="Background" Value="Gray" />
-								</Style>
-								<Style Selector="ScrollBar:vertical">
-									<Setter Property="Background" Value="Gray" />
+                    <MenuItem.Icon>
+                      <i:Icon Value="fa-trash" Width="35" Height="35" />
+                    </MenuItem.Icon>
+                  </MenuItem>
+                </ContextMenu>
+              </DataGrid.Resources>
+              <DataGrid.Styles>
+                <Style Selector="DataGridRow">
+                  <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+                </Style>
+                <Style Selector="DataGridColumnHeader">
+                  <Setter Property="Foreground" Value="Black" />
+                </Style>
+                <Style Selector="ScrollBar:horizontal">
+                  <Setter Property="Background" Value="Gray" />
+                </Style>
+                <Style Selector="ScrollBar:vertical">
+                  <Setter Property="Background" Value="Gray" />
 
-								</Style>
-								<Style Selector="Thumb">
-									<Setter Property="Background" Value="Black" />
-									<Setter Property="Foreground" Value="Wheat" />
+                </Style>
+                <Style Selector="Thumb">
+                  <Setter Property="Background" Value="Black" />
+                  <Setter Property="Foreground" Value="Wheat" />
 
-								</Style>
-							</DataGrid.Styles>
-						</DataGrid>
-					</Grid>
-				</StackPanel>
-			</StackPanel>
-		</Grid>
-	</Grid>
+                </Style>
+              </DataGrid.Styles>
+            </DataGrid>
+          </Grid>
+        </StackPanel>
+      </StackPanel>
+    </Grid>
+  </Grid>
 </UserControl>

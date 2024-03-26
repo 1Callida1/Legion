@@ -30,10 +30,18 @@ namespace Legion.ViewModels
             // your view models, or to reuse existing view models.
             //
 
+#if DEBUG
+            Locator.CurrentMutable.RegisterConstant(context.Users.First()!);
+            GoNext = ReactiveCommand.CreateFromObservable(
+                () => Router.Navigate.Execute(new MainMenuViewModel(context))
+            );
+            
+#else
+
             GoNext = ReactiveCommand.CreateFromObservable(
                 () => Router.Navigate.Execute(new LoginViewModel(context))
             );
-            Router.Navigate.Execute(new LoginViewModel(context));
+#endif
         }
     }
 }

@@ -11,87 +11,87 @@
              xmlns:models="clr-namespace:Legion.Models"
              x:DataType="vm:AddUserViewModel">
 
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="55" />
-			<RowDefinition Height="*" />
-		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*" />
-			<ColumnDefinition Width="80" />
-		</Grid.ColumnDefinitions>
-		<Panel
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="55" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="80" />
+    </Grid.ColumnDefinitions>
+    <Panel
             Background="#e95322"
             Grid.Row="0" Grid.ColumnSpan="2" Height="55" />
-		<Button Name="BtnBack" Grid.Row="0" Grid.Column="1" Content="Назад" Height="35" Width="80"
+    <Button Name="BtnBack" Grid.Row="0" Grid.Column="1" Content="Назад" Height="35" Width="80"
                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                 HorizontalAlignment="Right" Margin="0,0,5,0" Background="#ffff" Foreground="#e95322"
                 Command="{Binding BackCommand}" />
-		<StackPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Transparent" Margin="20">
-			<Label
+    <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Transparent" Margin="20">
+      <Label
                 Content="Добавление пользователя"
                 HorizontalAlignment="Center"
                 FontFamily="sans-serif"
                 FontSize="30"
                 Foreground="#e95322" />
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="0.1*" />
-					<RowDefinition Height="0.1*" />
-					<RowDefinition Height="0.1*" />
-					<RowDefinition Height="0.1*" />
-					<RowDefinition Height="0.1*" />
-					<RowDefinition Height="0.1*" />
-					<RowDefinition Height="0.1*" />
-					<RowDefinition Height="0.1*" />
-					<RowDefinition Height="0.1*" />
-					<RowDefinition Height="0.1*" />
-					<RowDefinition Height="0.1*" />
-					<RowDefinition Height="0.1*" />
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="0.1*" />
-					<ColumnDefinition Width="0.1*" />
-					<ColumnDefinition Width="0.1*" />
-					<ColumnDefinition Width="0.1*" />
-				</Grid.ColumnDefinitions>
-				<Label Content="Логин" Grid.Column="0" Grid.Row="1" Margin="7" Foreground="Black" />
-				<Label Content="Пароль" Grid.Column="0" Grid.Row="2" Margin="7" Foreground="Black" />
-				<Label Content="Имя" Grid.Column="0" Grid.Row="3" Margin="7" Foreground="Black" />
-				<Label Content="Роль" Grid.Column="0" Grid.Row="4" Margin="7" Foreground="Black" />
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="0.1*" />
+          <ColumnDefinition Width="0.1*" />
+          <ColumnDefinition Width="0.1*" />
+          <ColumnDefinition Width="0.1*" />
+        </Grid.ColumnDefinitions>
+        <Label Content="Логин" Grid.Column="0" Grid.Row="1" Margin="7" Foreground="Black" />
+        <Label Content="Пароль" Grid.Column="0" Grid.Row="2" Margin="7" Foreground="Black" />
+        <Label Content="Имя" Grid.Column="0" Grid.Row="3" Margin="7" Foreground="Black" />
+        <Label Content="Роль" Grid.Column="0" Grid.Row="4" Margin="7" Foreground="Black" />
 
-				<Border Grid.Column="1" Grid.Row="1" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
-					<TextBox  Height="28" Background="Gainsboro"
+        <Border Grid.Column="1" Grid.Row="1" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
+          <TextBox  Height="28" Background="Gainsboro"
 							  Foreground="Black" Text="{Binding User.UserName}"/>
-				</Border>
+        </Border>
 
-				<Border Grid.Column="1" Grid.Row="2" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
-					<TextBox  Height="28" Background="Gainsboro"
+        <Border Grid.Column="1" Grid.Row="2" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
+          <TextBox  Height="28" Background="Gainsboro"
 							  Foreground="Black" Text="{Binding User.Password}"/>
-				</Border>
+        </Border>
 
-				<Border Grid.Column="1" Grid.Row="3" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
-					<TextBox  Height="28" Background="Gainsboro"
+        <Border Grid.Column="1" Grid.Row="3" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
+          <TextBox  Height="28" Background="Gainsboro"
 							  Foreground="Black" Text="{Binding User.EmployerFirstName}"/>
-				</Border>
+        </Border>
 
-				<ComboBox Grid.Column="1" Grid.Row="4" Margin="7" Height="20" Background="Gainsboro"
+        <ComboBox Grid.Column="1" Grid.Row="4" Margin="7" Height="20" Background="Gainsboro"
                           CornerRadius="20" Foreground="Black" SelectedItem="{Binding User.UserRole}" ItemsSource="{Binding UserRoles}">
-					<ComboBox.ItemTemplate>
-						<DataTemplate>
-							<Panel>
-								<Label Content="{Binding Path=Role}" VerticalContentAlignment="Center" />
-							</Panel>
-						</DataTemplate>
-					</ComboBox.ItemTemplate>
-				</ComboBox>
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <Panel>
+                <Label Content="{Binding Path=Role}" VerticalContentAlignment="Center" />
+              </Panel>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
 
-                <Button Height="40" Margin="20" CornerRadius="20" Width="220" Content="{Binding SubmitText}"
-                        Background="#e95322" Command="{Binding SaveCommand}" HotKey="Ctrl+S" />
-                <Label Content="Роль" Grid.Column="0" Grid.Row="3" Margin="7" Foreground="Black" />
-                <Label Content="Имя" Grid.Column="0" Grid.Row="4" Margin="7" Foreground="Black" />
-			</Grid>
+        <Button Height="40" Margin="20" CornerRadius="20" Width="220" Content="{Binding SubmitText}"
+                Background="#e95322" Command="{Binding SaveCommand}" HotKey="Ctrl+S" />
+        <Label Content="Роль" Grid.Column="0" Grid.Row="3" Margin="7" Foreground="Black" />
+        <Label Content="Имя" Grid.Column="0" Grid.Row="4" Margin="7" Foreground="Black" />
+      </Grid>
 
-		</StackPanel>
-	</Grid>
+    </StackPanel>
+  </Grid>
 </UserControl>

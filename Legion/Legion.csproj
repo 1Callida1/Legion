@@ -45,14 +45,20 @@
 
 
   <ItemGroup>
-    <Compile Update="Views\AddIntegerWindow.axaml.cs">
+    <Compile Update="Views\Contracts\AddIntegerWindow.axaml.cs">
       <DependentUpon>AddIntegerWindow.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Contracts\PaymentsHistoryWindow.axaml.cs">
+      <DependentUpon>PaymentsHistoryWindow.axaml</DependentUpon>
     </Compile>
     <Compile Update="Views\LoginView.axaml.cs">
       <DependentUpon>LoginView.axaml</DependentUpon>
     </Compile>
     <Compile Update="Views\MainMenuView.axaml.cs">
       <DependentUpon>MainMenuView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Contracts\AdditionalPaymentsHistoryWindow.axaml.cs">
+      <DependentUpon>AdditionalPaymentsHistoryWindow.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
   

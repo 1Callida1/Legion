@@ -1,0 +1,142 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="Legion.Views.AddContractView"
+             Width="1000"
+             Height="800"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
+             xmlns:vm="using:Legion.ViewModels"
+             xmlns:controlTemplates="clr-namespace:Legion.Views.ControlTemplates"
+             x:DataType="vm:AddContractViewModel">
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="55" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="80" />
+    </Grid.ColumnDefinitions>
+    <Panel
+        Grid.ColumnSpan="2"
+        Grid.RowSpan="2" Background="#CB000000" IsVisible="{Binding BackgroundPaneVisible}"
+           ZIndex="10" />
+    <Panel
+        Background="#e95322"
+        Grid.Row="0" Grid.ColumnSpan="2" Height="55" />
+    <Button Name="BtnBack" Grid.Row="0" Grid.Column="1" Content="Назад" Height="35" Width="80"
+            HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+            HorizontalAlignment="Right" Margin="0,0,5,0" Background="#ffff" Foreground="#e95322"
+            Command="{Binding BackCommand}" />
+    <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Transparent">
+      <Label
+          Content="{Binding SubmitText}"
+          HorizontalAlignment="Center"
+          FontFamily="sans-serif"
+          FontSize="30"
+          Foreground="#e95322" />
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="0.1*" />
+          <ColumnDefinition Width="0.1*" />
+          <ColumnDefinition Width="0.1*" />
+          <ColumnDefinition Width="0.1*" />
+        </Grid.ColumnDefinitions>
+        <Label Content="Основная информация" Grid.Column="1" Grid.Row="0" Margin="7" Foreground="Black"
+               FontSize="15" FontWeight="Bold" />
+        <Label Content="Номер договора" Grid.Column="0" Grid.Row="1" Margin="7" Foreground="Black" />
+        <controlTemplates:CorneredTextBox Grid.Column="1" Grid.Row="1" Height="30" VerticalAlignment="Top"
+                                          TextPadding="10" MaxLength="18" Margin="7"
+                                          Text="{Binding CustomId, Mode=TwoWay}" />
+        <Label Content="Статус договора" Grid.Column="0" Grid.Row="2" Margin="7" Foreground="Black" />
+        <ComboBox Grid.Column="1" Grid.Row="2" Margin="7" Height="20" Background="Gainsboro"
+                  CornerRadius="20" Foreground="Black" SelectedItem="{Binding Contract.Status}"
+                  ItemsSource="{Binding ContractStatuses}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <Panel>
+                <Label Content="{Binding Path=Status}" VerticalContentAlignment="Center" />
+              </Panel>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Label Content="Дата начала" Grid.Column="0" Grid.Row="3" Margin="7" Foreground="Black" />
+        <DatePicker Grid.Column="1" Grid.Row="3" Foreground="Black"
+                    SelectedDate="{Binding StartDateTime, Mode=TwoWay}" />
+        <Label Content="Тип договора" Grid.Column="0" Grid.Row="4" Margin="7" Foreground="Black" />
+        <ComboBox Grid.Column="1" Grid.Row="4" Margin="7" Height="20" Background="Gainsboro"
+                  CornerRadius="20" Foreground="Black" SelectedItem="{Binding SelectedContractType}"
+                  ItemsSource="{Binding ContractTypes}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="80" />
+                  <ColumnDefinition Width="30" />
+                  <ColumnDefinition Width="30" />
+                  <ColumnDefinition Width="30" />
+                </Grid.ColumnDefinitions>
+                <Label Content="{Binding Path=TypeName}" Grid.Column="0" VerticalAlignment="Center" />
+                <Label Content="{Binding Path=Bet}" Grid.Column="1" VerticalAlignment="Center" />
+                <Label Content="{Binding Path=Period}" Grid.Column="2" VerticalAlignment="Center" />
+                <Label Content="мес." Grid.Column="3" VerticalAlignment="Center"
+                       VerticalContentAlignment="Center" />
+              </Grid>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Label Content="Сумма" Grid.Column="2" Grid.Row="1" Margin="7" Foreground="Black" />
+
+        <Border Grid.Row="1" Grid.Column="3" CornerRadius="20" Background="Gainsboro" Padding="10,0"
+                Height="20" Margin="7">
+          <NumericUpDown Height="20" Background="Gainsboro" Minimum="0" Maximum="2147000000"
+                         Foreground="Black" Value="{Binding Amount}" />
+        </Border>
+
+        <Border Grid.Column="3" Grid.Row="1" CornerRadius="20" BorderThickness="2" />
+        <Label Content="Заметка" Grid.Column="2" Grid.Row="2" Margin="7" Foreground="Black" />
+        <controlTemplates:CorneredTextBox Grid.Column="3" Grid.Row="2" Margin="7" Height="20"
+                                          Background="Gainsboro"
+                                          CornerRadius="20" TextPadding="10" Foreground="Black"
+                                          Text="{Binding Contract.Note, Mode=TwoWay}" />
+        <Label Content="Дата окончагия" Grid.Column="2" Grid.Row="3" Margin="7" Foreground="Black" />
+        <DatePicker Grid.Column="3" Grid.Row="3" Foreground="Black"
+                    SelectedDate="{Binding EndDateTime}" DayFormat="ddd dd" />
+        <Label Content="Инвестор" Grid.Column="1" Grid.Row="5" Margin="7" Foreground="Black"
+               FontSize="15" FontWeight="Bold" />
+
+        <Label Content="{Binding InvestorData}" Grid.Column="1" Grid.Row="6" Margin="7" Foreground="Black"
+               FontSize="15" />
+
+        <Button Height="40" Margin="10" CornerRadius="20" Width="110" Grid.Column="2" Grid.Row="6"
+                Content="Найти" Background="#e95322" Command="{Binding SearchInvestorCommand}" />
+        <Button Height="40" Margin="10" CornerRadius="20" Width="110" Grid.Column="3" Grid.Row="6"
+                Content="Новый" Background="#e95322" />
+        <Label Content="Реферал" Grid.Column="1" Grid.Row="9" Margin="7" Foreground="Black"
+               FontSize="15" FontWeight="Bold" />
+        <Label Content="{Binding RefferalData}" Grid.Column="1" Grid.Row="10" Margin="7" Foreground="Black"
+               FontSize="15" />
+        <Button Height="40" Margin="10" CornerRadius="20" Width="110" Grid.Column="2" Grid.Row="10"
+                Content="Найти" Background="#e95322" Command="{Binding SearchRefferalCommand}" />
+      </Grid>
+      <Button Height="40" Margin="10" CornerRadius="20" Width="220" Content="{Binding SubmitText}"
+              Background="#e95322" Command="{Binding SaveCommand}" />
+    </StackPanel>
+  </Grid>
+</UserControl>
