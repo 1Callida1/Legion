@@ -8,32 +8,32 @@
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="500"
              xmlns:vm="using:Legion.ViewModels"
              x:DataType="vm:MainMenuViewModel">
-  <Grid>
-    <Grid Width="400" Height="500">
-      <Border Background="#ffff" CornerRadius="20" />
-      <Grid Width="400" Height="500">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="25" />
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Background="#e95322"/>
-        <Button Grid.Row="1" Margin="6" CornerRadius="20" Content="Инвесторы" Background="#e95322" Command="{Binding InvestorsCommand}"/>
-        <Button Grid.Row="2" Margin="6" CornerRadius="20" Content="Договоры" Background="#e95322" Command="{Binding ContractsCommand}"/>
-        <Button Grid.Row="3" Margin="6" CornerRadius="20" Content="Рефералы" Background="#e95322"  Command="{Binding ReferralsCommand}"/>
-        <Button Grid.Row="5" Margin="6" CornerRadius="20" Content="Пользователи" Background="#e95322"  Command="{Binding UsersCommand}"/>
-        <Button Grid.Row="4" Margin="6" CornerRadius="20" Content="Истекающие договоры" Background="#e95322" Command="{Binding ExpiringContractCommand}"/>
-        <Button Grid.Row="8" Margin="6" CornerRadius="20" Content="Отчеты" Background="#e95322"/>
-        <Button Grid.Row="9" Margin="6" CornerRadius="20" Content="Выход" Background="#e95322"/>
-      </Grid>
-    </Grid>
-  </Grid>
+	<Grid>
+		<Grid Width="400" Height="500">
+			<Border Background="#ffff" CornerRadius="20" />
+			<Grid Width="400" Height="500">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="25" />
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+				<StackPanel Grid.Row="0" Background="#e95322"/>
+				<Button Grid.Row="1" Margin="6" CornerRadius="20" Content="Инвесторы" Background="#e95322" Command="{Binding InvestorsCommand}"/>
+				<Button Grid.Row="2" Margin="6" CornerRadius="20" Content="Договоры" Background="#e95322" Command="{Binding ContractsCommand}"/>
+				<Button Grid.Row="3" Margin="6" CornerRadius="20" Content="Рефералы" Background="#e95322"  Command="{Binding ReferralsCommand}"/>
+				<Button Grid.Row="5" Margin="6" CornerRadius="20" Content="Пользователи" Background="#e95322"  Command="{Binding UsersCommand}"/>
+				<Button Grid.Row="4" Margin="6" CornerRadius="20" Content="Истекающие договоры" Background="#e95322" Command="{Binding ExpiringContractCommand}"/>
+				<Button Grid.Row="8" Margin="6" CornerRadius="20" Content="Отчеты" Background="#e95322" Command="{Binding ReportsCommand}"/>
+				<Button Grid.Row="9" Margin="6" CornerRadius="20" Content="Выход" Background="#e95322"/>
+			</Grid>
+		</Grid>
+	</Grid>
 </UserControl>

@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Splat;
+using Legion.Views;
 
 namespace Legion.ViewModels
 {
@@ -60,6 +61,11 @@ namespace Legion.ViewModels
                 HostScreen.Router.Navigate.Execute(new UserViewModel(_context));
 
             });
+
+            ReportsCommand = ReactiveCommand.Create(() =>
+            {
+                HostScreen.Router.Navigate.Execute(new ReportsViewModel(_context));
+            });
         }
 
         public ReactiveCommand<Unit, Unit> InvestorsCommand { get; }
@@ -67,6 +73,7 @@ namespace Legion.ViewModels
         public ReactiveCommand<Unit, Unit> ReferralsCommand { get; }
         public ReactiveCommand<Unit, Unit> UsersCommand { get; }
         public ReactiveCommand<Unit, Unit> ExpiringContractCommand { get; }
+        public ReactiveCommand<Unit, Unit> ReportsCommand { get; }
         public sealed override IScreen HostScreen { get; set; }
     }
 }
