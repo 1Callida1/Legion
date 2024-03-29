@@ -26,6 +26,7 @@ namespace Legion.Models
         public bool Repeated { get; set; } = false;
         public int RepeatNumber { get; set; } = 0;
         public Referral? Referral { get; set; } = null!;
+        public DateTime DateProlonagtion { get; set; } = DateTime.Now;
         public string? Note {  get; set; } = null!;
     }
 }

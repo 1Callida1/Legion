@@ -62,7 +62,6 @@ namespace Legion
                        services.AddSingleton<LoginView>();
                        services.AddSingleton<InvestorsView>();
                        services.AddSingleton<InvestorsViewModel>();
-
                        services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
                    })
                    .UseSerilog() // Add Serilog
@@ -74,18 +73,18 @@ namespace Legion
 
                 if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
                 {
-                    _context.UserRoles.Add(new UserRole() { Role = "Админ"});
-                    _context.UserRoles.Add(new UserRole() { Role = "Босс качалки" });
+                    _context.UserRoles.Add(new UserRole() { Role = "ГЂГ¤Г¬ГЁГ­"});
+                    _context.UserRoles.Add(new UserRole() { Role = "ГЃГ®Г±Г± ГЄГ Г·Г Г«ГЄГЁ" });
                     _context.SaveChanges();
-                    _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Админ")) });
-                    _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Босс качалки")) });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 2, Formula = "x*p", Period = 6, TypeName = "Накопительный", CanAddMoney = true });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 4, Formula = "x*p", Period = 12, TypeName = "Годовой", CanAddMoney = false });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 6, Formula = "x*p", Period = 36, TypeName = "Трехгодовой", CanAddMoney = false });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 7, Formula = "x*p", Period = 18, TypeName = "Доходный", CanAddMoney = false });
-                    _context.ContractStatuses.Add(new ContractStatus() { Status = "Открыт" });
-                    _context.ContractStatuses.Add(new ContractStatus() { Status = "Закрыт" });
-                    _context.ContractStatuses.Add(new ContractStatus() { Status = "Приостановлен" });
+                    _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba", UserRole = _context.UserRoles.First(role => role.Role.Contains("ГЂГ¤Г¬ГЁГ­")) });
+                    _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba", UserRole = _context.UserRoles.First(role => role.Role.Contains("ГЃГ®Г±Г± ГЄГ Г·Г Г«ГЄГЁ")) });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 2, Formula = "x*p", Period = 6, TypeName = "ГЌГ ГЄГ®ГЇГЁГІГҐГ«ГјГ­Г»Г©", CanAddMoney = true });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 4, Formula = "x*p", Period = 12, TypeName = "ГѓГ®Г¤Г®ГўГ®Г©", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 6, Formula = "x*p", Period = 36, TypeName = "Г’Г°ГҐГµГЈГ®Г¤Г®ГўГ®Г©", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 7, Formula = "x*p", Period = 18, TypeName = "Г„Г®ГµГ®Г¤Г­Г»Г©", CanAddMoney = false });
+                    _context.ContractStatuses.Add(new ContractStatus() { Status = "ГЋГІГЄГ°Г»ГІ" });
+                    _context.ContractStatuses.Add(new ContractStatus() { Status = "Г‡Г ГЄГ°Г»ГІ" });
+                    _context.ContractStatuses.Add(new ContractStatus() { Status = "ГЏГ°ГЁГ®Г±ГІГ Г­Г®ГўГ«ГҐГ­" });
                     _context.SaveChanges();
                 }
                 else
