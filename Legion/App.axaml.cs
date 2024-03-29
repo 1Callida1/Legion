@@ -16,6 +16,7 @@ using SkiaSharp;
 using System.Diagnostics;
 using System.Linq;
 using Legion.Helpers;
+using Legion.Models.Internal;
 using Legion.Views;
 using ReactiveUI;
 
@@ -97,6 +98,7 @@ namespace Legion
                 Locator.CurrentMutable.RegisterConstant<IScreen>(new MainWindowViewModel(_context));
                 Locator.CurrentMutable.RegisterConstant(new MainWindow());
                 Locator.CurrentMutable.RegisterConstant(desktop);
+                Locator.CurrentMutable.RegisterConstant(SettingsHelper.LoadSettings() ?? new Settings());
 
                 desktop.MainWindow = Locator.Current.GetService<MainWindow>();
                 desktop.MainWindow!.DataContext = Locator.Current.GetService<IScreen>();

@@ -82,6 +82,8 @@ namespace Legion.ViewModels
             set
             {
                 var toSet = value;
+
+                //saving resize state after hide window
                 switch (value)
                 {
                     case 1:

@@ -68,6 +68,11 @@ namespace Legion.ViewModels
                 HostScreen.Router.Navigate.Execute(new ReportsViewModel(_context));
             });
 
+            SettingsCommand = ReactiveCommand.Create(() =>
+            {
+                HostScreen.Router.Navigate.Execute(new SettingsViewModel());
+            });
+
             ExitCommand = ReactiveCommand.Create(() =>
             {
                 Locator.Current.GetService<IClassicDesktopStyleApplicationLifetime>()!.Shutdown();
@@ -79,6 +84,7 @@ namespace Legion.ViewModels
         public ReactiveCommand<Unit, Unit> ReferralsCommand { get; }
         public ReactiveCommand<Unit, Unit> UsersCommand { get; }
         public ReactiveCommand<Unit, Unit> ExpiringContractCommand { get; }
+        public ReactiveCommand<Unit, Unit> SettingsCommand { get; }
         public ReactiveCommand<Unit, Unit> ReportsCommand { get; }
         public ReactiveCommand<Unit, Unit> ExitCommand { get; }
         public sealed override IScreen HostScreen { get; set; }

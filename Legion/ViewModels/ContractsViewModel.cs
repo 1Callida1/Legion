@@ -15,6 +15,7 @@ using Legion.Helpers;
 using Contract = Legion.Models.Contract;
 using SkiaSharp;
 using System.Security.Principal;
+using Legion.Models.Internal;
 
 namespace Legion.ViewModels
 {
