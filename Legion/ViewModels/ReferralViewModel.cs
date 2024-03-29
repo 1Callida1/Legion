@@ -21,14 +21,14 @@ namespace Legion.ViewModels
     {
         private readonly ApplicationDbContext _context;
         private ObservableCollection<Referral> _referral = null!;
-        private ObservableCollection<Contract> _contract = null!;
+        private List<Contract> _contract = null!;
         private string _searchText = null!;
     
         public ReferralViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             _context = context;
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
-            Contracts = _context.Contracts.Local.ToObservableCollection();
+            Contracts = _context.Contracts.ToList();
 
             BackCommand = ReactiveCommand.Create(() =>
             {
@@ -58,14 +58,14 @@ namespace Legion.ViewModels
             {
                 if (value.Length == 0)
                 {
-                    Contracts = _context.Contracts.Local.ToObservableCollection();
+                    Contracts = _context.Contracts.ToList();
                 }
                 this.RaiseAndSetIfChanged(ref _searchText, value);
             }
         }
 
 
-        public ObservableCollection<Contract> Contracts
+        public List<Contract> Contracts
         {
             get => _contract;
             set => this.RaiseAndSetIfChanged(ref _contract, value);

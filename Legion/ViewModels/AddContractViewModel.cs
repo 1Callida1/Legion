@@ -95,8 +95,6 @@ namespace Legion.ViewModels
                 this.RaisePropertyChanged(nameof(Contract.Investor));
             });
 
-
-
             SearchRefferalCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 Referral refer;
