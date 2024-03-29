@@ -79,9 +79,10 @@ namespace Legion
                     _context.SaveChanges();
                     _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Админ")) });
                     _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Босс качалки")) });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 10, Formula = "x*p", Period = 12, TypeName = "Накопительный", CanAddMoney = true });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 0, Formula = "x*p", Period = 12, TypeName = "Инвестиционный", CanAddMoney = false });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 0, Formula = "x*p", Period = 6, TypeName = "Тип 3", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 2, Formula = "x*p", Period = 6, TypeName = "Накопительный", CanAddMoney = true });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 4, Formula = "x*p", Period = 12, TypeName = "Годовой", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 6, Formula = "x*p", Period = 36, TypeName = "Трехгодовой", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 7, Formula = "x*p", Period = 18, TypeName = "Доходный", CanAddMoney = false });
                     _context.ContractStatuses.Add(new ContractStatus() { Status = "Открыт" });
                     _context.ContractStatuses.Add(new ContractStatus() { Status = "Закрыт" });
                     _context.ContractStatuses.Add(new ContractStatus() { Status = "Приостановлен" });
