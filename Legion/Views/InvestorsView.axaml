@@ -4,9 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Class="Legion.Views.InvestorsView"
              xmlns:i="https://github.com/projektanker/icons.avalonia"
-             Width="1000"
-             Height="800"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="780"
              xmlns:vm="using:Legion.ViewModels"
              xmlns:models="clr-namespace:Legion.Models"
              x:DataType="vm:InvestorsViewModel">

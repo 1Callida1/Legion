@@ -1,4 +1,5 @@
-﻿using Legion.Views;
+﻿using Avalonia.Controls.ApplicationLifetimes;
+using Legion.Views;
 using ReactiveUI;
 using Splat;
 using System;
@@ -7,11 +8,16 @@ using System.Linq;
 using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 
 namespace Legion.ViewModels
 {
     public class MainWindowViewModel : ReactiveObject, IScreen
     {
+        private int _mainWindowState;
+        private int _lastSizeState;
+        private bool _isInternalStateChanging;
+
         public RoutingState Router { get; } = new RoutingState();
 
         // The command that navigates a user to first view model.
@@ -22,6 +28,8 @@ namespace Legion.ViewModels
 
         public MainWindowViewModel(ApplicationDbContext context)
         {
+            _lastSizeState = 0; // normal
+            _isInternalStateChanging = false;
             // Manage the routing state. Use the Router.Navigate.Execute
             // command to navigate to different view models. 
             //
@@ -29,6 +37,30 @@ namespace Legion.ViewModels
             // of a view model, this allows you to pass parameters to 
             // your view models, or to reuse existing view models.
             //
+            ExitCommand = ReactiveCommand.Create(() =>
+            {
+                Locator.Current.GetService<IClassicDesktopStyleApplicationLifetime>()!.Shutdown();
+            });
+
+            ResizeCommand = ReactiveCommand.Create(() =>
+            {
+                if (MainWindowState == 3)
+                {
+                    _isInternalStateChanging = true;
+                    MainWindowState = 0; //normal
+                    _isInternalStateChanging = false;
+                }
+                else
+                {
+                    MainWindowState = 3; //fullscreen
+                }
+            });
+
+            HideCommand = ReactiveCommand.Create(() =>
+            {
+                MainWindowState = 1;
+            });
+
 
 #if DEBUG
             Locator.CurrentMutable.RegisterConstant(context.Users.First()!);
@@ -43,5 +75,27 @@ namespace Legion.ViewModels
             );
 #endif
         }
+
+        public int MainWindowState
+        {
+            get => _mainWindowState;
+            set
+            {
+                var toSet = value;
+                switch (value)
+                {
+                    case 1:
+                        _lastSizeState = MainWindowState;
+                        break;
+                    case 0:
+                        toSet = _isInternalStateChanging ? value : _lastSizeState;
+                        break;
+                }
+                this.RaiseAndSetIfChanged(ref _mainWindowState, toSet);
+            }
+        }
+        public ReactiveCommand<Unit, Unit> ExitCommand { get; }
+        public ReactiveCommand<Unit, Unit> ResizeCommand { get; }
+        public ReactiveCommand<Unit, Unit> HideCommand { get; }
     }
 }

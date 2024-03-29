@@ -3,8 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Class="Legion.Views.AddContractView"
-             Width="1000"
-             Height="800"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
              xmlns:vm="using:Legion.ViewModels"
              xmlns:controlTemplates="clr-namespace:Legion.Views.ControlTemplates"

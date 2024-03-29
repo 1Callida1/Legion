@@ -15,14 +15,30 @@
         ExtendClientAreaTitleBarHeightHint="-1"
         SystemDecorations="None"
         Background="Transparent"
+        WindowState ="{Binding MainWindowState, Mode=TwoWay}"
         WindowStartupLocation="CenterScreen">
   <Grid>
-    <Border Background="#464866" CornerRadius="20" />
+    <Border Grid.RowSpan="3" Background="#464866" CornerRadius="20" />
     <Grid.RowDefinitions>
+        <RowDefinition Height="20" />
       <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    <reactiveUi:RoutedViewHost Grid.Row="0" Router="{Binding Router}">
+    <Grid Grid.Row="0">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0, 15,0">
+
+          <Button Width="15" Height="15" Margin="3, 0" CornerRadius="10" HorizontalContentAlignment="Left" Background="Green" VerticalAlignment="Center" Command="{Binding ResizeCommand}">
+          </Button>
+
+            <Button Width="15" Height="15" Margin="3, 0" CornerRadius="10" HorizontalContentAlignment="Left" Background="Yellow" VerticalAlignment="Center" Command="{Binding HideCommand}">
+            </Button>
+
+            <Button Width="15" Height="15" Margin="3, 0" CornerRadius="10" HorizontalContentAlignment="Left" Background="Red" VerticalAlignment="Center" Command="{Binding ExitCommand}">
+            </Button>
+        </StackPanel>
+    </Grid>
+
+    <reactiveUi:RoutedViewHost Grid.Row="1" Router="{Binding Router}">
       <reactiveUi:RoutedViewHost.DefaultContent>
         <TextBlock Text="Default Content" />
       </reactiveUi:RoutedViewHost.DefaultContent>

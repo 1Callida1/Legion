@@ -22,14 +22,14 @@
             <RowDefinition Height="60" />
         </Grid.RowDefinitions>
 
-        <Grid Background="#e95322" Grid.Row="0" VerticalAlignment="Center" Height="55" ShowGridLines="True">
+        <Grid Background="#e95322" Grid.Row="0" VerticalAlignment="Center" Height="55" ShowGridLines="False">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="300" />
                 <ColumnDefinition Width="120" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="3" Content="Íàçàä" Margin="8" CornerRadius="20" Background="#ffff" Foreground="#e95322" Width="120" HorizontalAlignment="Right" Command="{Binding BackCommand}"/>
+            <Button Grid.Column="3" Content="ÐÐ°Ð·Ð°Ð´" Margin="8" CornerRadius="20" Background="#ffff" Foreground="#e95322" Width="120" HorizontalAlignment="Right" Command="{Binding BackCommand}"/>
         </Grid>
         <Grid ShowGridLines="True">
             <Grid.RowDefinitions>
