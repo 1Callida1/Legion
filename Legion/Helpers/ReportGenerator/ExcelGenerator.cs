@@ -19,14 +19,15 @@ namespace Legion.Helpers.ReportGenerator
 {
     public class ExcelGenerator
     {
+        private ApplicationDbContext _context = null!;
         public byte[] GenerateReportCash(ObservableCollection<Legion.Models.Contract> cntrs, DateTime start)
         {
             ExcelPackage package = new ExcelPackage();
             ObservableCollection<Legion.Models.Contract> contracts = cntrs;
 
             ExcelWorksheet sheet = package.Workbook.Worksheets.Add("Доход безналичный");
-            int sum_all_day = 0;
-            contracts.ToList().ForEach(contract => sum_all_day += contract.Amount * contract.ContractType.Bet); //TODO //TODO //TODO //БРАТЬ СТАВКУ ИЗ ДОГОВОРА А НЕ ТИПА
+            double sum_all_day = 0;
+            contracts.ToList().ForEach(contract => sum_all_day += Convert.ToDouble(contract.Amount) * Convert.ToDouble(contract.Bet));
 
             sheet.Column(2).Width = 38;
             sheet.Column(3).Width = 25;
@@ -72,7 +73,7 @@ namespace Legion.Helpers.ReportGenerator
             foreach (Models.Contract contract in contracts)
             {
                 sheet.Cells[row, column].Value = $"{contract.Investor.LastName} {contract.Investor.FirstName} {contract.Investor.MiddleName}";
-                sheet.Cells[row, column + 1].Value = contract.Amount * contract.ContractType.Bet; //TODO //TODO //TODO //БРАТЬ СТАВКУ ИЗ ДОГОВОРА А НЕ ТИПА
+                sheet.Cells[row, column + 1].Value = contract.Amount * contract.Bet;
                 sheet.Cells[row, column + 2].Value = contract.Investor.CardNumber;
 
                 sum += contract.Amount * contract.ContractType.Bet;
@@ -103,8 +104,8 @@ namespace Legion.Helpers.ReportGenerator
             ObservableCollection<Models.Contract> contracts = cntrs;
 
             ExcelWorksheet sheet = package.Workbook.Worksheets.Add("Доход наличный");
-            int sum_all_day = 0;
-            contracts.ToList().ForEach(contract => sum_all_day += contract.Amount * contract.ContractType.Bet); //TODO //TODO //TODO //БРАТЬ СТАВКУ ИЗ ДОГОВОРА А НЕ ТИПА
+            double sum_all_day = 0;
+            contracts.ToList().ForEach(contract => sum_all_day += Convert.ToDouble(contract.Amount) * Convert.ToDouble(contract.Bet));
 
             sheet.Column(2).Width = 38;
             sheet.Column(3).Width = 25;
@@ -143,16 +144,16 @@ namespace Legion.Helpers.ReportGenerator
             int row = 9;
             int column = 2;
 
-            int sum = 0;
+            double sum = 0;
 
             foreach (Models.Contract contract in contracts)
             {
                 sheet.Cells[row, column].Value = $"{contract.Investor.LastName} {contract.Investor.FirstName} {contract.Investor.MiddleName}";
-                sheet.Cells[row, column + 1].Value = contract.Amount * contract.ContractType.Bet; //TODO //TODO //TODO //БРАТЬ СТАВКУ ИЗ ДОГОВОРА А НЕ ТИПА
+                sheet.Cells[row, column + 1].Value = Convert.ToDouble(contract.Amount) * Convert.ToDouble(contract.Bet);
                 sheet.Cells[row, column + 2].Value = "Наличный";
 
-                sum += contract.Amount * contract.ContractType.Bet;
-                row++; 
+                sum += Convert.ToDouble(contract.Amount) * Convert.ToDouble(contract.Bet);
+                row++;
             }
 
             sheet.Cells[9, 2, row, column + 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -237,7 +238,7 @@ namespace Legion.Helpers.ReportGenerator
             sheet.Cells[12, 1].RichText.Add("Процентная" + "\r\n");
             sheet.Cells[12, 1].RichText.Add("ставка в:" + "\r\n");
             sheet.Cells[12, 1].RichText.Add("месяц");
-            sheet.Cells[12, 2].Value = contract.ContractType.Bet.ToString("F2") + "%"; //TODO //TODO //TODO //БРАТЬ СТАВКУ ИЗ ДОГОВОРА А НЕ ТИПА
+            sheet.Cells[12, 2].Value = contract.Bet.ToString("F2") + "%";
 
             sheet.Cells[13, 1].Value = "Дата:";
             sheet.Cells[13, 2].Value = contract.DateStart.ToString("dd.MM.yyyy");
@@ -272,7 +273,7 @@ namespace Legion.Helpers.ReportGenerator
             sheet.Cells[16, 2, 18, 2].Merge = true;
 
             sheet.Cells[16, 3].RichText.Add("Остаток суммы" + "\r\n");
-            sheet.Cells[16, 3].RichText.Add("инвестиции" );
+            sheet.Cells[16, 3].RichText.Add("инвестиции");
             sheet.Cells[16, 3, 18, 3].Merge = true;
 
             sheet.Cells[16, 4].RichText.Add("Проценты на" + "\r\n");
@@ -297,7 +298,7 @@ namespace Legion.Helpers.ReportGenerator
 
             double sum = 0;
 
-            for(int month = 0; month <= mounthCount - 1; month++)
+            for (int month = 0; month <= mounthCount - 1; month++)
             {
                 sheet.Column(row).Width = 16;
 
@@ -307,9 +308,9 @@ namespace Legion.Helpers.ReportGenerator
 
                 sheet.Cells[row, column + 2].Value = contract.Amount.ToString("### ### ### руб.");
 
-                string monthPayment = contract.ContractType.Formula.Replace("x", (Convert.ToDouble(contract.ContractType.Bet) / 100).ToString()).Replace("p", contract.Amount.ToString()); //TODO //TODO //TODO //БРАТЬ СТАВКУ ИЗ ДОГОВОРА А НЕ ТИПА
+                string monthPayment = contract.ContractType.Formula.Replace("x", (Convert.ToDouble(contract.Bet) / 100).ToString()).Replace("p", contract.Amount.ToString());
                 double result = Convert.ToDouble(new DataTable().Compute(monthPayment.Replace(",", "."), null));
-                sheet.Cells[row, column + 3].Value =  result.ToString("### ### ### руб.");
+                sheet.Cells[row, column + 3].Value = result.ToString("### ### ### руб.");
 
                 sheet.Cells[row, 1, row, 7].Style.Font.SetFromFont("Verdana", 8);
 
@@ -349,10 +350,14 @@ namespace Legion.Helpers.ReportGenerator
             return package.GetAsByteArray();
         }
 
-        public byte[] MonthlyContract(ObservableCollection<Models.Contract> cntrs, DateTime start, DateTime end)
+        public byte[] MonthlyContract(ObservableCollection<Models.Contract> cntrs, DateTime start, DateTime end, ApplicationDbContext context)
         {
             ExcelPackage package = new ExcelPackage();
             ObservableCollection<Models.Contract> contracts = cntrs;
+
+            _context = context;
+
+            contracts = new ObservableCollection<Models.Contract>(contracts.OrderByDescending(x => x.DateStart).Reverse());
 
             ExcelWorksheet sheet = package.Workbook.Worksheets.Add("Ежемесячная ведомость по договорам");
 
@@ -367,9 +372,78 @@ namespace Legion.Helpers.ReportGenerator
             sheet.Cells[2, 9].Value = "Срок";
             sheet.Cells[2, 10].Value = "Форма оплаты";
             sheet.Cells[2, 11].Value = "Номер карты";
-            sheet.Cells[2, 11].Value = "Сумма доб.";
+            sheet.Cells[2, 12].Value = "Сумма доб.";
 
-            //TO DO Допилить когда обновится моделька договоров
+            sheet.Cells[2, 1, 2, 12].Style.Font.Bold = true;
+
+            int row = 3;
+            int column = 1;
+            DateTime currentDate = new DateTime();
+
+            foreach (Models.Contract contract in contracts)
+            {
+                if(currentDate != contract.DateStart)
+                {
+                    currentDate = contract.DateStart;
+
+                    sheet.Cells[row, column].Value = currentDate.ToString("dd.MM.yyyy");
+                    sheet.Cells[row, column, row, 12].Merge = true;
+                    sheet.Cells[row, column, row, 12].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    sheet.Cells[row, column, row, 12].Style.Font.Bold = true;
+
+                    row++;
+                }
+
+                sheet.Cells[row, column].Value = contract.CustomId;
+
+                sheet.Cells[row, column + 2].Value = $"{contract.Investor.LastName} {contract.Investor.FirstName} {contract.Investor.MiddleName}";
+
+                sheet.Cells[row, column + 3].Value = contract.Investor.DateBirth.ToString("dd.MM.yyyy");
+
+                sheet.Cells[row, column + 4].Value = contract.Investor.Phone.ToString();
+
+                sheet.Cells[row, column + 5].Value = $"{contract.Referral.InvestorCalled.LastName} {contract.Referral.InvestorCalled.FirstName[0]}. {contract.Referral.InvestorCalled.LastName[0]}.";
+
+                sheet.Cells[row, column + 6].Value = contract.Amount.ToString("### ### ###");
+
+                sheet.Cells[row, column + 7].Value = contract.Bet;
+
+                if(contract.DateProlonagtion != contract.DateStart) 
+                {
+                    sheet.Cells[row, column + 8].Value = Math.Abs((contract.DateStart.Month - contract.DateEnd.Month) + 12 * (contract.DateStart.Year - contract.DateEnd.Year));
+                }
+                else
+                {
+                    sheet.Cells[row, column + 8].Value = Math.Abs((contract.DateProlonagtion.Month - contract.DateEnd.Month) + 12 * (contract.DateProlonagtion.Year - contract.DateEnd.Year));
+                }
+                
+                sheet.Cells[row, column + 9].Value = contract.Investor.PayType; //TO DO Нормализовать вывод PayType
+
+                if (contract.Repeated && contract.DateProlonagtion == currentDate)
+                {
+                    AdditionalPayment payment = _context.AdditionalPayments.First(x => x.Contract == contract && x.Date == currentDate);
+                    if(payment != null)
+                    {
+                        sheet.Cells[row, column + 10].Value = "Перез. с доб.";
+
+                        sheet.Cells[row, column + 11].Value = payment.Amount.ToString("dd.MM.yyyy");
+                    }
+                    else
+                    {
+                        sheet.Cells[row, column + 10].Value = "Перезаключение";
+                    }
+                }
+                else
+                {
+                    sheet.Cells[row, column + 10].Value = contract.Investor.CardNumber;
+                }
+
+                row++;
+            }
+
+            createTableBorder(sheet.Cells[2, 1, row - 1, 11], "Thin");
+            sheet.Cells[2, 1, row - 1, 11].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+            sheet.Cells[2, 1, row - 1, 11].Style.Font.Size = 10;
 
             return package.GetAsByteArray();
         }
@@ -387,39 +461,41 @@ namespace Legion.Helpers.ReportGenerator
             sheet.Row(2).Height = 20;
             sheet.Row(3).Height = 15;
             sheet.Row(4).Height = 48;
-            sheet.Column(1).Width = 12;
+            sheet.Column(1).Width = 14;
+            sheet.Column(2).Width = 24;
+            sheet.Column(3).Width = 14;
+            sheet.Column(4).Width = 15;
+            sheet.Column(5).Width = 15;
+            sheet.Column(6).Width = 24;
+            sheet.Column(7).Width = 15;
+            sheet.Column(8).Width = 16;
+            sheet.Column(9).Width = 30;
 
             sheet.Cells[2, 1].Value = "Ведомость по реферальному бонусу за {Период}";
+            sheet.Cells[2, 1].Style.Font.SetFromFont("Times New Roman", 12);
             sheet.Cells[2, 1].Style.Font.Bold = true;
             sheet.Cells[2, 1].Style.Font.UnderLine = true;
-            sheet.Cells[2, 1].Style.Font.SetFromFont("Times New Roman", 12);
             sheet.Cells[2, 1, 2, 8].Merge = true;
             sheet.Cells[2, 1, 2, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-            sheet.Cells[4, 1].Style.WrapText = true;
+            ExcelRichText ert = sheet.Cells[4, 1].RichText.Add("Дата\r\nзаключения\r\nдоговора");
+            ert.Bold = true;
 
-            sheet.Cells[4, 1].RichText.Add("Дата" + "\r\n");
-            sheet.Cells[4, 1].RichText.Add("заключения" + "\r\n");
-            sheet.Cells[4, 1].RichText.Add("договора");
-            
             sheet.Cells[4, 2].Value = "ФИО инвестора";
 
             sheet.Cells[4, 3].Value = "Сумма";
 
-            sheet.Cells[4, 4].Style.WrapText = true;
-            sheet.Cells[4, 4].RichText.Add("Наличные/" + "\r\n");
-            sheet.Cells[4, 4].RichText.Add("безналичные");
+            ert = sheet.Cells[4, 4].RichText.Add("Наличные/\r\nбезналичные");
+            ert.Bold = true;
 
-            sheet.Cells[4, 5].Style.WrapText = true;
-            sheet.Cells[4, 5].RichText.Add("Первый/" + "\r\n");
-            sheet.Cells[4, 5].RichText.Add("повторный" + "\r\n");
-            sheet.Cells[4, 5].RichText.Add("договор");
+            sheet.Cells[4, 5].IsRichText = true;
+            ert = sheet.Cells[4, 5].RichText.Add("Первый/\r\nповторный\r\nдоговор");
+            ert.Bold = true;
 
             sheet.Cells[4, 6].Value = "От кого";
 
-            sheet.Cells[4, 7].Style.WrapText = true;
-            sheet.Cells[4, 7].RichText.Add("Реферальный" + "\r\n");
-            sheet.Cells[4, 7].RichText.Add("бонус 3%");
+            ert = sheet.Cells[4, 7].RichText.Add("Реферальный\r\nбонус 3%");
+            ert.Bold = true;
 
             sheet.Cells[4, 8].Value = "Подпись";
 
@@ -433,42 +509,67 @@ namespace Legion.Helpers.ReportGenerator
             int row = 5;
             int column = 1;
 
-            foreach(Models.Contract contract in contracts)
+            foreach (Models.Contract contract in contracts)
             {
                 sheet.Cells[row, column].Value = contract.DateStart.ToString("dd.MM.yyyy");
 
                 sheet.Cells[row, column + 1].Style.WrapText = true;
-                sheet.Cells[row, column + 1].RichText.Add(contract.Investor.LastName + contract.Investor.FirstName + "\r\n");
+                sheet.Cells[row, column + 1].RichText.Add(contract.Investor.LastName + " " + contract.Investor.FirstName + "\r\n");
                 sheet.Cells[row, column + 1].RichText.Add(contract.Investor.MiddleName);
 
                 sheet.Cells[row, column + 2].Value = contract.Amount.ToString("### ### ### руб.");
 
-                sheet.Cells[row, column + 2].Value = contract.Investor.PayType; //TO DO Нормализовать вывод PayType
+                sheet.Cells[row, column + 3].Value = contract.Investor.PayType; //TO DO Нормализовать вывод PayType
+
+                sheet.Cells[row, column + 4].Value = contract.Repeated; //TO DO Нормализовать вывод Повторный не повторный
+
+                sheet.Cells[row, column + 5].Style.WrapText = true;
+                sheet.Cells[row, column + 5].RichText.Add(contract.Referral.InvestorCalled.LastName + " " + contract.Referral.InvestorCalled.FirstName + "\r\n");
+                sheet.Cells[row, column + 5].RichText.Add(contract.Referral.InvestorCalled.MiddleName);
+
+                if (contract.Repeated == true)
+                {
+                    sheet.Cells[row, column + 6].Value = 0.ToString("### ### ### руб.");
+                }
+                else
+                {
+                    sheet.Cells[row, column + 6].Value = (Convert.ToDouble(contract.Referral.Bonus) / 100.0 * Convert.ToDouble(contract.Amount)).ToString("### ### ### руб.");
+                }
+
+                sheet.Cells[row, column + 8].Value = contract.Referral.Note;
+
+                sheet.Cells[row, 1, row, 9].Style.Font.SetFromFont("Times New Roman", 11);
+                sheet.Cells[row, 1, row, 9].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                sheet.Cells[row, 1, row, 9].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                row++;
             }
+
+            createTableBorder(sheet.Cells[4, 1, row - 1, 9], "Thin");
 
             return package.GetAsByteArray();
         }
 
         private void createTableBorder(ExcelRange modelTable, string borderStyle)
         {
-            switch(borderStyle)
+            switch (borderStyle)
             {
                 case "Medium":
-                {
-                    modelTable.Style.Border.Top.Style = ExcelBorderStyle.Medium;
-                    modelTable.Style.Border.Left.Style = ExcelBorderStyle.Medium;
-                    modelTable.Style.Border.Right.Style = ExcelBorderStyle.Medium;
-                    modelTable.Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
-                    break;
-                }
+                    {
+                        modelTable.Style.Border.Top.Style = ExcelBorderStyle.Medium;
+                        modelTable.Style.Border.Left.Style = ExcelBorderStyle.Medium;
+                        modelTable.Style.Border.Right.Style = ExcelBorderStyle.Medium;
+                        modelTable.Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                        break;
+                    }
                 case "Thin":
-                {
-                    modelTable.Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                    modelTable.Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                    modelTable.Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                    modelTable.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                    break;
-                }
+                    {
+                        modelTable.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        modelTable.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        modelTable.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        modelTable.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        break;
+                    }
             }
         }
     }
