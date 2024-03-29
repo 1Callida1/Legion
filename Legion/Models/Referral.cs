@@ -16,7 +16,7 @@ namespace Legion.Models
 
         public Investor InvestorCalled { get; set; } = null!;
         public Investor InvestorInvited { get; set; } = null!;
-        public int Bonus { get; set; }
+        public int Bonus { get; set; } //Сумма реферального бонуса
         public bool BonusClaim {  get; set; }
         public string? Note { get; set; } = string.Empty;
     }
