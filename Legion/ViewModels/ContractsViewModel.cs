@@ -93,6 +93,7 @@ namespace Legion.ViewModels
                 copyContract.Id = 0;
                 copyContract.DateEnd = copyContract.DateEnd.AddMonths(int.Parse(result));
                 copyContract.Repeated = true;
+                copyContract.Referral = null;
                 copyContract.RepeatNumber = _context.Contracts.Count(c => c.CustomId == ctr.CustomId) + 1;
                 await _context.Contracts.AddAsync(copyContract);
 

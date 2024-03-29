@@ -36,11 +36,11 @@ namespace Legion
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                //IConfigurationBuilder builder = new ConfigurationBuilder()
-                //    .SetBasePath(Directory.GetCurrentDirectory())
-                //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                IConfigurationBuilder builder = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-                //Configuration = builder.Build();
+                Configuration = builder.Build();
 
                 // Specifying the configuration for serilog
                 Log.Logger = new LoggerConfiguration() // initiate the logger configuration
@@ -63,7 +63,7 @@ namespace Legion
                        services.AddSingleton<InvestorsView>();
                        services.AddSingleton<InvestorsViewModel>();
 
-                       services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql("Host=192.168.0.105;Database=main;Port=5432;Username=postgres;Password=postgres;IncludeErrorDetail=True"));
+                       services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
                    })
                    .UseSerilog() // Add Serilog
                    .Build(); // Build the Host
@@ -97,6 +97,7 @@ namespace Legion
 
                 Locator.CurrentMutable.RegisterConstant<IScreen>(new MainWindowViewModel(_context));
                 Locator.CurrentMutable.RegisterConstant(new MainWindow());
+                Locator.CurrentMutable.RegisterConstant(desktop);
 
                 desktop.MainWindow = Locator.Current.GetService<MainWindow>();
                 desktop.MainWindow!.DataContext = Locator.Current.GetService<IScreen>();

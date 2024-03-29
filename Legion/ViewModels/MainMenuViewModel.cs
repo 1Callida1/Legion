@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Splat;
 using Legion.Views;
+using Avalonia.Controls.ApplicationLifetimes;
 
 namespace Legion.ViewModels
 {
@@ -66,6 +67,11 @@ namespace Legion.ViewModels
             {
                 HostScreen.Router.Navigate.Execute(new ReportsViewModel(_context));
             });
+
+            ExitCommand = ReactiveCommand.Create(() =>
+            {
+                Locator.Current.GetService<IClassicDesktopStyleApplicationLifetime>()!.Shutdown();
+            });
         }
 
         public ReactiveCommand<Unit, Unit> InvestorsCommand { get; }
@@ -74,6 +80,7 @@ namespace Legion.ViewModels
         public ReactiveCommand<Unit, Unit> UsersCommand { get; }
         public ReactiveCommand<Unit, Unit> ExpiringContractCommand { get; }
         public ReactiveCommand<Unit, Unit> ReportsCommand { get; }
+        public ReactiveCommand<Unit, Unit> ExitCommand { get; }
         public sealed override IScreen HostScreen { get; set; }
     }
 }
