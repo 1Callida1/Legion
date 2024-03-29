@@ -112,6 +112,33 @@ namespace Legion.ViewModels
 
             SaveCommand = ReactiveCommand.Create(() =>
             {
+                switch (Contract.ContractType.TypeName)
+                {
+                    case "Годовой":
+                        Contract.Bet = Contract.Amount switch
+                        {
+                            >= 500000 and <= 800000 => 4,
+                            > 800000 and <= 1200000 => 5,
+                            > 1200000 => 6,
+                            _ => Contract.Bet
+                        };
+                        break;
+                    case "Трехгодовой":
+                        Contract.Bet = Contract.Amount switch
+                        {
+                            >= 500000 and <= 800000 => 6,
+                            > 800000 and <= 1200000 => 6.5f,
+                            > 1200000 => 7,
+                            _ => Contract.Bet
+                        };
+                        break;
+                    case "Доходный":
+                        Contract.Bet = 7;
+                        break;
+                    case "Накопительный":
+                        Contract.Bet = 2;
+                        break;
+                }
                 _context.Contracts.Add(Contract);
 
                 try
