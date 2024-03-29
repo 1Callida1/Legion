@@ -36,11 +36,11 @@ namespace Legion
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                //IConfigurationBuilder builder = new ConfigurationBuilder()
-                //    .SetBasePath(Directory.GetCurrentDirectory())
-                //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                IConfigurationBuilder builder = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-                //Configuration = builder.Build();
+                Configuration = builder.Build();
 
                 // Specifying the configuration for serilog
                 Log.Logger = new LoggerConfiguration() // initiate the logger configuration
@@ -62,8 +62,7 @@ namespace Legion
                        services.AddSingleton<LoginView>();
                        services.AddSingleton<InvestorsView>();
                        services.AddSingleton<InvestorsViewModel>();
-
-                       services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql("Host=localhost;Database=main;Port=5432;Username=postgres;Password=postgres;IncludeErrorDetail=True"));
+                       services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
                    })
                    .UseSerilog() // Add Serilog
                    .Build(); // Build the Host
@@ -74,17 +73,18 @@ namespace Legion
 
                 if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
                 {
-                    _context.UserRoles.Add(new UserRole() { Role = "¿‰ÏËÌ"});
-                    _context.UserRoles.Add(new UserRole() { Role = "¡ÓÒÒ Í‡˜‡ÎÍË" });
+                    _context.UserRoles.Add(new UserRole() { Role = "√Ä√§√¨√®√≠"});
+                    _context.UserRoles.Add(new UserRole() { Role = "√Å√Æ√±√± √™√†√∑√†√´√™√®" });
                     _context.SaveChanges();
-                    _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba", UserRole = _context.UserRoles.First(role => role.Role.Contains("¿‰ÏËÌ")) });
-                    _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba", UserRole = _context.UserRoles.First(role => role.Role.Contains("¡ÓÒÒ Í‡˜‡ÎÍË")) });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 10, Formula = "x*p", Period = 12, TypeName = "Õ‡ÍÓÔËÚÂÎ¸Ì˚È", CanAddMoney = true });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 0, Formula = "x*p", Period = 12, TypeName = "»Ì‚ÂÒÚËˆËÓÌÌ˚È", CanAddMoney = false });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 0, Formula = "x*p", Period = 6, TypeName = "“ËÔ 3", CanAddMoney = false });
-                    _context.ContractStatuses.Add(new ContractStatus() { Status = "ŒÚÍ˚Ú" });
-                    _context.ContractStatuses.Add(new ContractStatus() { Status = "«‡Í˚Ú" });
-                    _context.ContractStatuses.Add(new ContractStatus() { Status = "œËÓÒÚ‡ÌÓ‚ÎÂÌ" });
+                    _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba", UserRole = _context.UserRoles.First(role => role.Role.Contains("√Ä√§√¨√®√≠")) });
+                    _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba", UserRole = _context.UserRoles.First(role => role.Role.Contains("√Å√Æ√±√± √™√†√∑√†√´√™√®")) });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 2, Formula = "x*p", Period = 6, TypeName = "√ç√†√™√Æ√Ø√®√≤√•√´√º√≠√ª√©", CanAddMoney = true });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 4, Formula = "x*p", Period = 12, TypeName = "√É√Æ√§√Æ√¢√Æ√©", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 6, Formula = "x*p", Period = 36, TypeName = "√í√∞√•√µ√£√Æ√§√Æ√¢√Æ√©", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 7, Formula = "x*p", Period = 18, TypeName = "√Ñ√Æ√µ√Æ√§√≠√ª√©", CanAddMoney = false });
+                    _context.ContractStatuses.Add(new ContractStatus() { Status = "√é√≤√™√∞√ª√≤" });
+                    _context.ContractStatuses.Add(new ContractStatus() { Status = "√á√†√™√∞√ª√≤" });
+                    _context.ContractStatuses.Add(new ContractStatus() { Status = "√è√∞√®√Æ√±√≤√†√≠√Æ√¢√´√•√≠" });
                     _context.SaveChanges();
                 }
                 else
@@ -96,6 +96,7 @@ namespace Legion
 
                 Locator.CurrentMutable.RegisterConstant<IScreen>(new MainWindowViewModel(_context));
                 Locator.CurrentMutable.RegisterConstant(new MainWindow());
+                Locator.CurrentMutable.RegisterConstant(desktop);
 
                 desktop.MainWindow = Locator.Current.GetService<MainWindow>();
                 desktop.MainWindow!.DataContext = Locator.Current.GetService<IScreen>();

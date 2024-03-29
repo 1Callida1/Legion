@@ -30,12 +30,11 @@ namespace Legion.ViewModels
         public ContractsViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             _context = context;
+            _isPaneOpen = false;
+
             ContractTypes = context.ContractTypes.ToList();
             ContractTypes.Add(new ContractType() {TypeName = "Все", Bet = 0, CanAddMoney = false, ContractIdFormat = "", Formula = "", Period = 0});
             _selectedContractType = ContractTypes.First(t => t.TypeName == "Все");
-            _isPaneOpen = false;
-            
-            Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
 
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
 
@@ -44,6 +43,11 @@ namespace Legion.ViewModels
                 (text) =>
                     !string.IsNullOrWhiteSpace(text)
             );
+
+            RefreshCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
+            });
 
             SearchCommand = ReactiveCommand.Create(() =>
             {
@@ -61,9 +65,11 @@ namespace Legion.ViewModels
                 IsPaneOpen = !IsPaneOpen;
             });
 
-            NewContractCommand = ReactiveCommand.Create(() =>
+            NewContractCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                HostScreen.Router.Navigate.Execute(new AddContractViewModel(context));
+                await HostScreen.Router.Navigate.Execute(new AddContractViewModel(context));
+
+                Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
             });
 
             DataGridEditActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
@@ -93,6 +99,7 @@ namespace Legion.ViewModels
                 copyContract.Id = 0;
                 copyContract.DateEnd = copyContract.DateEnd.AddMonths(int.Parse(result));
                 copyContract.Repeated = true;
+                copyContract.Referral = null;
                 copyContract.RepeatNumber = _context.Contracts.Count(c => c.CustomId == ctr.CustomId) + 1;
                 copyContract.DateProlonagtion = DateTime.Now;
                 await _context.Contracts.AddAsync(copyContract);
@@ -138,11 +145,15 @@ namespace Legion.ViewModels
 
                 await _context.SaveChangesAsync();
                 await _context.Investors.LoadAsync();
+
+                Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
             });
 
             DataGridAddMoneyHistoryActionCommand = ReactiveCommand.CreateFromTask(async (Models.Contract ctr) =>
             {
                 await ShowAdditionalPaymentsDialog.Handle(new AdditionalPaymentsHistoryViewModel(context, ctr));
+
+                Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
             });
 
             BackCommand = ReactiveCommand.Create(() =>
@@ -202,6 +213,7 @@ namespace Legion.ViewModels
         }
 
         public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> RefreshCommand { get; } = null!;
 
         public ReactiveCommand<Unit, Unit> PaneCommand { get; } = null!;
         public ReactiveCommand<Unit, Unit> NewContractCommand { get; } = null!;

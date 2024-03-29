@@ -10,6 +10,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Text.RegularExpressions;
 
 namespace Legion.ViewModels
 {
@@ -69,7 +70,13 @@ namespace Legion.ViewModels
                 _context.Contracts.Count(c => c.ContractType.Id == Contract.ContractType.Id));
             EndDateTime = DateTime.Now.AddMonths(Contract.ContractType.Period);
 
+            InvestorSelected = false;
+
             ShowDialog = new Interaction<InvestorSerachViewModel, Investor?>();
+
+            IsInputValid = this.WhenAnyValue(
+                x => x.InvestorSelected
+            );
 
             SearchInvestorCommand = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -77,10 +84,15 @@ namespace Legion.ViewModels
                 Investor? result = await ShowDialog.Handle(new InvestorSerachViewModel(context));
                 BackgroundPaneVisible = false;
                 if (result != null && !string.IsNullOrWhiteSpace(result.FirstName))
+                {
                     Contract.Investor = result;
+                    InvestorSelected = true;
+                }
+                    
 
                 this.RaisePropertyChanged(nameof(InvestorData));
                 this.RaisePropertyChanged(nameof(Contract));
+                this.RaisePropertyChanged(nameof(Contract.Investor));
             });
 
             SearchRefferalCommand = ReactiveCommand.CreateFromTask(async () =>
@@ -89,21 +101,23 @@ namespace Legion.ViewModels
                 BackgroundPaneVisible = true;
                 Investor? result = await ShowDialog.Handle(new InvestorSerachViewModel(context));
                 BackgroundPaneVisible = false;
+
+                if (result == null)
+                    Contract.Referral = null;
+
                 if (result != null && !string.IsNullOrWhiteSpace(result.FirstName))
                 {
                     refer = _context.Referrals.Add(new Referral()
                     {
                         Bonus = 3, BonusClaim = false, InvestorCalled = result, InvestorInvited = Contract.Investor
                     }).Entity;
-                    _context.SaveChanges();
 
                     Contract.Referral = refer;
-                    _context.SaveChanges();
                 }
 
                 this.RaisePropertyChanged(nameof(RefferalData));
                 this.RaisePropertyChanged(nameof(Contract));
-            });
+            }, IsInputValid);
 
             BackCommand = ReactiveCommand.Create(() =>
             {
@@ -151,6 +165,14 @@ namespace Legion.ViewModels
                     Log.Error(ex.Message);
                 }
             });
+        }
+
+        public IObservable<bool> IsInputValid { get; }
+        private bool _investorSelected;
+        public bool InvestorSelected
+        {
+            get => _investorSelected;
+            set => this.RaiseAndSetIfChanged(ref _investorSelected, value);
         }
 
         public string CustomId
@@ -239,15 +261,32 @@ namespace Legion.ViewModels
             }
         }
 
-        public string RefferalData
+        public string RefferalData =>
+            Contract.Referral != null &&
+            !string.IsNullOrWhiteSpace(Contract.Referral.InvestorCalled.LastName)
+                ? $"{Contract.Referral.InvestorCalled.LastName} {Contract.Referral.InvestorCalled.FirstName[0]}.{Contract.Referral.InvestorCalled.MiddleName[0]}. {Contract.Referral.InvestorCalled.PassprotSeries} {Contract.Referral.InvestorCalled.PassprotNumber}"
+                : string.Empty;
+
+        public string RefferalNote
         {
             get
             {
-                if (Contract.Referral != null && !string.IsNullOrWhiteSpace(Contract.Referral.InvestorCalled.LastName))
-                    return
-                        $"{Contract.Referral.InvestorCalled.LastName} {Contract.Referral.InvestorCalled.FirstName[0]}.{Contract.Referral.InvestorCalled.MiddleName[0]}. {Contract.Referral.InvestorCalled.PassprotSeries} {Contract.Referral.InvestorCalled.PassprotNumber}";
+                if (Contract.Referral != null &&
+                    !string.IsNullOrWhiteSpace(Contract.Referral.InvestorCalled.LastName) &&
+                    !string.IsNullOrWhiteSpace(Contract.Referral.Note))
+                    return Contract.Referral.Note;
 
                 return string.Empty;
+            }
+            set
+            {
+                if (Contract.Referral != null &&
+                    !string.IsNullOrWhiteSpace(Contract.Referral.InvestorCalled.LastName) &&
+                    !string.IsNullOrWhiteSpace(value))
+
+                    Contract.Referral.Note = value;
+
+                this.RaisePropertyChanged();
             }
         }
 

@@ -23,6 +23,8 @@ namespace Legion.Views
 
             this.WhenActivated(action =>
                 action(ViewModel!.ShowPaymentsDialog.RegisterHandler(Locator.Current.GetService<MainWindow>()!.DoShowPaymentsDialogAsync!)));
+
+            this.WhenActivated(action => ViewModel!.RefreshCommand.Execute());
         }
     }
 }
