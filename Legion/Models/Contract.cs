@@ -15,6 +15,7 @@ namespace Legion.Models
         public int Id { get; set; }
 
         public string CustomId { get; set; } = string.Empty;
+        public float Bet { get; set; } = 0;
         public ContractStatus Status { get; set; } = null!;
         public Investor Investor { get; set; }
         public DateTime DateStart { get; set; } = DateTime.Now;
