@@ -25,6 +25,10 @@ namespace Legion.ViewModels
         private readonly ApplicationDbContext _context;
         private ObservableCollection<Investor> _investors = null!;
         private ObservableCollection<Models.Contract> _contracts;
+        private bool _datePickerVisible = false;
+        private int _dateOffsetVariant = 0;
+        private DateTimeOffset _startDateTime = new(DateTime.Now);
+        private DateTimeOffset _endDateTime = new(DateTime.Now);
 
         public ReportsViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
@@ -35,14 +39,64 @@ namespace Legion.ViewModels
             var reportExcel = new ExcelGenerator().ReferalBonus(Contracts);
             File.WriteAllBytes("reportExcel.xlsx", reportExcel);
 
+            BackCommand = ReactiveCommand.Create(() =>
+            {
+                HostScreen.Router.NavigateBack.Execute();
+            });
         }
         public sealed override IScreen HostScreen { get; set; }
+        public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
+
 
         public ObservableCollection<Models.Contract> Contracts
         {
             get => _contracts;
             set => this.RaiseAndSetIfChanged(ref _contracts, value);
         }
+
+        public int DateOffsetVariant
+        {
+            // 0 - за день
+            // 1 - месяц
+            // 2 - кастом
+            get => _dateOffsetVariant;
+            set
+            {
+                DatePickerVisible = value == 2;
+                this.RaiseAndSetIfChanged(ref _dateOffsetVariant, value);
+            }
+        }
+
+        public bool DatePickerVisible
+        {
+            get => _datePickerVisible;
+            set => this.RaiseAndSetIfChanged(ref _datePickerVisible, value);
+        }
+
+        public DateTimeOffset StartDateTime
+        {
+            get => _startDateTime;
+            set
+            {
+                if (value == null)
+                    return;
+
+                this.RaiseAndSetIfChanged(ref _startDateTime, value);
+            }
+        }
+
+        public DateTimeOffset EndDateTime
+        {
+            get => _endDateTime;
+            set
+            {
+                if (value == null)
+                    return;
+
+                this.RaiseAndSetIfChanged(ref _endDateTime, value);
+            }
+        }
+
         public ObservableCollection<Investor> Investors
         {
             get => _investors;
