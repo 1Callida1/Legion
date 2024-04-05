@@ -22,10 +22,13 @@ namespace Legion.ViewModels
     public class MainMenuViewModel : ViewModelBase
     {
         private readonly ApplicationDbContext _context;
+        private bool _userManagingVisible;
 
         public MainMenuViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             _context = context;
+            User user = Locator.Current.GetService<User>()!;
+            UserManagingVisible = user.UserRole != null && user.UserRole.Role is "Admin";
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
 
             InvestorsCommand = ReactiveCommand.Create(() =>
@@ -77,6 +80,12 @@ namespace Legion.ViewModels
             {
                 Locator.Current.GetService<IClassicDesktopStyleApplicationLifetime>()!.Shutdown();
             });
+        }
+
+        public bool UserManagingVisible
+        {
+            get => _userManagingVisible;
+            set => this.RaiseAndSetIfChanged(ref _userManagingVisible, value);
         }
 
         public ReactiveCommand<Unit, Unit> InvestorsCommand { get; }

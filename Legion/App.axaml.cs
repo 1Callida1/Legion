@@ -74,11 +74,11 @@ namespace Legion
 
                 if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
                 {
-                    _context.UserRoles.Add(new UserRole() { Role = "Àäìèí"});
-                    _context.UserRoles.Add(new UserRole() { Role = "Áîññ êà÷àëêè" });
+                    _context.UserRoles.Add(new UserRole() { Role = "Admin"});
+                    _context.UserRoles.Add(new UserRole() { Role = "User" });
                     _context.SaveChanges();
-                    _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Àäìèí")) });
-                    _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Áîññ êà÷àëêè")) });
+                    _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Admin")) });
+                    _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba", UserRole = _context.UserRoles.First(role => role.Role.Contains("User")) });
                     _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 2, Formula = "x*p", Period = 6, TypeName = "Íàêîïèòåëüíûé", CanAddMoney = true });
                     _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 4, Formula = "x*p", Period = 12, TypeName = "Ãîäîâîé", CanAddMoney = false });
                     _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 6, Formula = "x*p", Period = 36, TypeName = "Òðåõãîäîâîé", CanAddMoney = false });
