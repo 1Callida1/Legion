@@ -30,8 +30,8 @@ namespace Legion.ViewModels
         private double _viewHeight = 780;
         private double _menuHeight = 0;
         private double _dataGridHeight = 0;
-        private string _invCitySearchText = null!;
-        private string _invRegistrationSearchText = null!;
+        private string _invCitySearchText = "";
+        private string _invRegistrationSearchText = "";
         private DateTimeOffset _searchDateTime = new(DateTime.Now);
         private bool _filterState = false;
         private int _filterDateState = 0;
@@ -109,49 +109,47 @@ namespace Legion.ViewModels
             {
                 if(!FilterState)
                 {
-                    Investors = _context.Investors.Local.ToObservableCollection();
+                    Investors = new(await _context.Investors.ToListAsync());
                     return;
                 }
 
                 Investors = new ObservableCollection<Investor>();
 
-                if (!string.IsNullOrWhiteSpace(InvCitySearchText))
+                switch (FilterDateState)
                 {
-                    if(!string.IsNullOrWhiteSpace(InvRegistrationSearchText))
-                    {
+                    case 0: // Any
 
-                        switch (FilterDateState)
-                        {
-                            case 0:
-                                _context.Investors
-                                    .Where(i => i.PassportRegistration != null && i.City.Contains(InvCitySearchText) &&
-                                                i.PassportRegistration.Contains(InvRegistrationSearchText)).ToList()
-                                    .ForEach(i => Investors.Add(i));
-                                break;
-                            case 1:
-                                _context.Investors
-                                    .Where(i => i.PassportRegistration != null && i.City.Contains(InvCitySearchText) &&
-                                                i.PassportRegistration.Contains(InvRegistrationSearchText) &&
-                                                i.DateBirth > SearchDateTime).ToList()
-                                    .ForEach(i => Investors.Add(i));
-                                break;
-                            case 2:
-                                _context.Investors
-                                    .Where(i => i.PassportRegistration != null && i.City.Contains(InvCitySearchText) &&
-                                                i.PassportRegistration.Contains(InvRegistrationSearchText) &&
-                                                i.DateBirth < SearchDateTime).ToList()
-                                    .ForEach(i => Investors.Add(i));
-                                break;
-                            case 3:
-                                _context.Investors
-                                    .Where(i => i.PassportRegistration != null && i.City.Contains(InvCitySearchText) &&
-                                                i.PassportRegistration.Contains(InvRegistrationSearchText) &&
-                                                i.DateBirth == SearchDateTime).ToList()
-                                    .ForEach(i => Investors.Add(i));
-                                break;
+                        _context.Investors
+                            .Where(i => i.City.ToLower().Contains(string.IsNullOrWhiteSpace(InvCitySearchText) ? "" : InvCitySearchText.ToLower())
+                                        && (string.IsNullOrWhiteSpace(i.PassportRegistration) || i.PassportRegistration.ToLower().Contains(InvRegistrationSearchText.ToLower()))
+                                        ).ToList()
+                            .ForEach(i => Investors.Add(i));
+                        break;
+                    case 1: // >
+                        _context.Investors
+                            .Where(i => i.City.ToLower().Contains(string.IsNullOrWhiteSpace(InvCitySearchText) ? "" : InvCitySearchText.ToLower())
+                                        && (string.IsNullOrWhiteSpace(i.PassportRegistration) || i.PassportRegistration.ToLower().Contains(InvRegistrationSearchText.ToLower()))
+                                        && i.DateBirth > SearchDateTime
+                            ).ToList()
+                            .ForEach(i => Investors.Add(i));
+                        break;
+                    case 2: // <
+                        _context.Investors
+                            .Where(i => i.City.ToLower().Contains(string.IsNullOrWhiteSpace(InvCitySearchText) ? "" : InvCitySearchText.ToLower())
+                                        && (string.IsNullOrWhiteSpace(i.PassportRegistration) || i.PassportRegistration.ToLower().Contains(InvRegistrationSearchText.ToLower()))
+                                        && i.DateBirth < SearchDateTime
+                            ).ToList()
+                            .ForEach(i => Investors.Add(i));
+                        break;
+                    case 3: // ==
+                        _context.Investors
+                            .Where(i => i.City.ToLower().Contains(string.IsNullOrWhiteSpace(InvCitySearchText) ? "" : InvCitySearchText.ToLower())
+                                        && (string.IsNullOrWhiteSpace(i.PassportRegistration) || i.PassportRegistration.ToLower().Contains(InvRegistrationSearchText.ToLower()))
+                                        && DateOnly.FromDateTime(i.DateBirth) == DateOnly.FromDateTime(SearchDateTime.DateTime)
+                            ).ToList()
+                            .ForEach(i => Investors.Add(i));
+                        break;
 
-                        }
-                    }
                 }
             });
         }
