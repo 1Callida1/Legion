@@ -50,7 +50,10 @@ namespace Legion.ViewModels
                     BackCommand.Execute();
                 }
             });
+
+
         }
+
         public AddUserViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
@@ -58,6 +61,7 @@ namespace Legion.ViewModels
             User = new User();
             SubmitText = "Добавить пользователя";
             _context.UserRoles.Load();
+            Role = UserRoles.First();
 
             BackCommand = ReactiveCommand.Create(() =>
             {
@@ -66,7 +70,6 @@ namespace Legion.ViewModels
 
             SaveCommand = ReactiveCommand.Create(() =>
             {
-
                 _context.Users.Add(User);
 
                 try
@@ -78,7 +81,47 @@ namespace Legion.ViewModels
                 {
                     Log.Error(ex.Message);
                 }
-            });
+            }, this.IsValid());
+
+            this.ValidationRule(
+                x => x.UserName,
+                userName => !string.IsNullOrWhiteSpace(userName),
+                "Некорректное имя");
+
+            this.ValidationRule(
+                x => x.Password,
+                password => !string.IsNullOrWhiteSpace(password),
+                "Некорректный пароль");
+        }
+
+        public string UserName
+        {
+            get => User.UserName;
+            set
+            {
+                User.UserName = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public string Password
+        {
+            get => User.Password;
+            set
+            {
+                User.Password = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public UserRole Role
+        {
+            get => User.UserRole;
+            set
+            {
+                User.UserRole = value;
+                this.RaisePropertyChanged();
+            }
         }
 
         public ObservableCollection<UserRole> UserRoles => _context.UserRoles.Local.ToObservableCollection();

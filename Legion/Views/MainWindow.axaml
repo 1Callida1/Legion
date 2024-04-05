@@ -15,6 +15,7 @@
         ExtendClientAreaTitleBarHeightHint="-1"
         SystemDecorations="None"
         Background="Transparent"
+        TransparencyLevelHint="Transparent"
         WindowState ="{Binding MainWindowState, Mode=TwoWay}"
         WindowStartupLocation="CenterScreen">
   <Grid>

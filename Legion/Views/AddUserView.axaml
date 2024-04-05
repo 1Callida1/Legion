@@ -62,12 +62,12 @@
 
         <Border Grid.Column="1" Grid.Row="1" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
           <TextBox  Height="28" Background="Gainsboro"
-							  Foreground="Black" Text="{Binding User.UserName}"/>
+							  Foreground="Black" Text="{Binding UserName}"/>
         </Border>
 
         <Border Grid.Column="1" Grid.Row="2" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
           <TextBox  Height="28" Background="Gainsboro"
-							  Foreground="Black" Text="{Binding User.Password}"/>
+							  Foreground="Black" Text="{Binding Password}"/>
         </Border>
 
         <Border Grid.Column="1" Grid.Row="3" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
@@ -76,7 +76,7 @@
         </Border>
 
         <ComboBox Grid.Column="1" Grid.Row="4" Margin="7" Height="20" Background="Gainsboro"
-                          CornerRadius="20" Foreground="Black" SelectedItem="{Binding User.UserRole}" ItemsSource="{Binding UserRoles}">
+                          CornerRadius="20" Foreground="Black" SelectedItem="{Binding Role}" ItemsSource="{Binding UserRoles}">
           <ComboBox.ItemTemplate>
             <DataTemplate>
               <Panel>
@@ -86,7 +86,7 @@
           </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <Button Height="40" Margin="20" CornerRadius="20" Width="220" Content="{Binding SubmitText}"
+        <Button Grid.Row="5" Grid.ColumnSpan="4" Height="40" Margin="20" CornerRadius="20" Width="220" Content="{Binding SubmitText}"
                 Background="#e95322" Command="{Binding SaveCommand}" HotKey="Ctrl+S" />
       </Grid>
 
