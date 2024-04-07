@@ -382,7 +382,7 @@ namespace Legion.Helpers.ReportGenerator
 
             foreach (Models.Contract contract in contracts)
             {
-                if(currentDate != contract.DateStart)
+                if (currentDate != contract.DateStart)
                 {
                     currentDate = contract.DateStart;
 
@@ -408,7 +408,7 @@ namespace Legion.Helpers.ReportGenerator
 
                 sheet.Cells[row, column + 7].Value = contract.Bet;
 
-                if(contract.DateProlonagtion != contract.DateStart) 
+                if (contract.DateProlonagtion != contract.DateStart)
                 {
                     sheet.Cells[row, column + 8].Value = Math.Abs((contract.DateStart.Month - contract.DateEnd.Month) + 12 * (contract.DateStart.Year - contract.DateEnd.Year));
                 }
@@ -416,13 +416,13 @@ namespace Legion.Helpers.ReportGenerator
                 {
                     sheet.Cells[row, column + 8].Value = Math.Abs((contract.DateProlonagtion.Month - contract.DateEnd.Month) + 12 * (contract.DateProlonagtion.Year - contract.DateEnd.Year));
                 }
-                
+
                 sheet.Cells[row, column + 9].Value = contract.Investor.PayType; //TO DO Нормализовать вывод PayType
 
                 if (contract.Repeated && contract.DateProlonagtion == currentDate)
                 {
                     AdditionalPayment payment = _context.AdditionalPayments.First(x => x.Contract == contract && x.Date == currentDate);
-                    if(payment != null)
+                    if (payment != null)
                     {
                         sheet.Cells[row, column + 10].Value = "Перез. с доб.";
 
