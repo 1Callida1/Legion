@@ -17,6 +17,8 @@ using Splat;
 using Legion.Helpers.ReportGenerator;
 using System.IO;
 using System.Diagnostics.Contracts;
+using Avalonia.Controls.Shapes;
+using Legion.Helpers.Calculations;
 
 namespace Legion.ViewModels
 {
@@ -36,16 +38,36 @@ namespace Legion.ViewModels
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
             Contracts = new ObservableCollection<Models.Contract>(_context.Contracts.ToList());
 
-            var reportExcel = new ExcelGenerator().ReferalBonus(Contracts);
-            File.WriteAllBytes("reportExcel.xlsx", reportExcel);
-
             BackCommand = ReactiveCommand.Create(() =>
             {
                 HostScreen.Router.NavigateBack.Execute();
             });
+
+            GetEveryDayReportCommand = ReactiveCommand.Create(() =>
+            {
+                byte[] reportExcel = ExcelGenerator.GenerateReportCash(Contracts, DateTime.Now); //Дата из промежутка, добавить райз ошибки если выбрана дата больше чем один день
+                File.WriteAllBytes($"доход за  {DateTime.Now.ToString("dd.MM.yyyy")} безналичные.xlsx", reportExcel);
+                reportExcel = ExcelGenerator.GenerateReportCashless(Contracts, DateTime.Now);
+                File.WriteAllBytes($"доход за  {DateTime.Now.ToString("dd.MM.yyyy")} наличные.xlsx", reportExcel);
+            });
+
+            GetRefferalReportCommand = ReactiveCommand.Create(() =>
+            {
+                byte[] reportExcel = ExcelGenerator.ReferalBonus(Contracts);
+                File.WriteAllBytes("Ведомость по реферальному бонусу.xlsx", reportExcel);
+            });
+
+            GetContractsReportCommand = ReactiveCommand.Create(() =>
+            {
+                byte[] reportExcel = ExcelGenerator.MonthlyContract(Contracts, DateTime.Now, DateTime.Now.AddMonths(1), _context);
+                File.WriteAllBytes("ежемесячная ведомость по договорам.xlsx", reportExcel);
+            });
         }
         public sealed override IScreen HostScreen { get; set; }
         public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> GetEveryDayReportCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> GetRefferalReportCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> GetContractsReportCommand { get; } = null!;
 
 
         public ObservableCollection<Models.Contract> Contracts

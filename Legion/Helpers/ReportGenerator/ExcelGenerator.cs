@@ -20,7 +20,7 @@ namespace Legion.Helpers.ReportGenerator
     public class ExcelGenerator
     {
         private ApplicationDbContext _context = null!;
-        public byte[] GenerateReportCash(ObservableCollection<Legion.Models.Contract> cntrs, DateTime start)
+        public static byte[] GenerateReportCash(ObservableCollection<Legion.Models.Contract> cntrs, DateTime start)
         {
             ExcelPackage package = new ExcelPackage();
             ObservableCollection<Legion.Models.Contract> contracts = cntrs;
@@ -98,7 +98,7 @@ namespace Legion.Helpers.ReportGenerator
             return package.GetAsByteArray();
         }
 
-        public byte[] GenerateReportCashless(ObservableCollection<Models.Contract> cntrs, DateTime start)
+        public static byte[] GenerateReportCashless(ObservableCollection<Models.Contract> cntrs, DateTime start)
         {
             ExcelPackage package = new ExcelPackage();
             ObservableCollection<Models.Contract> contracts = cntrs;
@@ -350,12 +350,12 @@ namespace Legion.Helpers.ReportGenerator
             return package.GetAsByteArray();
         }
 
-        public byte[] MonthlyContract(ObservableCollection<Models.Contract> cntrs, DateTime start, DateTime end, ApplicationDbContext context)
+        public static byte[] MonthlyContract(ObservableCollection<Models.Contract> cntrs, DateTime start, DateTime end, ApplicationDbContext context)
         {
             ExcelPackage package = new ExcelPackage();
             ObservableCollection<Models.Contract> contracts = cntrs;
 
-            _context = context;
+            ApplicationDbContext _context = context;
 
             contracts = new ObservableCollection<Models.Contract>(contracts.OrderByDescending(x => x.DateStart).Reverse());
 
@@ -402,13 +402,16 @@ namespace Legion.Helpers.ReportGenerator
 
                 sheet.Cells[row, column + 4].Value = contract.Investor.Phone.ToString();
 
-                sheet.Cells[row, column + 5].Value = $"{contract.Referral.InvestorCalled.LastName} {contract.Referral.InvestorCalled.FirstName[0]}. {contract.Referral.InvestorCalled.LastName[0]}.";
+                if (contract.Referral != null)
+                {
+                    sheet.Cells[row, column + 5].Value = $"{contract.Referral.InvestorCalled.LastName} {contract.Referral.InvestorCalled.FirstName[0]}. {contract.Referral.InvestorCalled.LastName[0]}.";
+                }
 
                 sheet.Cells[row, column + 6].Value = contract.Amount.ToString("### ### ###");
 
                 sheet.Cells[row, column + 7].Value = contract.Bet;
 
-                if (contract.DateProlonagtion != contract.DateStart)
+                if (contract.DateProlonagtion.ToString("dd.MM.yyyy") != contract.DateStart.ToString("dd.MM.yyyy"))
                 {
                     sheet.Cells[row, column + 8].Value = Math.Abs((contract.DateStart.Month - contract.DateEnd.Month) + 12 * (contract.DateStart.Year - contract.DateEnd.Year));
                 }
@@ -419,14 +422,14 @@ namespace Legion.Helpers.ReportGenerator
 
                 sheet.Cells[row, column + 9].Value = contract.Investor.PayType; //TO DO Нормализовать вывод PayType
 
-                if (contract.Repeated && contract.DateProlonagtion == currentDate)
+                if (contract.Repeated && contract.DateProlonagtion.ToString("dd.MM.yyyy").Equals(currentDate.ToString("dd.MM.yyyy")))
                 {
-                    AdditionalPayment payment = _context.AdditionalPayments.First(x => x.Contract == contract && x.Date == currentDate);
+                    AdditionalPayment payment = _context.AdditionalPayments.First(x => x.Contract == contract && x.Date.Day == currentDate.Day);
                     if (payment != null)
                     {
                         sheet.Cells[row, column + 10].Value = "Перез. с доб.";
 
-                        sheet.Cells[row, column + 11].Value = payment.Amount.ToString("dd.MM.yyyy");
+                        sheet.Cells[row, column + 11].Value = payment.Amount.ToString("### ### ###");
                     }
                     else
                     {
@@ -441,14 +444,14 @@ namespace Legion.Helpers.ReportGenerator
                 row++;
             }
 
-            createTableBorder(sheet.Cells[2, 1, row - 1, 11], "Thin");
-            sheet.Cells[2, 1, row - 1, 11].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-            sheet.Cells[2, 1, row - 1, 11].Style.Font.Size = 10;
+            createTableBorder(sheet.Cells[2, 1, row - 1, 12], "Thin");
+            sheet.Cells[2, 1, row - 1, 12].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+            sheet.Cells[2, 1, row - 1, 12].Style.Font.Size = 10;
 
             return package.GetAsByteArray();
         }
 
-        public byte[] ReferalBonus(ObservableCollection<Models.Contract> cntrs)//, DateTime start, DateTime end)
+        public static byte[] ReferalBonus(ObservableCollection<Models.Contract> cntrs)//, DateTime start, DateTime end)
         {
             ExcelPackage package = new ExcelPackage();
             ObservableCollection<Models.Contract> contracts = cntrs;
@@ -511,6 +514,7 @@ namespace Legion.Helpers.ReportGenerator
 
             foreach (Models.Contract contract in contracts)
             {
+                if(contract.Referral == null) continue;
                 sheet.Cells[row, column].Value = contract.DateStart.ToString("dd.MM.yyyy");
 
                 sheet.Cells[row, column + 1].Style.WrapText = true;
@@ -550,7 +554,7 @@ namespace Legion.Helpers.ReportGenerator
             return package.GetAsByteArray();
         }
 
-        private void createTableBorder(ExcelRange modelTable, string borderStyle)
+        private static void createTableBorder(ExcelRange modelTable, string borderStyle)
         {
             switch (borderStyle)
             {
