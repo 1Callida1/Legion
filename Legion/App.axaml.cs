@@ -15,7 +15,9 @@ using Legion.Models;
 using SkiaSharp;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using Legion.Helpers;
+using Legion.Models.Internal;
 using Legion.Views;
 using ReactiveUI;
 
@@ -73,18 +75,19 @@ namespace Legion
 
                 if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
                 {
-                    _context.UserRoles.Add(new UserRole() { Role = "�����"});
-                    _context.UserRoles.Add(new UserRole() { Role = "���� �������" });
+
+                    _context.UserRoles.Add(new UserRole() { Role = "Admin"});
+                    _context.UserRoles.Add(new UserRole() { Role = "User" });
                     _context.SaveChanges();
-                    _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Àäìèí")) });
-                    _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Áîññ êà÷àëêè")) });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 2, Formula = "x*p", Period = 6, TypeName = "Íàêîïèòåëüíûé", CanAddMoney = true });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 4, Formula = "x*p", Period = 12, TypeName = "Ãîäîâîé", CanAddMoney = false });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 6, Formula = "x*p", Period = 36, TypeName = "Òðåõãîäîâîé", CanAddMoney = false });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 7, Formula = "x*p", Period = 18, TypeName = "Äîõîäíûé", CanAddMoney = false });
-                    _context.ContractStatuses.Add(new ContractStatus() { Status = "Îòêðûò" });
-                    _context.ContractStatuses.Add(new ContractStatus() { Status = "Çàêðûò" });
-                    _context.ContractStatuses.Add(new ContractStatus() { Status = "Ïðèîñòàíîâëåí" });
+                    _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Admin")) });
+                    _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba", UserRole = _context.UserRoles.First(role => role.Role.Contains("User")) });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 2, Formula = "x*p", Period = 6, TypeName = "Накопительный", CanAddMoney = true });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 4, Formula = "x*p", Period = 12, TypeName = "Годовой", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 6, Formula = "x*p", Period = 36, TypeName = "Трехгодовой", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 7, Formula = "x*p", Period = 18, TypeName = "Доходный", CanAddMoney = false });
+                    _context.ContractStatuses.Add(new ContractStatus() { Status = "Открыт" });
+                    _context.ContractStatuses.Add(new ContractStatus() { Status = "Закрыт" });
+                    _context.ContractStatuses.Add(new ContractStatus() { Status = "Приостановлен" });
                     _context.SaveChanges();
                 }
                 else
@@ -97,6 +100,7 @@ namespace Legion
                 Locator.CurrentMutable.RegisterConstant<IScreen>(new MainWindowViewModel(_context));
                 Locator.CurrentMutable.RegisterConstant(new MainWindow());
                 Locator.CurrentMutable.RegisterConstant(desktop);
+                Locator.CurrentMutable.RegisterConstant(SettingsHelper.LoadSettings() ?? new Settings());
 
                 desktop.MainWindow = Locator.Current.GetService<MainWindow>();
                 desktop.MainWindow!.DataContext = Locator.Current.GetService<IScreen>();

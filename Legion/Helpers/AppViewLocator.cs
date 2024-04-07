@@ -30,6 +30,7 @@ namespace Legion.Helpers
             ExpiringContractViewModel context => new ExpiringContractView() { DataContext = context },
             AdditionalPaymentsHistoryViewModel context => new AdditionalPaymentsHistoryWindow() { DataContext = context },
             PaymentsHistoryViewModel context => new PaymentsHistoryWindow() { DataContext = context },
+            SettingsViewModel context => new SettingsView() { DataContext = context },
             _ => throw new ArgumentOutOfRangeException(nameof(viewModel))
         };
         //{

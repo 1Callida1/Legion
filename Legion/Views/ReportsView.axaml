@@ -4,11 +4,74 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Class="Legion.Views.ReportsView"
              xmlns:i="https://github.com/projektanker/icons.avalonia"
-             Width="1000"
-             Height="800"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="780"
              xmlns:vm="using:Legion.ViewModels"
              xmlns:models="clr-namespace:Legion.Models"
+             xmlns:converters="clr-namespace:Legion.Helpers.Converters"
              x:DataType="vm:ReportsViewModel">
-  Welcome to Avalonia!
+    <UserControl.Resources>
+        <converters:ContractInvestorConverter x:Key="ContractInvestorConverter" />
+        <converters:DateTimeToDateConverter x:Key="DateConverter" />
+    </UserControl.Resources>
+  <Grid ShowGridLines="False">
+      <Border Grid.RowSpan="2" Grid.ColumnSpan="2" Background="#ffff" CornerRadius="20" />
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="200"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="50"/>
+        <RowDefinition/>
+      </Grid.RowDefinitions>
+
+    <Panel Grid.Row="0" Grid.ColumnSpan="2" Background="#e95322"/>
+      <Button Grid.Row="0" Background="#ffff" Grid.Column="0" Width="100" Margin="7" Content="Назад" Command="{Binding BackCommand}" HorizontalAlignment="Left" Foreground="#e95322"></Button>
+      <Label Grid.Row="0" Grid.ColumnSpan="2" Foreground="#ffff" HorizontalAlignment="Center" FontSize="25" Content="Генерация отчетов" FontWeight="Bold"/>
+      
+      <StackPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">
+        <Button Content="Ежедневная ведомость" Margin="5" Background="#e95322" CornerRadius="20"/>
+        <Button Content="Рефералы" Margin="5" Background="#e95322" CornerRadius="20"/>
+        <Button Content="Договора" Margin="5" Background="#e95322" CornerRadius="20"/>
+
+        <Label Content="Временной промежуток" Margin="5"></Label>
+        <ComboBox Margin="5" SelectedIndex="{Binding DateOffsetVariant}">
+            <ComboBox.Items>
+                <ComboBoxItem Content="За день"/>
+                <ComboBoxItem Content="За месяц"/>
+                <ComboBoxItem Content="Выбрать промежуток"/>
+            </ComboBox.Items>
+        </ComboBox>
+
+        <StackPanel Margin="5" IsVisible="{Binding DatePickerVisible}" >
+            <Label Content="Начало:"/>
+            <DatePicker SelectedDate="{Binding StartDateTime, Mode=TwoWay}"/>
+        </StackPanel>
+        
+        <StackPanel Margin="5" IsVisible="{Binding DatePickerVisible}" >
+            <Label Content="Конец:"/>
+            <DatePicker SelectedDate="{Binding EndDateTime, Mode=TwoWay}"/>
+        </StackPanel>
+      </StackPanel>
+
+      <DataGrid Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Contracts}" CornerRadius="20" Margin="5">
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="Номер договора" Binding="{Binding Path=CustomId}" />
+            <DataGridTextColumn Header="Менеджер"
+                                Binding="{Binding Path=Manager.EmployerFirstName}" />
+            <DataGridTextColumn Header="Статус" Binding="{Binding Path=Status.Status}" />
+            <DataGridTextColumn Header="Вкладчик"
+                                Binding="{Binding ., Converter={StaticResource ContractInvestorConverter}}" />
+            <DataGridTextColumn Header="Дата начала"
+                                Binding="{Binding Path=DateStart, Converter={StaticResource DateConverter}}" />
+            <DataGridTextColumn Header="Дата окончания"
+                                Binding="{Binding Path=DateEnd, Converter={StaticResource DateConverter}}" />
+            <DataGridTextColumn Header="Сумма вклада" Binding="{Binding Path=Amount}" />
+            <DataGridTextColumn Header="Тип вклада" Binding="{Binding Path=ContractType.TypeName}" />
+            <DataGridCheckBoxColumn Header="Повторный?" Binding="{Binding Path=Repeated}" />
+            <DataGridTextColumn Header="Реферал"
+                                Binding="{Binding Path=Referral.InvestorCalled.FirstName}" />
+            <DataGridTextColumn Header="Заметка" Binding="{Binding Path=Note}" />
+        </DataGrid.Columns>
+      </DataGrid>
+  </Grid>
 </UserControl>

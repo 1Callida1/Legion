@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using Splat;
 using DynamicData;
+using Avalonia.Controls.ApplicationLifetimes;
 
 namespace Legion.ViewModels
 {
@@ -26,6 +27,14 @@ namespace Legion.ViewModels
         private bool _isPaneOpen;
         private string _searchText = null!;
         private ObservableCollection<Investor> _investors = null!;
+        private double _viewHeight = 780;
+        private double _menuHeight = 0;
+        private double _dataGridHeight = 0;
+        private string _invCitySearchText = "";
+        private string _invRegistrationSearchText = "";
+        private DateTimeOffset _searchDateTime = new(DateTime.Now);
+        private bool _filterState = false;
+        private int _filterDateState = 0;
 
         public InvestorsViewModel()
         {
@@ -34,10 +43,18 @@ namespace Legion.ViewModels
 
         public InvestorsViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
+            ViewHeight = 780;
             _context = context;
             _isPaneOpen = false;
-            _context.Investors.Load();
+            _context.Investors.LoadAsync();
             Investors = _context.Investors.Local.ToObservableCollection();
+            var a = Locator.Current.GetService<IClassicDesktopStyleApplicationLifetime>();
+
+            if (a is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                desktop.MainWindow.WhenAnyValue(s => s.Height).Subscribe((x) => ViewHeight = x - 20);
+            }
+
 
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
 
@@ -87,6 +104,54 @@ namespace Legion.ViewModels
             {
                 HostScreen.Router.NavigateBack.Execute();
             });
+
+            FilterCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                if(!FilterState)
+                {
+                    Investors = new(await _context.Investors.ToListAsync());
+                    return;
+                }
+
+                Investors = new ObservableCollection<Investor>();
+
+                switch (FilterDateState)
+                {
+                    case 0: // Any
+
+                        _context.Investors
+                            .Where(i => i.City.ToLower().Contains(string.IsNullOrWhiteSpace(InvCitySearchText) ? "" : InvCitySearchText.ToLower())
+                                        && (string.IsNullOrWhiteSpace(i.PassportRegistration) || i.PassportRegistration.ToLower().Contains(InvRegistrationSearchText.ToLower()))
+                                        ).ToList()
+                            .ForEach(i => Investors.Add(i));
+                        break;
+                    case 1: // >
+                        _context.Investors
+                            .Where(i => i.City.ToLower().Contains(string.IsNullOrWhiteSpace(InvCitySearchText) ? "" : InvCitySearchText.ToLower())
+                                        && (string.IsNullOrWhiteSpace(i.PassportRegistration) || i.PassportRegistration.ToLower().Contains(InvRegistrationSearchText.ToLower()))
+                                        && i.DateBirth > SearchDateTime
+                            ).ToList()
+                            .ForEach(i => Investors.Add(i));
+                        break;
+                    case 2: // <
+                        _context.Investors
+                            .Where(i => i.City.ToLower().Contains(string.IsNullOrWhiteSpace(InvCitySearchText) ? "" : InvCitySearchText.ToLower())
+                                        && (string.IsNullOrWhiteSpace(i.PassportRegistration) || i.PassportRegistration.ToLower().Contains(InvRegistrationSearchText.ToLower()))
+                                        && i.DateBirth < SearchDateTime
+                            ).ToList()
+                            .ForEach(i => Investors.Add(i));
+                        break;
+                    case 3: // ==
+                        _context.Investors
+                            .Where(i => i.City.ToLower().Contains(string.IsNullOrWhiteSpace(InvCitySearchText) ? "" : InvCitySearchText.ToLower())
+                                        && (string.IsNullOrWhiteSpace(i.PassportRegistration) || i.PassportRegistration.ToLower().Contains(InvRegistrationSearchText.ToLower()))
+                                        && DateOnly.FromDateTime(i.DateBirth) == DateOnly.FromDateTime(SearchDateTime.DateTime)
+                            ).ToList()
+                            .ForEach(i => Investors.Add(i));
+                        break;
+
+                }
+            });
         }
 
         public ObservableCollection<Investor> Investors
@@ -113,15 +178,64 @@ namespace Legion.ViewModels
                     Investors = _context.Investors.Local.ToObservableCollection();
                 }
                 this.RaiseAndSetIfChanged(ref _searchText, value);
+                
             }
         }
 
+        public string InvCitySearchText
+        {
+            get => _invCitySearchText;
+            set => this.RaiseAndSetIfChanged(ref _invCitySearchText, value);
+        }
+
+        public string InvRegistrationSearchText
+        {
+            get => _invRegistrationSearchText;
+            set => this.RaiseAndSetIfChanged(ref _invRegistrationSearchText, value);
+        }
+
+        public DateTimeOffset SearchDateTime
+        {
+            get => _searchDateTime;
+            set
+            {
+                if (value == null)
+                    return;
+
+                this.RaiseAndSetIfChanged(ref _searchDateTime, value);
+            }
+        }
+
+        public double ViewHeight {
+            get => _viewHeight;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _viewHeight, value);
+                MenuHeight = value - 50;
+                DataGridHeight = value - 100;
+            }
+        }
+
+        public double DataGridHeight
+        {
+            get => _dataGridHeight;
+            set => this.RaiseAndSetIfChanged(ref _dataGridHeight, value);
+        }
+
+        public bool FilterState
+        {
+            get => _filterState;
+            set => this.RaiseAndSetIfChanged(ref _filterState, value);
+        }
+
+        public double MenuHeight { get => _menuHeight; set => this.RaiseAndSetIfChanged(ref _menuHeight, value); }
+
         public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
         public IObservable<bool> IsSearchTextExist { get; } = null!;
-        public string InvCitySBText { get; } = null!;
-        public string InvRegistrationSBText { get; } = null!;
         public DateOnly InvDobDPDate { get; }
-        public int InvDobCBItem { get; }
+        public int FilterDateState { get => _filterDateState;
+            set => this.RaiseAndSetIfChanged(ref _filterDateState, value);
+        }
         public ReactiveCommand<Investor, Unit> SerachCommand { get; set; } = null!;
         public ReactiveCommand<Unit, Unit> PaneCommand { get;} = null!;
         public ReactiveCommand<Unit, Unit> NewInvestorCommand { get; } = null!;
@@ -129,5 +243,6 @@ namespace Legion.ViewModels
         public ReactiveCommand<Investor, Unit> DataGridPrintActionCommand { get; set; } = null!;
         public ReactiveCommand<Investor, Unit> DataGridEditActionCommand { get; set; } = null!;
         public ReactiveCommand<Investor, Unit> DataGridRemoveActionCommand { get; set; } = null!;
+        public ReactiveCommand<Unit, Unit> FilterCommand { get; set; } = null!;
     }
 }

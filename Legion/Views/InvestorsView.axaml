@@ -4,16 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Class="Legion.Views.InvestorsView"
              xmlns:i="https://github.com/projektanker/icons.avalonia"
-             Width="1000"
-             Height="800"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="780"
+             Height="{Binding ViewHeight, Mode=TwoWay}"
              xmlns:vm="using:Legion.ViewModels"
              xmlns:models="clr-namespace:Legion.Models"
              x:DataType="vm:InvestorsViewModel">
   <Grid>
     <Border Background="#ffff" CornerRadius="20" />
-    <SplitView VerticalAlignment="Bottom" Height="645" ZIndex="1" Name="SVLeft" OpenPaneLength="260"
-               CompactPaneLength="0" Background="#ffff" HorizontalAlignment="Left" DisplayMode="CompactInline"
+    <SplitView VerticalAlignment="Bottom" ZIndex="1" Height="{Binding MenuHeight}" Name="SVLeft" OpenPaneLength="260"
+               CompactPaneLength="0" Background="#e95322" HorizontalAlignment="Left" DisplayMode="CompactInline"
        IsPaneOpen="{Binding IsPaneOpen}">
       <SplitView.Pane>
         <StackPanel Background="#e95322">
@@ -30,16 +29,27 @@
               <RowDefinition Height="50" />
             </Grid.RowDefinitions>
             <Label Content="Город:" Grid.Row="1" Foreground="#ffff" />
-            <TextBox Name="InvCitySB" Grid.Row="2" CornerRadius="20" Background="#ffff" Height="25" Foreground="Black"  Text="{Binding InvCitySBText}"/>
+            <TextBox Name="InvCitySB" Grid.Row="2" CornerRadius="20" Background="#ffff" Height="25" Foreground="Black"  Text="{Binding InvCitySearchText}"/>
             <Label Content="Дата рождения:" Grid.Row="3" Foreground="#ffff" />
-            <ComboBox Name="InvDobCB" Grid.Row="4" Background="#ffff" Foreground="Black" SelectedIndex="{Binding InvDobCBItem}">
+            <ComboBox Name="InvDobCB" Grid.Row="4" Background="#ffff" Foreground="Black" SelectedIndex="{Binding FilterDateState}">
+              <ComboBoxItem Content="Любая" Background="#ffff" Foreground="Black"/>
               <ComboBoxItem Content="Больше" Background="#ffff" Foreground="Black"/>
               <ComboBoxItem Content="Меньше" Background="#ffff" Foreground="Black"/>
               <ComboBoxItem Content="Равно" Background="#ffff" Foreground="Black"/>
             </ComboBox>
-            <DatePicker Name="InvDobDP" Grid.Row="5" Background="#ffff" Foreground="Black" SelectedDate="{Binding InvDobDPDate}"/>
+            <DatePicker Name="InvDobDP" Grid.Row="5" Background="#ffff" Foreground="Black" SelectedDate="{Binding SearchDateTime}"/>
             <Label Content="Регистрация:" Grid.Row="6" Foreground="#ffff" />
-            <TextBox Name="InvRegistrationSB" Grid.Row="7" CornerRadius="20" Background="#ffff" Height="25" Foreground="Black" Text="{Binding InvRegistrationSBText}" />
+            <TextBox Name="InvRegistrationSB" Grid.Row="7" CornerRadius="20" Background="#ffff" Height="25" Foreground="Black" Text="{Binding InvRegistrationSearchText}" />
+            <ToggleButton Grid.Row="8" CornerRadius="20" Background="#ffff" Height="40" Width="200" Foreground="Black" IsChecked="{Binding FilterState}" Content="Применить фильтр" Command="{Binding FilterCommand}">
+              <ToggleButton.Styles>
+                  <Style Selector="ToggleButton:checked /template/ ContentPresenter">
+                      <Setter Property="Background" Value="Gray" />
+                  </Style>
+                  <Style Selector="ToggleButton:unchecked /template/ ContentPresenter">
+                      <Setter Property="Background" Value="#ffff" />
+                  </Style>
+              </ToggleButton.Styles>
+            </ToggleButton>
           </Grid>
         </StackPanel>
       </SplitView.Pane>
@@ -85,7 +95,7 @@
             <DataGrid Name="InvestorsGrid" ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20"
                       ItemsSource="{Binding Investors}" AutoGenerateColumns="False"
                       GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray" IsReadOnly="True"
-                      HorizontalScrollBarVisibility="Visible" Height="700">
+                      HorizontalScrollBarVisibility="Visible" Height="{Binding DataGridHeight}">
               <DataGrid.Columns>
                 <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}" />
                 <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}" />

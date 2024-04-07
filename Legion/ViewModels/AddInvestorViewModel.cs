@@ -53,11 +53,6 @@ namespace Legion.ViewModels
             });
         }
 
-        private void UpdInvestor(ref Investor investor, Investor incInvestor)
-        {
-            investor = incInvestor;
-        }
-
         public AddInvestorViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;

@@ -29,9 +29,11 @@
 				<Button Grid.Row="1" Margin="6" CornerRadius="20" Content="Инвесторы" Background="#e95322" Command="{Binding InvestorsCommand}"/>
 				<Button Grid.Row="2" Margin="6" CornerRadius="20" Content="Договоры" Background="#e95322" Command="{Binding ContractsCommand}"/>
 				<Button Grid.Row="3" Margin="6" CornerRadius="20" Content="Рефералы" Background="#e95322"  Command="{Binding ReferralsCommand}"/>
-				<Button Grid.Row="5" Margin="6" CornerRadius="20" Content="Пользователи" Background="#e95322"  Command="{Binding UsersCommand}"/>
+				<Button Grid.Row="5" Margin="6" CornerRadius="20" Content="Пользователи" Background="#e95322"  Command="{Binding UsersCommand}" IsVisible="{Binding UserManagingVisible}"/>
 				<Button Grid.Row="4" Margin="6" CornerRadius="20" Content="Истекающие договоры" Background="#e95322" Command="{Binding ExpiringContractCommand}"/>
-				<Button Grid.Row="8" Margin="6" CornerRadius="20" Content="Отчеты" Background="#e95322" Command="{Binding ReportsCommand}"/>
+        <Button Grid.Row="6" Margin="6" CornerRadius="20" Content="Настройки" Background="#e95322" Command="{Binding SettingsCommand}"/>
+
+        <Button Grid.Row="8" Margin="6" CornerRadius="20" Content="Отчеты" Background="#e95322" Command="{Binding ReportsCommand}"/>
 				<Button Grid.Row="9" Margin="6" CornerRadius="20" Content="Выход" Background="#e95322" Command="{Binding ExitCommand}"/>
 			</Grid>
 		</Grid>
