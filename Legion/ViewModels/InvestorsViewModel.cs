@@ -18,6 +18,7 @@ using System.Collections;
 using Splat;
 using DynamicData;
 using Avalonia.Controls.ApplicationLifetimes;
+using System.Threading;
 
 namespace Legion.ViewModels
 {
@@ -34,11 +35,21 @@ namespace Legion.ViewModels
         private string _invRegistrationSearchText = "";
         private DateTimeOffset _searchDateTime = new(DateTime.Now);
         private bool _filterState = false;
+        private bool _loadingVisible = false;
         private int _filterDateState = 0;
+        private Task load;
 
         public InvestorsViewModel()
         {
             _context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
+        }
+
+        public async Task LoadDataAsync()
+        {
+            LoadingVisible = true;
+            await _context.Investors.LoadAsync();
+            LoadingVisible = false;
+            Investors = _context.Investors.Local.ToObservableCollection();
         }
 
         public InvestorsViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
@@ -46,8 +57,8 @@ namespace Legion.ViewModels
             ViewHeight = 780;
             _context = context;
             _isPaneOpen = false;
-            _context.Investors.LoadAsync();
-            Investors = _context.Investors.Local.ToObservableCollection();
+            LoadDataAsync();
+
             var a = Locator.Current.GetService<IClassicDesktopStyleApplicationLifetime>();
 
             if (a is IClassicDesktopStyleApplicationLifetime desktop)
@@ -67,7 +78,7 @@ namespace Legion.ViewModels
             SearchCommand = ReactiveCommand.Create(() =>
             {
                 Investors = new ObservableCollection<Investor>();
-                SearchText.Split(' ').ToList().ForEach(word => Investors.Add(_context.Investors.Where(inv => inv.LastName.ToLower().Contains(word.ToLower()) || inv.FirstName.ToLower().Contains(word.ToLower()) || inv.MiddleName.ToLower().Contains(word.ToLower()) || inv.Email.ToLower().Contains(word.ToLower()) || inv.Phone.ToLower().Contains(word.ToLower()) || inv.City.ToLower().Contains(word.ToLower()) || inv.DateBirth.ToString().Contains(word.ToLower()))));
+                SearchText.Split(' ').ToList().ForEach(word => Investors.Add(_context.Investors.Local.Where(inv => inv.LastName.ToLower().Contains(word.ToLower()) || inv.FirstName.ToLower().Contains(word.ToLower()) || inv.MiddleName.ToLower().Contains(word.ToLower()) || inv.Email.ToLower().Contains(word.ToLower()) || inv.Phone.ToLower().Contains(word.ToLower()) || inv.City.ToLower().Contains(word.ToLower()) || inv.DateBirth.ToString().Contains(word.ToLower()))));
                 Investors = new ObservableCollection<Investor>(Investors.Distinct());
             }, IsSearchTextExist);
 
@@ -226,6 +237,12 @@ namespace Legion.ViewModels
         {
             get => _filterState;
             set => this.RaiseAndSetIfChanged(ref _filterState, value);
+        }
+
+        public bool LoadingVisible
+        {
+            get => _loadingVisible;
+            set => this.RaiseAndSetIfChanged(ref _loadingVisible, value);
         }
 
         public double MenuHeight { get => _menuHeight; set => this.RaiseAndSetIfChanged(ref _menuHeight, value); }

@@ -92,6 +92,12 @@
               <RowDefinition Height="0.1*" />
               <RowDefinition />
             </Grid.RowDefinitions>
+            <Panel Grid.Row="1" Margin="20" Background="rgba(150, 150, 150, 50)" IsVisible="{Binding LoadingVisible}">
+                <StackPanel Margin="2" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                    <i:Icon Value="fa-spinner" Animation="Pulse" FontSize="50" Width="60" Height="60"/>
+                    <Label Content="Загрузка..." FontSize="30"></Label>
+                </StackPanel>
+              </Panel>
             <DataGrid Name="InvestorsGrid" ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20"
                       ItemsSource="{Binding Investors}" AutoGenerateColumns="False"
                       GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray" IsReadOnly="True"
