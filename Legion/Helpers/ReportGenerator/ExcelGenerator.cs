@@ -308,7 +308,7 @@ namespace Legion.Helpers.ReportGenerator
 
                 sheet.Cells[row, column + 2].Value = contract.Amount.ToString("### ### ### руб.");
 
-                string monthPayment = contract.ContractType.Formula.Replace("x", (Convert.ToDouble(contract.Bet) / 100).ToString()).Replace("p", contract.Amount.ToString());
+                string monthPayment = contract.ContractType.Formula.Replace("x", (Convert.ToDouble(contract.Bet) / 100).ToString()).Replace("p", contract.Amount.ToString()).Replace("m", mounthCount.ToString());
                 double result = Convert.ToDouble(new DataTable().Compute(monthPayment.Replace(",", "."), null));
                 sheet.Cells[row, column + 3].Value = result.ToString("### ### ### руб.");
 

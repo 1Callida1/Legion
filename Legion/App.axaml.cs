@@ -73,8 +73,8 @@ namespace Legion
 
                 if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
                 {
-                    _context.UserRoles.Add(new UserRole() { Role = "Àäìèí"});
-                    _context.UserRoles.Add(new UserRole() { Role = "Áîññ êà÷àëêè" });
+                    _context.UserRoles.Add(new UserRole() { Role = "�����"});
+                    _context.UserRoles.Add(new UserRole() { Role = "���� �������" });
                     _context.SaveChanges();
                     _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Àäìèí")) });
                     _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Áîññ êà÷àëêè")) });
