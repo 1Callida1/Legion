@@ -46,7 +46,7 @@ namespace Legion.ViewModels
             ViewHeight = 780;
             _context = context;
             _isPaneOpen = false;
-            _context.Investors.Load();
+            _context.Investors.LoadAsync();
             Investors = _context.Investors.Local.ToObservableCollection();
             var a = Locator.Current.GetService<IClassicDesktopStyleApplicationLifetime>();
 
