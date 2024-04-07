@@ -75,6 +75,7 @@ namespace Legion
 
                 if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
                 {
+
                     _context.UserRoles.Add(new UserRole() { Role = "Admin"});
                     _context.UserRoles.Add(new UserRole() { Role = "User" });
                     _context.SaveChanges();
