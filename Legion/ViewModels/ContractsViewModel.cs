@@ -131,8 +131,10 @@ namespace Legion.ViewModels
 
                 ctr.Amount += int.Parse((string)result);
 
-                await _context.AdditionalPayments.AddAsync(new AdditionalPayment()
-                    { Amount = int.Parse((string)result), Contract = ctr, Date = DateTime.Now });
+                AdditionalPayment ap = new AdditionalPayment()
+                    { Amount = int.Parse((string)result), Contract = ctr, Date = DateTime.Now };
+
+                await _context.AdditionalPayments.AddAsync(ap);
 
                 _context.Contracts.Update(ctr);
                 await _context.SaveChangesAsync();
