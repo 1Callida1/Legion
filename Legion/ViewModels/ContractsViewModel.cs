@@ -90,8 +90,8 @@ namespace Legion.ViewModels
                 _context.SaveChanges();
 
                 Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
-                
-                //TODO: Распечатать бланк закрытия договора
+
+                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Заявление на закрытие договора инвестирования");
             });
 
             DataGridProlongationActionCommand = ReactiveCommand.CreateFromTask(async (Models.Contract ctr) =>
@@ -113,6 +113,8 @@ namespace Legion.ViewModels
                 await _context.SaveChangesAsync();
 
                 Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
+
+                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Пролонгация", copyContract);
             });
 
             DataGridShowPaymentsActionCommand = ReactiveCommand.CreateFromTask(async (Models.Contract ctr) =>
@@ -136,6 +138,8 @@ namespace Legion.ViewModels
                 await _context.SaveChangesAsync();
 
                 Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
+
+                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Доп соглашение");
             });
 
             DataGridPrintActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
