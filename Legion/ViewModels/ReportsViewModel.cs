@@ -54,9 +54,9 @@ namespace Legion.ViewModels
             {
                 ObservableCollection<Contract> ctrs = new ObservableCollection<Contract>(Contracts
                     .Where(c => c.Status.Status == "Открыт" && c.DateStart.Day == DateTime.Now.Day).ToList());
-                byte[] reportExcel = ExcelGenerator.GenerateReportCash(ctrs, DateTime.Now); //Дата из промежутка, добавить райз ошибки если выбрана дата больше чем один день
+                byte[] reportExcel = ExcelGenerator.GenerateReportCash(new ObservableCollection<Contract>(ctrs.Where(c => c.Investor.PayType == true)), DateTime.Now); //Дата из промежутка, добавить райз ошибки если выбрана дата больше чем один день
                 File.WriteAllBytes($"{outputPath}/доход за  {DateTime.Now:dd.MM.yyyy} безналичные.xlsx", reportExcel);
-                reportExcel = ExcelGenerator.GenerateReportCashless(ctrs, DateTime.Now);
+                reportExcel = ExcelGenerator.GenerateReportCashless(new ObservableCollection<Contract>(ctrs.Where(c => c.Investor.PayType == false)), DateTime.Now);
                 File.WriteAllBytes($"{outputPath}/доход за  {DateTime.Now:dd.MM.yyyy} наличные.xlsx", reportExcel);
             });
 
@@ -95,15 +95,15 @@ namespace Legion.ViewModels
                 {
                     case 0:
                         ctrs = new ObservableCollection<Contract>(Contracts
-                            .Where(c => c.Status.Status == "Открыт" && c.DateStart.Date == DateTime.Now.Date && c.Referral != null).ToList());
+                            .Where(c => c.Status.Status == "Открыт" && c.DateStart.Date == DateTime.Now.Date).ToList());
                         break;
                     case 1:
                         ctrs = new ObservableCollection<Contract>(Contracts
-                            .Where(c => c.Status.Status == "Открыт" && c.DateStart.Month == DateTime.Now.Month && c.DateStart.Year == DateTime.Now.Year && c.Referral != null).ToList());
+                            .Where(c => c.Status.Status == "Открыт" && c.DateStart.Month == DateTime.Now.Month && c.DateStart.Year == DateTime.Now.Year).ToList());
                         break;
                     case 2:
                         ctrs = new ObservableCollection<Contract>(Contracts
-                            .Where(c => c.Status.Status == "Открыт" && c.DateStart.Date >= StartDateTime.Date && c.DateStart.Date <= EndDateTime.Date && c.Referral != null).ToList());
+                            .Where(c => c.Status.Status == "Открыт" && c.DateStart.Date >= StartDateTime.Date && c.DateStart.Date <= EndDateTime.Date).ToList());
                         break;
                 }
 

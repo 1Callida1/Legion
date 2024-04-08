@@ -141,7 +141,7 @@ namespace Legion.ViewModels
 
                 Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
 
-                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Доп соглашение");
+                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Доп соглашение", null, ap);
             });
 
             DataGridPrintActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
