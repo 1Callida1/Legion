@@ -1,4 +1,5 @@
 ﻿using Legion.Models;
+using NickBuhro.NumToWords.Russian;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using SQLitePCL;
@@ -28,7 +29,7 @@ namespace Legion.Helpers.ReportGenerator
 
             ExcelWorksheet sheet = package.Workbook.Worksheets.Add("Доход безналичный");
             double sum_all_day = 0;
-            contracts.ToList().ForEach(contract => sum_all_day += Convert.ToDouble(contract.Amount) * Convert.ToDouble(contract.Bet));
+            contracts.ToList().ForEach(contract => sum_all_day += Convert.ToDouble(contract.Amount) * Convert.ToDouble(contract.Bet) / 100.0);
 
             sheet.Column(2).Width = 38;
             sheet.Column(3).Width = 25;
@@ -69,15 +70,15 @@ namespace Legion.Helpers.ReportGenerator
             int row = 9;
             int column = 2;
 
-            int sum = 0;
+            double sum = 0;
 
             foreach (Models.Contract contract in contracts)
             {
                 sheet.Cells[row, column].Value = $"{contract.Investor.LastName} {contract.Investor.FirstName} {contract.Investor.MiddleName}";
-                sheet.Cells[row, column + 1].Value = contract.Amount * contract.Bet;
+                sheet.Cells[row, column + 1].Value = Convert.ToDouble(contract.Amount) * Convert.ToDouble(contract.Bet) / 100.0;
                 sheet.Cells[row, column + 2].Value = contract.Investor.CardNumber;
 
-                sum += contract.Amount * contract.ContractType.Bet;
+                sum += Convert.ToDouble(contract.Amount) * Convert.ToDouble(contract.Bet) / 100.0;
                 row++;
             }
 
@@ -106,7 +107,7 @@ namespace Legion.Helpers.ReportGenerator
 
             ExcelWorksheet sheet = package.Workbook.Worksheets.Add("Доход наличный");
             double sum_all_day = 0;
-            contracts.ToList().ForEach(contract => sum_all_day += Convert.ToDouble(contract.Amount) * Convert.ToDouble(contract.Bet));
+            contracts.ToList().ForEach(contract => sum_all_day += Convert.ToDouble(contract.Amount) * Convert.ToDouble(contract.Bet) / 100.0);
 
             sheet.Column(2).Width = 38;
             sheet.Column(3).Width = 25;
@@ -150,10 +151,10 @@ namespace Legion.Helpers.ReportGenerator
             foreach (Models.Contract contract in contracts)
             {
                 sheet.Cells[row, column].Value = $"{contract.Investor.LastName} {contract.Investor.FirstName} {contract.Investor.MiddleName}";
-                sheet.Cells[row, column + 1].Value = Convert.ToDouble(contract.Amount) * Convert.ToDouble(contract.Bet);
+                sheet.Cells[row, column + 1].Value = Convert.ToDouble(contract.Amount) * Convert.ToDouble(contract.Bet) / 100.0;
                 sheet.Cells[row, column + 2].Value = "Наличный";
 
-                sum += Convert.ToDouble(contract.Amount) * Convert.ToDouble(contract.Bet);
+                sum += Convert.ToDouble(contract.Amount) * Convert.ToDouble(contract.Bet) / 100.0;
                 row++;
             }
 
@@ -427,7 +428,7 @@ namespace Legion.Helpers.ReportGenerator
 
                 if (contract.Repeated)
                 {
-                    AdditionalPayment payment = _context.AdditionalPayments.FirstOrDefault(x => x.Contract == contract && x.Date.Day == currentDate.Day);
+                    AdditionalPayment payment = _context.AdditionalPayments.FirstOrDefault(x => x.Contract == contract && x.Date.Day == contract.DateProlonagtion.Day);
                     if (payment != null)
                     {
                         sheet.Cells[row, column + 10].Value = "Перез. с доб.";
@@ -438,6 +439,11 @@ namespace Legion.Helpers.ReportGenerator
                     {
                         sheet.Cells[row, column + 10].Value = "Перезаключение";
                     }
+                }
+                else if(contract.RepeatNumber != 0)
+                {
+                   string[] ArrayNumberOfContracts = new string[7] { "второй", "третий", "четвертый", "пятый", "шестой", "седьмой", "восьмой" };
+                   sheet.Cells[row, column + 10].Value = $"{ArrayNumberOfContracts[contract.RepeatNumber - 1]} договор";
                 }
                 else
                 {
