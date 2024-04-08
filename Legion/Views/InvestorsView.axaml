@@ -8,7 +8,12 @@
              Height="{Binding ViewHeight, Mode=TwoWay}"
              xmlns:vm="using:Legion.ViewModels"
              xmlns:models="clr-namespace:Legion.Models"
+             xmlns:converters="clr-namespace:Legion.Helpers.Converters"
              x:DataType="vm:InvestorsViewModel">
+    <UserControl.Resources>
+        <converters:DateTimeToDateConverter x:Key="DateConverter" />
+        <converters:BoolToPayTypeIconConverter x:Key="PayTypeConverter" />
+    </UserControl.Resources>
   <Grid>
     <Border Background="#ffff" CornerRadius="20" />
     <SplitView VerticalAlignment="Bottom" ZIndex="1" Height="{Binding MenuHeight}" Name="SVLeft" OpenPaneLength="260"
@@ -106,11 +111,17 @@
                 <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}" />
                 <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}" />
                 <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}" />
-                <DataGridTextColumn Header="Дата рождения" Binding="{Binding Path=DateBirth}" />
+                <DataGridTextColumn Header="Дата рождения" Binding="{Binding Path=DateBirth, Converter={StaticResource DateConverter}}" />
                 <DataGridTextColumn Header="Телефон" Binding="{Binding Path=Phone}" />
                 <DataGridTextColumn Header="E-mail" Binding="{Binding Path=Email}" />
                 <DataGridTextColumn Header="Город" Binding="{Binding Path=City}" />
-                <DataGridCheckBoxColumn Header="Тип расчета" Binding="{Binding PayType}"/>
+                <DataGridTemplateColumn Header="Тип расчета">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <i:Icon Value="{Binding PayType, Converter={StaticResource PayTypeConverter}}" Width="35" Height="35"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Серия паспорта" Binding="{Binding Path=PassprotSeries}" />
                 <DataGridTextColumn Header="Номер паспорта" Binding="{Binding Path=PassprotNumber}" />
               </DataGrid.Columns>

@@ -53,7 +53,7 @@
 			</StackPanel>
 		</StackPanel>
 
-		<DataGrid Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Contracts}" CornerRadius="20" Margin="5">
+		<DataGrid Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Contracts}" CornerRadius="20" Margin="5" HorizontalScrollBarVisibility="Visible">
 			<DataGrid.Columns>
 				<DataGridTextColumn Header="Номер договора" Binding="{Binding Path=CustomId}" />
 				<DataGridTextColumn Header="Менеджер"

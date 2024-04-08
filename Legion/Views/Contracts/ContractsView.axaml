@@ -12,6 +12,7 @@
     <UserControl.Resources>
         <converters:ContractInvestorConverter x:Key="ContractInvestorConverter" />
         <converters:DateTimeToDateConverter x:Key="DateConverter" />
+        <converters:ContractRepeatedConverter x:Key="RepeatedConverter"/>
     </UserControl.Resources>
     <Grid>
         <Border Background="#ffff" CornerRadius="20" />
@@ -112,7 +113,7 @@
                                                     Binding="{Binding Path=DateEnd, Converter={StaticResource DateConverter}}" />
                                 <DataGridTextColumn Header="Сумма вклада" Binding="{Binding Path=Amount}" />
                                 <DataGridTextColumn Header="Тип вклада" Binding="{Binding Path=ContractType.TypeName}" />
-                                <DataGridCheckBoxColumn Header="Повторный?" Binding="{Binding Path=Repeated}" />
+                                <DataGridTextColumn Header="Повторный?" Binding="{Binding Path=Repeated, Converter={StaticResource RepeatedConverter}}" />
                                 <DataGridTextColumn Header="Реферал"
                                                     Binding="{Binding Path=Referral.InvestorCalled.FirstName}" />
                                 <DataGridTextColumn Header="Заметка" Binding="{Binding Path=Note}" />
