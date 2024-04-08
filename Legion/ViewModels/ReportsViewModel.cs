@@ -20,6 +20,8 @@ using System.Diagnostics.Contracts;
 using Avalonia.Controls.Shapes;
 using Legion.Helpers.Calculations;
 using Legion.Models.Internal;
+using Contract = Legion.Models.Contract;
+using DynamicData.Binding;
 
 namespace Legion.ViewModels
 {
@@ -50,22 +52,68 @@ namespace Legion.ViewModels
 
             GetEveryDayReportCommand = ReactiveCommand.Create(() =>
             {
-                byte[] reportExcel = ExcelGenerator.GenerateReportCash(Contracts, DateTime.Now); //Дата из промежутка, добавить райз ошибки если выбрана дата больше чем один день
+                ObservableCollection<Contract> ctrs = new ObservableCollection<Contract>(Contracts
+                    .Where(c => c.Status.Status == "Открыт" && c.DateStart.Day == DateTime.Now.Day).ToList());
+                byte[] reportExcel = ExcelGenerator.GenerateReportCash(ctrs, DateTime.Now); //Дата из промежутка, добавить райз ошибки если выбрана дата больше чем один день
                 File.WriteAllBytes($"{outputPath}/доход за  {DateTime.Now:dd.MM.yyyy} безналичные.xlsx", reportExcel);
-                reportExcel = ExcelGenerator.GenerateReportCashless(Contracts, DateTime.Now);
+                reportExcel = ExcelGenerator.GenerateReportCashless(ctrs, DateTime.Now);
                 File.WriteAllBytes($"{outputPath}/доход за  {DateTime.Now:dd.MM.yyyy} наличные.xlsx", reportExcel);
             });
 
             GetRefferalReportCommand = ReactiveCommand.Create(() =>
             {
-                byte[] reportExcel = ExcelGenerator.ReferalBonus(Contracts);
-                File.WriteAllBytes($"{outputPath}/Ведомость по реферальному бонусу.xlsx", reportExcel);
+                ObservableCollection<Contract> ctrs = new();
+
+                switch (DateOffsetVariant)
+                {
+                    case 0:
+                        ctrs = new ObservableCollection<Contract>(Contracts
+                            .Where(c => c.Status.Status == "Открыт" && c.DateStart.Date == DateTime.Now.Date && c.Referral != null).ToList());
+                        break;
+                    case 1:
+                        ctrs = new ObservableCollection<Contract>(Contracts
+                            .Where(c => c.Status.Status == "Открыт" && c.DateStart.Month == DateTime.Now.Month && c.DateStart.Year == DateTime.Now.Year && c.Referral != null).ToList());
+                        break;
+                    case 2:
+                        ctrs = new ObservableCollection<Contract>(Contracts
+                            .Where(c => c.Status.Status == "Открыт" && c.DateStart.Date >= StartDateTime.Date && c.DateStart.Date <= EndDateTime.Date && c.Referral != null).ToList());
+                        break;
+                }
+
+                if (ctrs.Any())
+                {
+                    byte[] reportExcel = ExcelGenerator.ReferalBonus(ctrs);
+                    File.WriteAllBytes($"{outputPath}/Ведомость по реферальному бонусу.xlsx", reportExcel);
+                }
             });
 
             GetContractsReportCommand = ReactiveCommand.Create(() =>
             {
-                byte[] reportExcel = ExcelGenerator.MonthlyContract(Contracts, DateTime.Now, DateTime.Now.AddMonths(1), _context);
-                File.WriteAllBytes($"{outputPath}/ежемесячная ведомость по договорам.xlsx", reportExcel);
+                ObservableCollection<Contract> ctrs = new();
+
+                switch (DateOffsetVariant)
+                {
+                    case 0:
+                        ctrs = new ObservableCollection<Contract>(Contracts
+                            .Where(c => c.Status.Status == "Открыт" && c.DateStart.Date == DateTime.Now.Date && c.Referral != null).ToList());
+                        break;
+                    case 1:
+                        ctrs = new ObservableCollection<Contract>(Contracts
+                            .Where(c => c.Status.Status == "Открыт" && c.DateStart.Month == DateTime.Now.Month && c.DateStart.Year == DateTime.Now.Year && c.Referral != null).ToList());
+                        break;
+                    case 2:
+                        ctrs = new ObservableCollection<Contract>(Contracts
+                            .Where(c => c.Status.Status == "Открыт" && c.DateStart.Date >= StartDateTime.Date && c.DateStart.Date <= EndDateTime.Date && c.Referral != null).ToList());
+                        break;
+                }
+
+
+                if (ctrs.Any())
+                {
+                    byte[] reportExcel = ExcelGenerator.MonthlyContract(ctrs, DateTime.Now, DateTime.Now.AddMonths(1), _context);
+                    File.WriteAllBytes($"{outputPath}/ежемесячная ведомость по договорам.xlsx", reportExcel);
+                }
+                    
             });
         }
         public sealed override IScreen HostScreen { get; set; }
