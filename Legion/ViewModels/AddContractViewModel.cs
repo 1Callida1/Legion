@@ -11,6 +11,8 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
+using Legion.Models.Internal;
+using System.IO;
 
 namespace Legion.ViewModels
 {
@@ -159,6 +161,24 @@ namespace Legion.ViewModels
                 {
                     _context.SaveChanges();
                     HostScreen.Router.NavigateBack.Execute();
+                    if (Contract.ContractType.TypeName.Equals("Накопительный"))
+                    {
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор накопительный");
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Акт");
+                    }
+                    else
+                    {
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор инвестирования");
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Акт");
+                        byte[] reportExcel = Helpers.ReportGenerator.ExcelGenerator.GeneratePayments(Contract);
+                        string path = $"{Locator.Current.GetService<Settings>().ArchievFolder}/" +
+                            $"{Contract.ContractType.TypeName} " +
+                            $"{Contract.CustomId.Replace("/", ".")} " +
+                            $"{Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}./" +
+                            $"Акт выплат {Contract.CustomId.Replace("/", ".")} {Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}..xlsx";
+                        File.WriteAllBytes($"{path}", reportExcel);
+                    }
+
                 }
                 catch (Exception ex)
                 {
