@@ -50,7 +50,7 @@ namespace Legion.Helpers.ReportGenerator
             public string PassportRegistration { get; set; } = null;
             public string Phone { get;set; }
             public string DateProlongation { get; set; }
-            public string NewDateEndFormatBrackets { get; set; } = null;
+            public string ProlongationDate { get; set; } = null;
             public string AdditionalPaymentSum { get; set; } = null;
             public string AdditionalPaymentSumWords { get; set; } = null;
             public string AdditionalPaymentDate { get; set; } = null;
@@ -92,7 +92,7 @@ namespace Legion.Helpers.ReportGenerator
                 contractOptimazed.AdditionalPaymentSumWords = RussianConverter.Format(additionalPayment.Amount);
                 contractOptimazed.AdditionalPaymentDate = $"«{additionalPayment.Date.Day}» {additionalPayment.Date.ToString("MMMM", culture)} {additionalPayment.Date.Year}";
             }
-            if (cntrProlongation != null) contractOptimazed.NewDateEndFormatBrackets = $"«{cntrProlongation.DateEnd.Day}» {cntrProlongation.DateEnd.ToString("MMMM", culture)} {cntrProlongation.DateEnd.Year}";
+            if (cntrProlongation != null) contractOptimazed.ProlongationDate = $"«{cntrProlongation.DateEnd.Day}» {cntrProlongation.DateEnd.ToString("MMMM", culture)} {cntrProlongation.DateEnd.Year}";
 
             var template = DocxTemplate.Open($"{Locator.Current.GetService<Settings>().TemplatesFolder}/Шаблон {documentType}.docx");
             template.BindModel("ds", contractOptimazed);
