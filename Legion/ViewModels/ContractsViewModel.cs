@@ -100,7 +100,7 @@ namespace Legion.ViewModels
 
                 if (result == null)
                     return;
-
+                ctr = _context.Contracts.AsNoTracking().First(c => c.Id == ctr.Id);
                 Contract copyContract = _context.Contracts.First(c => c.Id == ctr.Id);
                 copyContract.Id = 0;
                 copyContract.DateEnd = copyContract.DateEnd.AddMonths(int.Parse(result));

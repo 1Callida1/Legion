@@ -59,7 +59,11 @@ namespace Legion.Helpers.ReportGenerator
         public static void GenerateDocument(Models.Contract cntr, string documentType, Models.Contract cntrProlongation = null, AdditionalPayment additionalPayment = null)
         {
             Legion.Models.Contract contract = cntr;
+
             CultureInfo culture = new CultureInfo("ru-RU");
+            culture.DateTimeFormat.MonthNames = culture.DateTimeFormat.MonthGenitiveNames;
+            culture.DateTimeFormat.AbbreviatedMonthNames = culture.DateTimeFormat.AbbreviatedMonthGenitiveNames;
+
             ContractOptimazed contractOptimazed = new ContractOptimazed {
                 ContractId = contract.CustomId,
                 DateStartFormat = $"{contract.DateStart.Day} {contract.DateStart.ToString("MMMM", culture)} {contract.DateStart.Year}",
