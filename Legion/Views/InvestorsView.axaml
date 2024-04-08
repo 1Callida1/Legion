@@ -8,7 +8,12 @@
              Height="{Binding ViewHeight, Mode=TwoWay}"
              xmlns:vm="using:Legion.ViewModels"
              xmlns:models="clr-namespace:Legion.Models"
+             xmlns:converters="clr-namespace:Legion.Helpers.Converters"
              x:DataType="vm:InvestorsViewModel">
+    <UserControl.Resources>
+        <converters:DateTimeToDateConverter x:Key="DateConverter" />
+        <converters:BoolToPayTypeIconConverter x:Key="PayTypeConverter" />
+    </UserControl.Resources>
   <Grid>
     <Border Background="#ffff" CornerRadius="20" />
     <SplitView VerticalAlignment="Bottom" ZIndex="1" Height="{Binding MenuHeight}" Name="SVLeft" OpenPaneLength="260"
@@ -92,6 +97,12 @@
               <RowDefinition Height="0.1*" />
               <RowDefinition />
             </Grid.RowDefinitions>
+            <Panel Grid.Row="1" Margin="20" Background="rgba(150, 150, 150, 50)" IsVisible="{Binding LoadingVisible}">
+                <StackPanel Margin="2" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                    <i:Icon Value="fa-spinner" Animation="Pulse" FontSize="50" Width="60" Height="60"/>
+                    <Label Content="Загрузка..." FontSize="30"></Label>
+                </StackPanel>
+              </Panel>
             <DataGrid Name="InvestorsGrid" ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20"
                       ItemsSource="{Binding Investors}" AutoGenerateColumns="False"
                       GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray" IsReadOnly="True"
@@ -100,11 +111,17 @@
                 <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}" />
                 <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}" />
                 <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}" />
-                <DataGridTextColumn Header="Дата рождения" Binding="{Binding Path=DateBirth}" />
+                <DataGridTextColumn Header="Дата рождения" Binding="{Binding Path=DateBirth, Converter={StaticResource DateConverter}}" />
                 <DataGridTextColumn Header="Телефон" Binding="{Binding Path=Phone}" />
                 <DataGridTextColumn Header="E-mail" Binding="{Binding Path=Email}" />
                 <DataGridTextColumn Header="Город" Binding="{Binding Path=City}" />
-                <DataGridCheckBoxColumn Header="Тип расчета" Binding="{Binding PayType}"/>
+                <DataGridTemplateColumn Header="Тип расчета">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <i:Icon Value="{Binding PayType, Converter={StaticResource PayTypeConverter}}" Width="35" Height="35"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Серия паспорта" Binding="{Binding Path=PassprotSeries}" />
                 <DataGridTextColumn Header="Номер паспорта" Binding="{Binding Path=PassprotNumber}" />
               </DataGrid.Columns>

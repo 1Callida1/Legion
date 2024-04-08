@@ -16,6 +16,7 @@ using Contract = Legion.Models.Contract;
 using SkiaSharp;
 using System.Security.Principal;
 using Legion.Models.Internal;
+using System.Threading.Tasks;
 
 namespace Legion.ViewModels
 {
@@ -27,15 +28,15 @@ namespace Legion.ViewModels
         private string _searchText;
         private List<ContractType> _contractTypes;
         private ContractType _selectedContractType;
+        private bool _loadingVisible = false;
 
         public ContractsViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             _context = context;
             _isPaneOpen = false;
-
-            ContractTypes = context.ContractTypes.ToList();
-            ContractTypes.Add(new ContractType() {TypeName = "Все", Bet = 0, CanAddMoney = false, ContractIdFormat = "", Formula = "", Period = 0});
-            _selectedContractType = ContractTypes.First(t => t.TypeName == "Все");
+            ContractTypes = _context.ContractTypes.ToList();
+            ContractTypes.Add(new ContractType() { TypeName = "Все", Bet = 0, CanAddMoney = false, ContractIdFormat = "", Formula = "", Period = 0 });
+            SelectedContractType = ContractTypes.First(t => t.TypeName == "Все");
 
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
 
@@ -163,6 +164,13 @@ namespace Legion.ViewModels
             });
         }
 
+        private async Task LoadContractsAsync()
+        {
+            LoadingVisible = true;
+            Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
+            LoadingVisible = false;
+        }
+
         public string SearchText
         {
             get => _searchText;
@@ -199,11 +207,11 @@ namespace Legion.ViewModels
 
                 if (value.TypeName != "Все")
                 {
-                    Contracts = new ObservableCollection<Contract>(_context.Contracts
+                    Contracts = new ObservableCollection<Contract>(_context.Contracts.Local
                         .Where(c => c.ContractType.Id == value.Id).ToList());
                 }
                 else
-                    Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
+                    LoadContractsAsync();
             }
         }
 
@@ -211,6 +219,12 @@ namespace Legion.ViewModels
         {
             get => _contractTypes;
             set => this.RaiseAndSetIfChanged(ref _contractTypes, value);
+        }
+
+        public bool LoadingVisible
+        {
+            get => _loadingVisible;
+            set => this.RaiseAndSetIfChanged(ref _loadingVisible, value);
         }
 
         public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;

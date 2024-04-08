@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
@@ -422,11 +423,11 @@ namespace Legion.Helpers.ReportGenerator
                     sheet.Cells[row, column + 8].Value = Math.Abs((contract.DateProlonagtion.Month - contract.DateEnd.Month) + 12 * (contract.DateProlonagtion.Year - contract.DateEnd.Year));
                 }
 
-                sheet.Cells[row, column + 9].Value = contract.Investor.PayType; //TO DO Нормализовать вывод PayType
+                sheet.Cells[row, column + 9].Value = new Converters.BoolToPayTypeStringConverter().Convert(contract.Investor.PayType, typeof(string), "", CultureInfo.CurrentCulture);
 
-                if (contract.Repeated && contract.DateProlonagtion.ToString("dd.MM.yyyy").Equals(currentDate.ToString("dd.MM.yyyy")))
+                if (contract.Repeated)
                 {
-                    AdditionalPayment payment = _context.AdditionalPayments.First(x => x.Contract == contract && x.Date.Day == currentDate.Day);
+                    AdditionalPayment payment = _context.AdditionalPayments.FirstOrDefault(x => x.Contract == contract && x.Date.Day == currentDate.Day);
                     if (payment != null)
                     {
                         sheet.Cells[row, column + 10].Value = "Перез. с доб.";
@@ -525,9 +526,9 @@ namespace Legion.Helpers.ReportGenerator
 
                 sheet.Cells[row, column + 2].Value = contract.Amount.ToString("### ### ### руб.");
 
-                sheet.Cells[row, column + 3].Value = contract.Investor.PayType; //TO DO Нормализовать вывод PayType
+                sheet.Cells[row, column + 3].Value = new Converters.BoolToPayTypeStringConverter().Convert(contract.Investor.PayType, typeof(string), "", CultureInfo.CurrentCulture);
 
-                sheet.Cells[row, column + 4].Value = contract.Repeated; //TO DO Нормализовать вывод Повторный не повторный
+                sheet.Cells[row, column + 4].Value = new Converters.ContractRepeatedConverter().Convert(contract.Repeated, typeof(string), "", CultureInfo.CurrentCulture);
 
                 sheet.Cells[row, column + 5].Style.WrapText = true;
                 sheet.Cells[row, column + 5].RichText.Add(contract.Referral.InvestorCalled.LastName + " " + contract.Referral.InvestorCalled.FirstName + "\r\n");

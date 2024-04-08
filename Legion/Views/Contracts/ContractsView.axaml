@@ -12,6 +12,7 @@
     <UserControl.Resources>
         <converters:ContractInvestorConverter x:Key="ContractInvestorConverter" />
         <converters:DateTimeToDateConverter x:Key="DateConverter" />
+        <converters:ContractRepeatedConverter x:Key="RepeatedConverter"/>
     </UserControl.Resources>
     <Grid>
         <Border Background="#ffff" CornerRadius="20" />
@@ -86,6 +87,14 @@
                             <RowDefinition Height="0.1*" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
+
+                        <Panel Grid.Row="1" Margin="20" Background="rgba(150, 150, 150, 50)" IsVisible="{Binding LoadingVisible}">
+                            <StackPanel Margin="2" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                <i:Icon Value="fa-spinner" Animation="Pulse" FontSize="50" Width="60" Height="60"/>
+                                <Label Content="Загрузка..." FontSize="30"></Label>
+                            </StackPanel>
+                        </Panel>
+
                         <DataGrid Name="ContractGrid" ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20"
                                   Height="700"
                                   ItemsSource="{Binding Contracts, Mode=TwoWay}" AutoGenerateColumns="False"
@@ -104,7 +113,7 @@
                                                     Binding="{Binding Path=DateEnd, Converter={StaticResource DateConverter}}" />
                                 <DataGridTextColumn Header="Сумма вклада" Binding="{Binding Path=Amount}" />
                                 <DataGridTextColumn Header="Тип вклада" Binding="{Binding Path=ContractType.TypeName}" />
-                                <DataGridCheckBoxColumn Header="Повторный?" Binding="{Binding Path=Repeated}" />
+                                <DataGridTextColumn Header="Повторный?" Binding="{Binding Path=Repeated, Converter={StaticResource RepeatedConverter}}" />
                                 <DataGridTextColumn Header="Реферал"
                                                     Binding="{Binding Path=Referral.InvestorCalled.FirstName}" />
                                 <DataGridTextColumn Header="Заметка" Binding="{Binding Path=Note}" />

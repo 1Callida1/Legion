@@ -211,7 +211,7 @@ namespace Legion.ViewModels
             set
             {
                 Contract.ContractType = value;
-                EndDateTime = DateTime.Now.AddMonths(Contract.ContractType.Period);
+                EndDateTime = StartDateTime.Date.AddMonths(Contract.ContractType.Period);
                 CustomId = ContractId.Generate(value.ContractIdFormat,
                     _context.Contracts.Count(c => c.ContractType.Id == value.Id));
                 this.RaisePropertyChanged();
@@ -228,6 +228,7 @@ namespace Legion.ViewModels
 
                 _startDateTime = value;
                 Contract.DateStart = _startDateTime.Date;
+                EndDateTime = StartDateTime.Date.AddMonths(Contract.ContractType.Period);
                 this.RaisePropertyChanged();
             }
         }
