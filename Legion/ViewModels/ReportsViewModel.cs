@@ -39,6 +39,9 @@ namespace Legion.ViewModels
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
             Contracts = new ObservableCollection<Models.Contract>(_context.Contracts.ToList());
             Settings settings = Locator.Current.GetService<Settings>()!;
+            string outputPath = $"{settings.ArchievFolder}/Отчеты";
+            if(!Directory.Exists(outputPath))
+                Directory.CreateDirectory(outputPath);
 
             BackCommand = ReactiveCommand.Create(() =>
             {
@@ -48,21 +51,21 @@ namespace Legion.ViewModels
             GetEveryDayReportCommand = ReactiveCommand.Create(() =>
             {
                 byte[] reportExcel = ExcelGenerator.GenerateReportCash(Contracts, DateTime.Now); //Дата из промежутка, добавить райз ошибки если выбрана дата больше чем один день
-                File.WriteAllBytes($"{settings.ArchievFolder}/Отчеты/доход за  {DateTime.Now:dd.MM.yyyy} безналичные.xlsx", reportExcel);
+                File.WriteAllBytes($"{outputPath}/доход за  {DateTime.Now:dd.MM.yyyy} безналичные.xlsx", reportExcel);
                 reportExcel = ExcelGenerator.GenerateReportCashless(Contracts, DateTime.Now);
-                File.WriteAllBytes($"{settings.ArchievFolder}/Отчеты/доход за  {DateTime.Now:dd.MM.yyyy} наличные.xlsx", reportExcel);
+                File.WriteAllBytes($"{outputPath}/доход за  {DateTime.Now:dd.MM.yyyy} наличные.xlsx", reportExcel);
             });
 
             GetRefferalReportCommand = ReactiveCommand.Create(() =>
             {
                 byte[] reportExcel = ExcelGenerator.ReferalBonus(Contracts);
-                File.WriteAllBytes($"{settings.ArchievFolder}/Отчеты/Ведомость по реферальному бонусу.xlsx", reportExcel);
+                File.WriteAllBytes($"{outputPath}/Ведомость по реферальному бонусу.xlsx", reportExcel);
             });
 
             GetContractsReportCommand = ReactiveCommand.Create(() =>
             {
                 byte[] reportExcel = ExcelGenerator.MonthlyContract(Contracts, DateTime.Now, DateTime.Now.AddMonths(1), _context);
-                File.WriteAllBytes($"{settings.ArchievFolder}/Отчеты/ежемесячная ведомость по договорам.xlsx", reportExcel);
+                File.WriteAllBytes($"{outputPath}/ежемесячная ведомость по договорам.xlsx", reportExcel);
             });
         }
         public sealed override IScreen HostScreen { get; set; }
