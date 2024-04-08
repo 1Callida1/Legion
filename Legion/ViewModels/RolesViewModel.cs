@@ -38,8 +38,8 @@ namespace Legion.ViewModels
 
             DataGridEditActionCommand = ReactiveCommand.Create((UserRole us) =>
             {
-                //if (us.Role == "Admin")
-                //    return;
+                if (us.Role == "Admin")
+                    return;
                 HostScreen.Router.Navigate.Execute(new AddRoleViewModel(us, context));
             });
 
