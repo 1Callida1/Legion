@@ -29,11 +29,15 @@ namespace Legion.ViewModels
         private List<ContractType> _contractTypes;
         private ContractType _selectedContractType;
         private bool _loadingVisible = false;
+        private bool _addContractsVisible = false;
+        private bool _hiddenDataVisible = false;
+        private bool _removeVisible = false;
 
         public ContractsViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             _context = context;
             _isPaneOpen = false;
+
             ContractTypes = _context.ContractTypes.ToList();
             ContractTypes.Add(new ContractType() { TypeName = "Все", Bet = 0, CanAddMoney = false, ContractIdFormat = "", Formula = "", Period = 0 });
             SelectedContractType = ContractTypes.First(t => t.TypeName == "Все");
@@ -168,7 +172,19 @@ namespace Legion.ViewModels
         {
             LoadingVisible = true;
             Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
+            await _context.UserRoles.LoadAsync();
+
+            var user = Locator.Current.GetService<User>()!;
+            AddContractsVisible = user.UserRole != null && user.UserRole.CanAddContracts;
+            HiddenDataVisible = user.UserRole != null && user.UserRole.CanSeeHiddenData;
+            RemoveVisible = user.UserRole != null && user.UserRole.CanDeleteData;
             LoadingVisible = false;
+        }
+
+        public bool RemoveVisible
+        {
+            get => _removeVisible;
+            set => this.RaiseAndSetIfChanged(ref _removeVisible, value);
         }
 
         public string SearchText
@@ -213,6 +229,18 @@ namespace Legion.ViewModels
                 else
                     LoadContractsAsync();
             }
+        }
+
+        public bool AddContractsVisible
+        {
+            get => _addContractsVisible;
+            set => this.RaiseAndSetIfChanged(ref _addContractsVisible, value);
+        }
+
+        public bool HiddenDataVisible
+        {
+            get => _hiddenDataVisible;
+            set => this.RaiseAndSetIfChanged(ref _hiddenDataVisible, value);
         }
 
         public List<ContractType> ContractTypes

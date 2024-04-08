@@ -150,7 +150,7 @@
                     </MenuItem.Icon>
                   </MenuItem>
                   <Separator />
-                  <MenuItem Header="Удалить" CommandParameter="{Binding (models:Investor)}"
+                  <MenuItem Header="Удалить" CommandParameter="{Binding (models:Investor)}" IsEnabled="{Binding RemoveVisible}"
                             Command="{Binding #InvestorsGrid.((vm:InvestorsViewModel)DataContext).DataGridRemoveActionCommand}">
                     <MenuItem.Icon>
                       <i:Icon Value="fa-trash" Width="35" Height="35" />

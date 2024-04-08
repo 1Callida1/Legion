@@ -73,14 +73,12 @@ namespace Legion
                 var _context = host.Services.GetRequiredService<ApplicationDbContext>();
                 _context.Database.EnsureCreated();
 
-                if (_context.Users.FirstOrDefault(user => user.UserName == "admin") == null)
+                if (!_context.Users.Any())
                 {
-
-                    _context.UserRoles.Add(new UserRole() { Role = "Admin"});
-                    _context.UserRoles.Add(new UserRole() { Role = "User" });
+                    _context.UserRoles.Add(new UserRole() { Role = "Admin", CanAddContracts = true, CanDeleteData = true, CanManageUsers = true, CanSeeHiddenData = true, CanViewReports = true });
                     _context.SaveChanges();
-                    _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Aboba", UserRole = _context.UserRoles.First(role => role.Role.Contains("Admin")) });
-                    _context.Users.Add(new User() { Password = "321", UserName = "loh", EmployerFirstName = "Biba", UserRole = _context.UserRoles.First(role => role.Role.Contains("User")) });
+                    _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Admin", UserRole = _context.UserRoles.First(role => role.Role.Contains(Role.Admin.ToString())) });
+
                     _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 2, Formula = "x*p", Period = 6, TypeName = "Накопительный", CanAddMoney = true });
                     _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 4, Formula = "x*p", Period = 12, TypeName = "Годовой", CanAddMoney = false });
                     _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 6, Formula = "x*p", Period = 36, TypeName = "Трехгодовой", CanAddMoney = false });

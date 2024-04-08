@@ -1,0 +1,85 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Legion.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Legion.AddRoleView"
+             x:DataType="viewModels:AddRoleViewModel">
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="55" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="55" />
+    </Grid.ColumnDefinitions>
+    <Panel
+            Background="#e95322"
+            Grid.Row="0" Grid.ColumnSpan="2" Height="55" />
+    <Button Name="BtnBack" Grid.Row="0" Grid.Column="1" Content="Назад" Height="35" Width="80"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                HorizontalAlignment="Right" Margin="0,0,5,0" Background="#ffff" Foreground="#e95322"
+                Command="{Binding BackCommand}" />
+    <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Transparent" Margin="20">
+      <Label
+                Content="Права роли"
+                HorizontalAlignment="Center"
+                FontFamily="sans-serif"
+                FontSize="30"
+                Foreground="#e95322" />
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+          <RowDefinition Height="0.1*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="210" />
+          <ColumnDefinition Width="200" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Label Content="Наименование роли" Grid.Column="0" Grid.Row="1" Margin="7" Foreground="Black" />
+
+        <Border Grid.Column="1" Grid.Row="1" Margin="7" Height="30" CornerRadius="20" Background="Gainsboro" Padding="10,0">
+          <TextBox  Height="28" Background="Gainsboro"
+							  Foreground="Black" Text="{Binding UserRole.Role}"/>
+        </Border>
+
+        <Label Content="Управление договорами" Grid.Column="0" Grid.Row="2" Margin="7" Foreground="Black" />
+
+        <CheckBox Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" IsChecked="{Binding UserRole.CanAddContracts}"/>
+
+        <Label Content="Удаление данных" Grid.Column="0" Grid.Row="3" Margin="7" Foreground="Black" />
+
+        <CheckBox Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center" IsChecked="{Binding UserRole.CanDeleteData}"/>
+
+        <Label Content="Управление пользователями" Grid.Column="0" Grid.Row="4" Margin="7" Foreground="Black" />
+
+        <CheckBox Grid.Column="1" Grid.Row="4" HorizontalAlignment="Center" IsChecked="{Binding UserRole.CanManageUsers}"/>
+
+        <Label Content="Просмотр скрытых данных" Grid.Column="0" Grid.Row="5" Margin="7" Foreground="Black" />
+
+        <CheckBox Grid.Column="1" Grid.Row="5" HorizontalAlignment="Center" IsChecked="{Binding UserRole.CanSeeHiddenData}"/>
+        <Label Content="Просмотр отчетов" Grid.Column="0" Grid.Row="6" Margin="7" Foreground="Black" />
+
+        <CheckBox Grid.Column="1" Grid.Row="6" HorizontalAlignment="Center" IsChecked="{Binding UserRole.CanViewReports}"/>
+
+        <Button Grid.Row="7" Grid.ColumnSpan="4" Height="40" Margin="20" CornerRadius="20" Width="220" Content="{Binding SubmitText}"
+                Background="#e95322" Command="{Binding SaveCommand}" HotKey="Ctrl+S" />
+      </Grid>
+
+    </StackPanel>
+  </Grid>
+</UserControl>

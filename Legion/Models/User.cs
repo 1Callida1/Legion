@@ -19,4 +19,11 @@ namespace Legion.Models
         public string Password { get; set; }
         public string EmployerFirstName { get; set; }
     }
+
+    public enum Role
+    {
+        ContractManager,
+        ReportsManager,
+        Admin
+    }
 }

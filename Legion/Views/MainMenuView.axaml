@@ -33,7 +33,7 @@
 				<Button Grid.Row="4" Margin="6" CornerRadius="20" Content="Истекающие договоры" Background="#e95322" Command="{Binding ExpiringContractCommand}"/>
         <Button Grid.Row="6" Margin="6" CornerRadius="20" Content="Настройки" Background="#e95322" Command="{Binding SettingsCommand}"/>
 
-        <Button Grid.Row="8" Margin="6" CornerRadius="20" Content="Отчеты" Background="#e95322" Command="{Binding ReportsCommand}"/>
+        <Button Grid.Row="8" Margin="6" CornerRadius="20" Content="Отчеты" Background="#e95322" Command="{Binding ReportsCommand}" IsVisible="{Binding ReportsVisible}"/>
 				<Button Grid.Row="9" Margin="6" CornerRadius="20" Content="Выход" Background="#e95322" Command="{Binding ExitCommand}"/>
 			</Grid>
 		</Grid>

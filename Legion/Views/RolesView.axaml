@@ -2,13 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             x:Class="Legion.Views.UserView"
-             xmlns:i="https://github.com/projektanker/icons.avalonia"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
-             xmlns:vm="using:Legion.ViewModels"
+             xmlns:viewModels="clr-namespace:Legion.ViewModels"
              xmlns:models="clr-namespace:Legion.Models"
-             x:DataType="vm:UserViewModel">
-
+             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Legion.Views.RolesView"
+             x:DataType="viewModels:RolesViewModel">
   <Grid>
     <Border Background="#ffff" CornerRadius="20" />
     <Grid>
@@ -25,55 +24,53 @@
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Margin="0,0,5,0" Grid.Column="3" IsVisible="True" Content="Добавить пользователя"
-                    Height="35"
-                    Width="180" HorizontalAlignment="Right" Background="#ffff" Foreground="#e95322"
-                    Command="{Binding NewUserCommand}" />
-            <Button Margin="0,0,5,0" Grid.Column="3" IsVisible="True" Content="Управление ролями"
-                    Height="35"
-                    Width="180" HorizontalAlignment="Right" Background="#ffff" Foreground="#e95322"
-                    Command="{Binding RolesCommand}" />
+          <Button Margin="0,0,5,0" Grid.Column="3" IsVisible="True" Content="Добавить роль"
+                  Height="35"
+                  Width="180" HorizontalAlignment="Right" Background="#ffff" Foreground="#e95322"
+                  Command="{Binding NewRoleCommand}" />
 
-            <Button Margin="80,0,5,0" IsVisible="True" Content="Назад"
-                    Height="35"
-                    Width="80" HorizontalAlignment="Center" Background="#ffff" Foreground="#e95322"
-                    Command="{Binding BackCommand}"/>
+          <Button Margin="80,0,5,0" IsVisible="True" Content="Назад"
+                  Height="35"
+                  Width="80" HorizontalAlignment="Center" Background="#ffff" Foreground="#e95322"
+                  Command="{Binding BackCommand}"/>
         </StackPanel>
-
       </Grid>
 
       <StackPanel Grid.Row="1">
-        <StackPanel IsVisible="True" Background="Transparent" Name="SPInvestorDG">
+        <StackPanel IsVisible="True" Background="Transparent">
           <Grid>
             <Grid.RowDefinitions>
               <RowDefinition Height="0.1*" />
               <RowDefinition />
             </Grid.RowDefinitions>
             <DataGrid Name="UserGrid" ZIndex="-2" Grid.Row="1" Foreground="Black" Margin="20"
-                                  ItemsSource="{Binding Users}" AutoGenerateColumns="False"
+                                  ItemsSource="{Binding Roles}" AutoGenerateColumns="False"
                                   GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray" IsReadOnly="True"
                                   HorizontalScrollBarVisibility="Visible" Height="700">
               <DataGrid.Columns>
-                <DataGridTextColumn Header="Логин" Binding="{Binding Path=UserName}"/>
-                <DataGridTextColumn Header="Пароль" Binding="{Binding Path=Password}"/>
-                <DataGridTextColumn Header="Имя" Binding="{Binding Path=EmployerFirstName}"/>
-                <DataGridTextColumn Header="Роль" Binding="{Binding Path=UserRole.Role}"/>
+                <DataGridTextColumn Header="Роль" Binding="{Binding Path=Role}"/>
+                <DataGridCheckBoxColumn Header="Добавление пользователей" Binding="{Binding CanManageUsers}"/>
+                <DataGridCheckBoxColumn Header="Добавление договоров" Binding="{Binding CanAddContracts}"/>
+                <DataGridCheckBoxColumn Header="Удаление данных" Binding="{Binding CanDeleteData}"/>
+                <DataGridCheckBoxColumn Header="Скрытые данные" Binding="{Binding CanSeeHiddenData}"/>
+                <DataGridCheckBoxColumn Header="Отчеты" Binding="{Binding CanViewReports}"/>
+
               </DataGrid.Columns>
               <DataGrid.Resources>
 
                 <ContextMenu x:Key="RowMenu">
                   <MenuItem Header="Редактировать"
-                                              CommandParameter="{Binding (models:User)}"
-                                              Command="{Binding #UserGrid.((vm:UserViewModel)DataContext).DataGridEditActionCommand}">
+                                              CommandParameter="{Binding (models:UserRole)}"
+                                              Command="{Binding #UserGrid.((viewModels:RolesViewModel)DataContext).DataGridEditActionCommand}">
                     <MenuItem.Icon>
-                      <i:Icon Value="fa-pen" Width="35" Height="35"/>
+                      <avalonia:Icon Value="fa-pen" Width="35" Height="35"/>
                     </MenuItem.Icon>
                   </MenuItem>
                   <Separator />
-                  <MenuItem Header="Удалить" CommandParameter="{Binding (models:User)}"
-                                              Command="{Binding #UserGrid.((vm:UserViewModel)DataContext).DataGridRemoveActionCommand}">
+                  <MenuItem Header="Удалить" CommandParameter="{Binding (models:UserRole)}"
+                                              Command="{Binding #UserGrid.((viewModels:RolesViewModel)DataContext).DataGridRemoveActionCommand}">
                     <MenuItem.Icon>
-                      <i:Icon Value="fa-trash" Width="35" Height="35" />
+                      <avalonia:Icon Value="fa-trash" Width="35" Height="35" />
                     </MenuItem.Icon>
                   </MenuItem>
                 </ContextMenu>

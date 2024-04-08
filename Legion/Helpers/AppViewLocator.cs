@@ -31,6 +31,8 @@ namespace Legion.Helpers
             AdditionalPaymentsHistoryViewModel context => new AdditionalPaymentsHistoryWindow() { DataContext = context },
             PaymentsHistoryViewModel context => new PaymentsHistoryWindow() { DataContext = context },
             SettingsViewModel context => new SettingsView() { DataContext = context },
+            RolesViewModel context => new RolesView() { DataContext = context },
+            AddRoleViewModel context => new AddRoleView() { DataContext = context },
             _ => throw new ArgumentOutOfRangeException(nameof(viewModel))
         };
         //{

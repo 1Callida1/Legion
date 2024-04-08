@@ -52,6 +52,11 @@ namespace Legion.ViewModels
                 _context.SaveChangesAsync();
                 _context.Users.LoadAsync();
             });
+
+            RolesCommand = ReactiveCommand.Create(() =>
+            {
+                HostScreen.Router.Navigate.Execute(new RolesViewModel(context));
+            });
         }
 
         public ObservableCollection<User> Users
@@ -61,6 +66,7 @@ namespace Legion.ViewModels
         }
         public ReactiveCommand<Unit, Unit> NewUserCommand { get; } = null!;
         public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> RolesCommand { get; } = null!;
         public sealed override IScreen HostScreen { get; set; }
         public ReactiveCommand<User, Unit> DataGridEditActionCommand { get; set; } = null!;
         public ReactiveCommand<User, Unit> DataGridRemoveActionCommand { get; set; } = null!;

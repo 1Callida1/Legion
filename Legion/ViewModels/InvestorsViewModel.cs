@@ -48,8 +48,12 @@ namespace Legion.ViewModels
         {
             LoadingVisible = true;
             await _context.Investors.LoadAsync();
-            LoadingVisible = false;
+            await _context.UserRoles.LoadAsync();
+
+            
+
             Investors = _context.Investors.Local.ToObservableCollection();
+            LoadingVisible = false;
         }
 
         public InvestorsViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
@@ -57,6 +61,10 @@ namespace Legion.ViewModels
             ViewHeight = 780;
             _context = context;
             _isPaneOpen = false;
+            _context.UserRoles.Load();
+            var user = Locator.Current.GetService<User>()!;
+            RemoveVisible = user.UserRole != null && user.UserRole.CanDeleteData;
+
             LoadDataAsync();
 
             var a = Locator.Current.GetService<IClassicDesktopStyleApplicationLifetime>();
@@ -243,6 +251,13 @@ namespace Legion.ViewModels
         {
             get => _loadingVisible;
             set => this.RaiseAndSetIfChanged(ref _loadingVisible, value);
+        }
+
+        private bool _removeVisible = false;
+        public bool RemoveVisible
+        {
+            get => _removeVisible;
+            set => this.RaiseAndSetIfChanged(ref _removeVisible, value);
         }
 
         public double MenuHeight { get => _menuHeight; set => this.RaiseAndSetIfChanged(ref _menuHeight, value); }

@@ -17,5 +17,10 @@ namespace Legion.Models
         public int Id { get; set; }
 
         public string Role { get; set; } = null!;
+        public bool CanAddContracts { get; set; } = false; // +
+        public bool CanViewReports { get; set; } = false; // +
+        public bool CanSeeHiddenData { get; set; } = false; // +
+        public bool CanDeleteData { get; set; } = false;
+        public bool CanManageUsers { get; set; } = false; // +
     }
 }
