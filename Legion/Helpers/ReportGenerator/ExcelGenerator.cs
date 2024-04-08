@@ -175,7 +175,7 @@ namespace Legion.Helpers.ReportGenerator
             return package.GetAsByteArray();
         }
 
-        public byte[] GeneratePayments(Models.Contract cntrs)
+        public static byte[] GeneratePayments(Models.Contract cntrs)
         {
             ExcelPackage package = new ExcelPackage();
             Models.Contract contract = cntrs;
@@ -374,6 +374,8 @@ namespace Legion.Helpers.ReportGenerator
             sheet.Cells[2, 10].Value = "Форма оплаты";
             sheet.Cells[2, 11].Value = "Номер карты";
             sheet.Cells[2, 12].Value = "Сумма доб.";
+
+            sheet.Cells[2, 1, 2, 12].AutoFitColumns();
 
             sheet.Cells[2, 1, 2, 12].Style.Font.Bold = true;
 
