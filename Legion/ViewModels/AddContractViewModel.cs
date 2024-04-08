@@ -69,7 +69,7 @@ namespace Legion.ViewModels
             Contract.ContractType = ContractTypes.First();
             Contract.Status = ContractStatuses.First(s => s.Status == "Открыт");
             CustomId = ContractId.Generate(Contract.ContractType.ContractIdFormat,
-                _context.Contracts.Count(c => c.ContractType.Id == Contract.ContractType.Id));
+                _context.Contracts.Count(c => c.ContractType.Id == Contract.ContractType.Id && c.Repeated == false));
             EndDateTime = DateTime.Now.AddMonths(Contract.ContractType.Period);
 
             InvestorSelected = false;
@@ -213,7 +213,7 @@ namespace Legion.ViewModels
                 Contract.ContractType = value;
                 EndDateTime = StartDateTime.Date.AddMonths(Contract.ContractType.Period);
                 CustomId = ContractId.Generate(value.ContractIdFormat,
-                    _context.Contracts.Count(c => c.ContractType.Id == value.Id));
+                    _context.Contracts.Count(c => c.ContractType.Id == value.Id && c.Repeated == false));
                 this.RaisePropertyChanged();
             }
         }
