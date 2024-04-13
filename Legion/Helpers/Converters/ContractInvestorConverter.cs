@@ -24,4 +24,20 @@ namespace Legion.Helpers.Converters
             throw new NotImplementedException();
         }
     }
+
+    public class ContractRefferalConverter : IValueConverter
+    {
+        public object Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        {
+            Investor? investor = ((Contract)value).Referral.InvestorCalled;
+            if (investor == null)
+                return "";
+            return $"{investor.LastName} {investor.FirstName[0]}. {investor.MiddleName[0]}.";
+        }
+
+        public object ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

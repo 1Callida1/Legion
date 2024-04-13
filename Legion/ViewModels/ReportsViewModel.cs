@@ -52,12 +52,35 @@ namespace Legion.ViewModels
 
             GetEveryDayReportCommand = ReactiveCommand.Create(() =>
             {
-                ObservableCollection<Contract> ctrs = new ObservableCollection<Contract>(Contracts
-                    .Where(c => c.Status.Status == "Открыт" && c.DateStart.Day == DateTime.Now.Day).ToList());
-                byte[] reportExcel = ExcelGenerator.GenerateReportCash(new ObservableCollection<Contract>(ctrs.Where(c => c.Investor.PayType == true)), DateTime.Now); //Дата из промежутка, добавить райз ошибки если выбрана дата больше чем один день
-                File.WriteAllBytes($"{outputPath}/доход за  {DateTime.Now:dd.MM.yyyy} безналичные.xlsx", reportExcel);
-                reportExcel = ExcelGenerator.GenerateReportCashless(new ObservableCollection<Contract>(ctrs.Where(c => c.Investor.PayType == false)), DateTime.Now);
-                File.WriteAllBytes($"{outputPath}/доход за  {DateTime.Now:dd.MM.yyyy} наличные.xlsx", reportExcel);
+                ObservableCollection<Contract> ctrs;
+                byte[] reportExcel;
+
+
+
+                switch (DateOffsetVariant)
+                {
+                    case 0:
+                        ctrs = new ObservableCollection<Contract>(Contracts
+                            .Where(c => c.Status.Status == "Открыт" && c.DateStart.Day == DateTime.Now.Day).ToList());
+
+                        reportExcel = ExcelGenerator.GenerateReportCash(ctrs, DateTime.Now); //Дата из промежутка, добавить райз ошибки если выбрана дата больше чем один день
+                        File.WriteAllBytes($"{outputPath}/доход за  {DateTime.Now:dd.MM.yyyy} безналичные.xlsx", reportExcel);
+                        reportExcel = ExcelGenerator.GenerateReportCashless(ctrs, DateTime.Now);
+                        File.WriteAllBytes($"{outputPath}/доход за  {DateTime.Now:dd.MM.yyyy} наличные.xlsx", reportExcel);
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        ctrs = new ObservableCollection<Contract>(Contracts
+                            .Where(c => c.Status.Status == "Открыт" && c.DateStart.Day == StartDateTime.Date.Day).ToList());
+
+                        reportExcel = ExcelGenerator.GenerateReportCash(ctrs, StartDateTime.Date); //Дата из промежутка, добавить райз ошибки если выбрана дата больше чем один день
+                        File.WriteAllBytes($"{outputPath}/доход за  {StartDateTime.Date:dd.MM.yyyy} безналичные.xlsx", reportExcel);
+                        reportExcel = ExcelGenerator.GenerateReportCashless(ctrs, StartDateTime.Date);
+                        File.WriteAllBytes($"{outputPath}/доход за  {StartDateTime.Date:dd.MM.yyyy} наличные.xlsx", reportExcel);
+
+                        break;
+                }
             });
 
             GetRefferalReportCommand = ReactiveCommand.Create(() =>

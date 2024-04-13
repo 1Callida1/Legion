@@ -79,10 +79,13 @@ namespace Legion
                     _context.SaveChanges();
                     _context.Users.Add(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Admin", UserRole = _context.UserRoles.First(role => role.Role.Contains(Role.Admin.ToString())) });
 
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 2, Formula = "x*p", Period = 6, TypeName = "Накопительный", CanAddMoney = true });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 4, Formula = "x*p", Period = 12, TypeName = "Годовой", CanAddMoney = false });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 6, Formula = "x*p", Period = 36, TypeName = "Трехгодовой", CanAddMoney = false });
-                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yyyy/yy", Bet = 7, Formula = "x*p", Period = 18, TypeName = "Доходный", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id-E/yy", Bet = 2, Formula = "x*p", Period = 6, TypeName = "Накопительный", CanAddMoney = true });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 4, Formula = "x*p", Period = 12, TypeName = "Инвестиционный", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id-36/yy", Bet = 6, Formula = "x*p", Period = 36, TypeName = "Трехгодовой", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id-18/yy", Bet = 7, Formula = "x*p", Period = 18, TypeName = "Полуторагодовой", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id/yy", Bet = 3, Formula = "x*p", Period = 12, TypeName = "ТАНАКА инвестиционный", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "idK/yy", Bet = 3, Formula = "x*p", Period = 24, TypeName = "ТАНАКА накопительный", CanAddMoney = false });
+                    _context.ContractTypes.Add(new ContractType() { ContractIdFormat = "id-18/yy", Bet = 7, Formula = "x*p", Period = 18, TypeName = "Полуторагодовой", CanAddMoney = false });
                     _context.ContractStatuses.Add(new ContractStatus() { Status = "Открыт" });
                     _context.ContractStatuses.Add(new ContractStatus() { Status = "Закрыт" });
                     _context.ContractStatuses.Add(new ContractStatus() { Status = "Приостановлен" });

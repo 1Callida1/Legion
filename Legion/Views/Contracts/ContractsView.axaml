@@ -10,35 +10,13 @@
              xmlns:converters="clr-namespace:Legion.Helpers.Converters"
              x:DataType="vm:ContractsViewModel">
     <UserControl.Resources>
-        <converters:ContractInvestorConverter x:Key="ContractInvestorConverter" />
-        <converters:DateTimeToDateConverter x:Key="DateConverter" />
+      <converters:ContractInvestorConverter x:Key="ContractInvestorConverter" />
+      <converters:ContractRefferalConverter x:Key="ContractRefferalConverter" />
+      <converters:DateTimeToDateConverter x:Key="DateConverter" />
         <converters:ContractRepeatedConverter x:Key="RepeatedConverter"/>
     </UserControl.Resources>
     <Grid>
         <Border Background="#ffff" CornerRadius="20" />
-        <SplitView VerticalAlignment="Bottom" Height="645" ZIndex="1" Name="SVLeft" OpenPaneLength="260"
-                   CompactPaneLength="0" Background="#ffff" HorizontalAlignment="Left" DisplayMode="CompactInline"
-                   IsPaneOpen="{Binding IsPaneOpen}">
-            <SplitView.Pane>
-                <StackPanel Background="#e95322">
-                    <Grid ShowGridLines="True">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="50" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="50" />
-                            <RowDefinition Height="50" />
-                            <RowDefinition Height="50" />
-                            <RowDefinition Height="50" />
-                            <RowDefinition Height="50" />
-                            <RowDefinition Height="50" />
-                        </Grid.RowDefinitions>
-                        <Label Content="ФИО:" Grid.Row="1" Foreground="#ffff" />
-                        <TextBox Grid.Row="2" CornerRadius="20" Background="#ffff" Height="25" Foreground="Black" />
-                    </Grid>
-                </StackPanel>
-            </SplitView.Pane>
-        </SplitView>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="55" />
@@ -74,10 +52,6 @@
                 <Button Name="SerachBtnContract" Grid.Column="2" Content="Найти" Background="#ffff"
                         Foreground="#e95322"
                         Width="80" Height="35" Margin="25, 0,0,0" Command="{Binding SearchCommand}" />
-                <Button Name="SpTriggerBtnContract" Background="#ffff" Foreground="#e95322" Width="35"
-                        Height="35" Margin="5, 0,0,0" Command="{Binding PaneCommand}">
-                    <i:Icon Value="fa-bars" Width="35" Height="35" />
-                </Button>
             </Grid>
 
             <StackPanel Grid.Row="1">
@@ -115,7 +89,7 @@
                                 <DataGridTextColumn Header="Тип вклада" Binding="{Binding Path=ContractType.TypeName}" />
                                 <DataGridTextColumn Header="Повторный?" Binding="{Binding Path=Repeated, Converter={StaticResource RepeatedConverter}}" />
                                 <DataGridTextColumn Header="Реферал"
-                                                    Binding="{Binding Path=Referral.InvestorCalled.FirstName}" />
+                                                    Binding="{Binding ., Converter={StaticResource ContractRefferalConverter}}" />
                                 <DataGridTextColumn Header="Заметка" Binding="{Binding Path=Note}" />
                             </DataGrid.Columns>
                             <DataGrid.Resources>
