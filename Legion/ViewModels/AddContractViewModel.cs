@@ -126,6 +126,11 @@ namespace Legion.ViewModels
                 HostScreen.Router.NavigateBack.Execute();
             });
 
+            NewInvestorCommand = ReactiveCommand.Create(() =>
+            {
+                HostScreen.Router.Navigate.Execute(new AddInvestorViewModel(context));
+            });
+
             SaveCommand = ReactiveCommand.Create(() =>
             {
                 switch (Contract.ContractType.TypeName)
@@ -316,6 +321,7 @@ namespace Legion.ViewModels
 
         public ReactiveCommand<Unit, Unit> SearchInvestorCommand { get; } = null!;
         public ReactiveCommand<Unit, Unit> SearchRefferalCommand { get; } = null!;
+        public ReactiveCommand<Unit, Unit> NewInvestorCommand { get; } = null!;
         public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
         public ReactiveCommand<Unit, Unit> SaveCommand { get; } = null!;
         public string SubmitText { get; protected set; } = null!;

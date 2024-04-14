@@ -77,7 +77,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Номер договора" Binding="{Binding Path=CustomId}" />
                                 <DataGridTextColumn Header="Менеджер"
-                                                    Binding="{Binding Path=Manager.EmployerFirstName}" IsVisible="{Binding HiddenDataVisible}}"/>
+                                                    Binding="{Binding Path=Manager.EmployerFirstName}" IsVisible="{Binding HiddenDataVisible}"/>
                                 <DataGridTextColumn Header="Статус" Binding="{Binding Path=Status.Status}" />
                                 <DataGridTextColumn Header="Вкладчик"
                                                     Binding="{Binding ., Converter={StaticResource ContractInvestorConverter}}" />

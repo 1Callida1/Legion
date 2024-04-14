@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Splat;
 using System.Diagnostics.Contracts;
+using Legion.Helpers.Calculations;
 
 namespace Legion.ViewModels
 {
@@ -22,13 +23,14 @@ namespace Legion.ViewModels
     {
         private readonly ApplicationDbContext _context;
         private ObservableCollection<User> _user = null!;
+        private bool _loadingVisible = false;
+
 
         public UserViewModel(ApplicationDbContext context, IScreen? hostScreen = null)
         {
             _context = context;
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
-            _context.Users.LoadAsync();
-            Users = _context.Users.Local.ToObservableCollection();
+            LoadUsesAsync();
 
             BackCommand = ReactiveCommand.Create(() =>
             {
@@ -57,6 +59,21 @@ namespace Legion.ViewModels
             {
                 HostScreen.Router.Navigate.Execute(new RolesViewModel(context));
             });
+        }
+
+        public bool LoadingVisible
+        {
+            get => _loadingVisible;
+            set => this.RaiseAndSetIfChanged(ref _loadingVisible, value);
+        }
+
+        private async Task LoadUsesAsync()
+        {
+            LoadingVisible = true;
+            Users = new ObservableCollection<User>(await _context.Users.ToListAsync());
+            await _context.UserRoles.LoadAsync();
+
+            LoadingVisible = false;
         }
 
         public ObservableCollection<User> Users

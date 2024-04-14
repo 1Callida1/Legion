@@ -27,6 +27,8 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<AdditionalPayment>().Navigation(c => c.Contract).AutoInclude();
     }
 
+
+
     public DbSet<User> Users { get; set; }
     public DbSet<Investor> Investors { get; set; }
     public DbSet<Contract> Contracts { get; set; }

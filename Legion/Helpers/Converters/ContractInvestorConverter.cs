@@ -29,7 +29,7 @@ namespace Legion.Helpers.Converters
     {
         public object Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
         {
-            Investor? investor = ((Contract)value).Referral.InvestorCalled;
+            Investor? investor = ((Contract)value).Referral?.InvestorCalled;
             if (investor == null)
                 return "";
             return $"{investor.LastName} {investor.FirstName[0]}. {investor.MiddleName[0]}.";

@@ -4,6 +4,7 @@ using Avalonia.ReactiveUI;
 using Projektanker.Icons.Avalonia;
 using Projektanker.Icons.Avalonia.FontAwesome;
 using Projektanker.Icons.Avalonia.MaterialDesign;
+using Serilog;
 
 namespace Legion
 {
@@ -13,8 +14,26 @@ namespace Legion
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.
         [STAThread]
-        public static void Main(string[] args) => BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
+        public static void Main(string[] args)
+        {
+            try
+            {
+                // prepare and run your App here
+                BuildAvaloniaApp()
+                    .StartWithClassicDesktopLifetime(args);
+            }
+            catch (Exception e)
+            {
+                // here we can work with the exception, for example add it to our log file
+                Log.Fatal(e, "Something very bad happened");
+            }
+            finally
+            {
+                // This block is optional. 
+                // Use the finally-block if you need to clean things up or similar
+                Log.CloseAndFlush();
+            }
+        } 
 
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()

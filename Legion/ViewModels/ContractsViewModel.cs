@@ -17,11 +17,17 @@ using SkiaSharp;
 using System.Security.Principal;
 using Legion.Models.Internal;
 using System.Threading.Tasks;
+using MsBox.Avalonia.Enums;
+using MsBox.Avalonia;
+using Legion.Views;
+using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Legion.ViewModels
 {
     public class ContractsViewModel : ViewModelBase
     {
+        private ILogger _log = Log.Logger.ForContext<ContractsViewModel>();
         private ApplicationDbContext _context;
         private bool _isPaneOpen;
         private ObservableCollection<Models.Contract> _contracts;
@@ -83,13 +89,50 @@ namespace Legion.ViewModels
                 HostScreen.Router.Navigate.Execute(new AddContractViewModel(ctr, context));
             });
 
-            DataGridCloseActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
+            DataGridCloseActionCommand = ReactiveCommand.CreateFromTask( async (Models.Contract ctr) =>
             {
-                ctr.Status = _context.ContractStatuses.First(s => s.Status == "Закрыт");
-                _context.Contracts.Update(ctr);
-                _context.SaveChanges();
+                ContractStatus closed;
+                try
+                {
+                    closed = await _context.ContractStatuses.FirstAsync(s => s.Status == "Закрыт");
+                }
+                catch (Exception ex)
+                {
+                    _log.Error(ex.Message);
 
-                Contracts = new ObservableCollection<Contract>(_context.Contracts.ToList());
+                    var box = MessageBoxManager
+                        .GetMessageBoxStandard("Ошибка!", "Не удалось закрыть договор!",
+                            ButtonEnum.Ok, Icon.Error);
+
+                    await box.ShowAsPopupAsync(Locator.Current.GetService<MainWindow>());
+
+                    return;
+                }
+                
+                if (ctr.Status == closed)
+                    return;
+
+                ctr.Status = closed;
+
+                try
+                {
+                    _context.Contracts.Update(ctr);
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    _log.Error(ex.Message);
+
+                    var box = MessageBoxManager
+                        .GetMessageBoxStandard("Ошибка!", "Не удалось закрыть договор!",
+                            ButtonEnum.Ok, Icon.Error);
+
+                    await box.ShowAsPopupAsync(Locator.Current.GetService<MainWindow>());
+
+                    return;
+                }
+
+                Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
 
                 Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Заявление на закрытие договора инвестирования");
             });
@@ -98,8 +141,9 @@ namespace Legion.ViewModels
             {
                 string? result = (string?) await ShowDialog.Handle(new AddIntegerViewModel("Введите количество месяцев:", "Добавить"));
 
-                if (result == null)
+                if (string.IsNullOrWhiteSpace(result))
                     return;
+
                 ctr = _context.Contracts.AsNoTracking().First(c => c.Id == ctr.Id);
                 Contract copyContract = _context.Contracts.First(c => c.Id == ctr.Id);
                 copyContract.Id = 0;
@@ -124,9 +168,9 @@ namespace Legion.ViewModels
 
             DataGridAddMoneyActionCommand = ReactiveCommand.CreateFromTask(async (Contract ctr) =>
             {
-                object? result = await ShowDialog.Handle(new AddIntegerViewModel("Введите сумму пополнения:", "Пополнить"));
+                string? result = (string?) await ShowDialog.Handle(new AddIntegerViewModel("Введите сумму пополнения:", "Пополнить"));
 
-                if (result == null)
+                if (string.IsNullOrWhiteSpace(result))
                     return;
 
                 ctr.Amount += int.Parse((string)result);
