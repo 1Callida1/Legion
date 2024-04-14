@@ -60,6 +60,7 @@ namespace Legion.ViewModels
             User curUser = Locator.Current.GetService<User>()!;
             Contract = new Models.Contract()
                 { Manager = _context.Users.First(u => u.Id == curUser.Id) };
+
             Contract.DateStart = DateTime.Now;
             Contract.DateEnd = DateTime.Now;
             SubmitText = "Добавить новый договор";

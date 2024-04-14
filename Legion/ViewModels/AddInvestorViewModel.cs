@@ -60,6 +60,18 @@ namespace Legion.ViewModels
             Investor = new Investor();
             SubmitText = "Добавить инвестора";
 
+#if DEBUG
+            City = Faker.Address.City();
+            Email = Faker.Internet.Email();
+            FirstName = Faker.Name.First();
+            LastName = Faker.Name.Last();
+            MiddleName = Faker.Name.Middle();
+            PassportGiven = Faker.Address.City();
+            PassportSeries = new Random().Next(1111, 9999).ToString();
+            PassportNumber = new Random().Next(111111, 999999).ToString();
+            Phone = Faker.Phone.Number();
+#endif
+
             BackCommand = ReactiveCommand.Create(() =>
             {
                 HostScreen.Router.NavigateBack.Execute();
