@@ -27,12 +27,6 @@ namespace Legion
                 // here we can work with the exception, for example add it to our log file
                 Log.Fatal(e, "Something very bad happened");
             }
-            finally
-            {
-                // This block is optional. 
-                // Use the finally-block if you need to clean things up or similar
-                Log.CloseAndFlush();
-            }
         } 
 
         // Avalonia configuration, don't remove; also used by visual designer.

@@ -17,6 +17,7 @@ namespace Legion.Models
         public string TypeName { get; set; } = string.Empty;
         public int Period { get; set; }
         public int Bet { get; set; }
+        public float NextYearBetCoef { get; set; } = 0;
         public string Formula { get; set; } = string.Empty;
         public string ContractIdFormat { get; set; } = string.Empty;
         public bool CanAddMoney { get; set; } = false;

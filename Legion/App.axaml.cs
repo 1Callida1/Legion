@@ -101,10 +101,10 @@ namespace Legion
 
                         await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "id-E/yy", Bet = 2, Formula = "x*p", Period = 6, TypeName = "Накопительный", CanAddMoney = true });
                         await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "id/yy", Bet = 4, Formula = "x*p", Period = 12, TypeName = "Инвестиционный", CanAddMoney = false });
-                        await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "id-36/yy", Bet = 6, Formula = "x*p", Period = 36, TypeName = "Трехгодовой", CanAddMoney = false });
+                        await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "id-36/yy", Bet = 6, Formula = "x*p", Period = 36, TypeName = "Трехгодовой", CanAddMoney = false, NextYearBetCoef = 0.5f});
                         await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "id-18/yy", Bet = 7, Formula = "x*p", Period = 18, TypeName = "Полуторагодовой", CanAddMoney = false });
                         await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "id/yy", Bet = 3, Formula = "x*p", Period = 12, TypeName = "ТАНАКА инвестиционный", CanAddMoney = false });
-                        await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "idK/yy", Bet = 3, Formula = "x*p", Period = 24, TypeName = "ТАНАКА накопительный", CanAddMoney = false });
+                        await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "idK/yy", Bet = 3, Formula = "x*p", Period = 24, TypeName = "ТАНАКА накопительный", CanAddMoney = false, NextYearBetCoef = 1});
                         await context.ContractStatuses.AddAsync(new ContractStatus() { Status = "Открыт" });
                         await context.ContractStatuses.AddAsync(new ContractStatus() { Status = "Закрыт" });
                         await context.ContractStatuses.AddAsync(new ContractStatus() { Status = "Приостановлен" });
