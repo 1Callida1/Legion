@@ -167,10 +167,10 @@ namespace Legion.Helpers.ReportGenerator
                     TemplateName = $"Договор {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
                     break;
                 case "Договор накопительный":
-                    TemplateName = $"Договор {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
+                    TemplateName = $"Договор накопительный {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
                     break;
                 case "Договор накопительный Е":
-                    TemplateName = $"Договор {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
+                    TemplateName = $"Договор накопительный {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
                     break;
                 case "Договор инвестирования ТАНАКА":
                     TemplateName = $"Договор МКК {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";

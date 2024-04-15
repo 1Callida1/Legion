@@ -51,8 +51,6 @@ namespace Legion.Helpers.ReportGenerator
 
             sheet.Cells[5, 2].Value = $"Общая - {sum_all_day}";
             sheet.Cells[5, 2].Style.Font.Size = 14;
-            sheet.Cells[5, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            sheet.Cells[5, 2].Style.Fill.BackgroundColor.SetColor(ExcelIndexedColor.Indexed13);
             //table
 
             sheet.Cells[7, 2].Value = "ФИО";
@@ -66,8 +64,6 @@ namespace Legion.Helpers.ReportGenerator
             sheet.Cells[8, 2].Value = $"{start.Date.Day} число";
             sheet.Cells[8, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             sheet.Cells[8, 2].Style.Font.Bold = true;
-            sheet.Cells[8, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            sheet.Cells[8, 2].Style.Fill.BackgroundColor.SetColor(ExcelIndexedColor.Indexed13);
 
             int row = 9;
             int column = 2;
@@ -88,8 +84,6 @@ namespace Legion.Helpers.ReportGenerator
 
             sheet.Cells[row + 1, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             sheet.Cells[row + 1, 3].Value = sum.ToString();
-            sheet.Cells[9, 2, row, 4].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            sheet.Cells[9, 2, row, 4].Style.Fill.BackgroundColor.SetColor(ExcelIndexedColor.Indexed13);
 
             //table grid
             sheet.Cells[7, 2, row + 1, 4].Style.Border.BorderAround(ExcelBorderStyle.Hair);
@@ -131,8 +125,6 @@ namespace Legion.Helpers.ReportGenerator
 
             sheet.Cells[5, 2].Value = $"Общая - {sum_all_day}";
             sheet.Cells[5, 2].Style.Font.Size = 14;
-            sheet.Cells[5, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            sheet.Cells[5, 2].Style.Fill.BackgroundColor.SetColor(ExcelIndexedColor.Indexed13);
 
             sheet.Cells[7, 2].Value = "ФИО";
             sheet.Cells[7, 3].Value = "СУММА";
@@ -144,8 +136,6 @@ namespace Legion.Helpers.ReportGenerator
             sheet.Cells[8, 2].Value = $"{start.Date.Day} число";
             sheet.Cells[8, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             sheet.Cells[8, 2].Style.Font.Bold = true;
-            sheet.Cells[8, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            sheet.Cells[8, 2].Style.Fill.BackgroundColor.SetColor(ExcelIndexedColor.Indexed13);
 
             int row = 9;
             int column = 2;
@@ -166,8 +156,6 @@ namespace Legion.Helpers.ReportGenerator
 
             sheet.Cells[row + 1, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             sheet.Cells[row + 1, 3].Value = sum.ToString();
-            sheet.Cells[9, 2, row, 4].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            sheet.Cells[9, 2, row, 4].Style.Fill.BackgroundColor.SetColor(ExcelIndexedColor.Indexed13);
 
             //table grid
             sheet.Cells[7, 2, row + 1, 4].Style.Border.BorderAround(ExcelBorderStyle.Hair);
@@ -180,12 +168,23 @@ namespace Legion.Helpers.ReportGenerator
             return package.GetAsByteArray();
         }
 
-        public static byte[] GeneratePayments(Models.Contract cntrs)
+        public static byte[] GeneratePayments(Models.Contract cntrs, int mounthAdd = 0)
         {
             ExcelPackage package = new ExcelPackage();
             Models.Contract contract = cntrs;
 
-            int mounthCount = Math.Abs((contract.DateStart.Month - contract.DateEnd.Month) + 12 * (contract.DateStart.Year - contract.DateEnd.Year));
+            int mounthCount = 0;
+
+            if (mounthCount != 0)
+            {
+                contract.DateStart = contract.DateEnd;
+                contract.DateEnd = contract.DateEnd.AddMonths(mounthAdd);
+                mounthCount = mounthAdd;
+            }
+            else
+            {
+                mounthCount = Math.Abs((contract.DateStart.Month - contract.DateEnd.Month) + 12 * (contract.DateStart.Year - contract.DateEnd.Year));
+            }
 
             int yearCount = mounthCount % 12 == 0 ? mounthCount / 12 : mounthCount / 12 + 1;
 
@@ -259,8 +258,6 @@ namespace Legion.Helpers.ReportGenerator
                 sheet.Cells[5, 1].Value = descriptionContract;
                 sheet.Cells[5, 1].Style.Font.SetFromFont("Verdana", 9);
                 sheet.Cells[5, 1, 5, 7].Merge = true;
-                sheet.Cells[5, 1, 5, 7].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                sheet.Cells[5, 1, 5, 7].Style.Fill.BackgroundColor.SetColor(ExcelIndexedColor.Indexed13);
 
                 sheet.Cells[9, 2].Value = "Инвестиции";
                 sheet.Cells[9, 2].Style.Font.SetFromFont("Verdana", 10);
@@ -341,6 +338,7 @@ namespace Legion.Helpers.ReportGenerator
 
                 double sum = 0;
                 double bet = contract.ContractType.NextYearBetCoef == 0 ? contract.Bet : contract.Bet + sheetNumber * contract.ContractType.NextYearBetCoef;
+                double sumPercent = contract.Amount;
 
                 for (int month = 0; month <= currentYearMounthCount - 1; month++)
                 {
@@ -350,19 +348,28 @@ namespace Legion.Helpers.ReportGenerator
 
                     sheet.Cells[row, column + 1].Value = " -  руб";
 
-                    sheet.Cells[row, column + 2].Value = contract.Amount.ToString("### ### ### руб.");
+                    sheet.Cells[row, column + 2].Value = sumPercent.ToString("### ### ### руб.");
 
-                    string monthPayment = "";
+                    string monthPayment;
 
                     if (contract.ContractType.Formula != "x*p")
                     {
-                        monthPayment = contract.ContractType.Formula.Replace("x", (bet / 100).ToString()).Replace("p", contract.Amount.ToString()).Replace("m", (sheetNumber * 12 + currentYearMounthCount).ToString());
+                        monthPayment = contract.ContractType.Formula.Replace("x", (bet / 100).ToString()).Replace("p*", "").Replace("^m", "");
                     }
                     else
                     {
                         monthPayment = contract.ContractType.Formula.Replace("x", (bet / 100).ToString()).Replace("p", contract.Amount.ToString());
                     }
                     double result = Convert.ToDouble(new DataTable().Compute(monthPayment.Replace(",", "."), null));
+                    if(contract.ContractType.Formula.Contains('^'))
+                    {
+                        result = Math.Pow(result, sheetNumber * 12 + month + 1) * sumPercent - Convert.ToDouble(contract.Amount);
+                        sumPercent += result;
+
+                        sheet.Cells[row, column + 2].Value = sumPercent.ToString("### ### ### руб.");
+
+                        sheet.Cells[row, column + 4].Value = sumPercent.ToString("### ### ### руб.");
+                    }
                     sheet.Cells[row, column + 3].Value = result.ToString("### ### ### руб.");
 
                     sheet.Cells[row, 1, row, 7].Style.Font.SetFromFont("Verdana", 8);
