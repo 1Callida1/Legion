@@ -20,6 +20,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Legion.Models.Internal;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace Legion.Helpers.ReportGenerator
 {
@@ -55,6 +56,18 @@ namespace Legion.Helpers.ReportGenerator
             public string AdditionalPaymentSumWords { get; set; } = null;
             public string AdditionalPaymentDate { get; set; } = null;
             public string ContractTypeName { get; set; }
+            public string BetYear { get; set; }
+            public List<CustomBet> CustomBet { get; set; }
+        }
+        private class CustomBet
+        {
+            public string YearEnd { get; set; } = null;
+            public string YearNotFormat { get; set; } = null;
+            public string YearBet { get; set; } = null;
+            public string sumYearBet { get; set; } = null;
+            public string YearBetWords { get; set; } = null;
+            public string YearMonthPayment { get; set; } = null;
+            public string YearMonthPaymentWords { get; set; } = null;
         }
         public static void GenerateDocument(Models.Contract cntr, string documentType, Models.Contract cntrProlongation = null, AdditionalPayment additionalPayment = null)
         {
@@ -75,9 +88,11 @@ namespace Legion.Helpers.ReportGenerator
                 DateEndFormatBrackets = $"«{contract.DateEnd.Day}» {contract.DateEnd.ToString("MMMM", culture)} {contract.DateEnd.Year}",
                 DayPayment = contract.DateEnd.Day.ToString(),
                 Bet = contract.Bet.ToString(),
-                BetWords = RussianConverter.FormatCurrency((decimal)contract.Bet),
+                BetWords = RussianConverter.FormatCurrency((decimal)contract.Bet)
+                    .Replace("рубля пятьдесят копеек", "целых пять десятых")
+                    .Replace("рубля ноль копеек", ""),
                 MonthPayment = (contract.Amount * contract.Bet / 100).ToString("### ### ###"),
-                MonthPaymentWords = RussianConverter.FormatCurrency((decimal)(contract.Amount * contract.Bet / 100)),
+                MonthPaymentWords = RussianConverter.Format((long)(contract.Amount * contract.Bet / 100)),
                 Dob = contract.Investor.DateBirth.ToString("dd.MM.yyyy"),
                 PassprotSeries = contract.Investor.PassprotSeries,
                 PassprotNumber = contract.Investor.PassprotNumber,
@@ -88,7 +103,8 @@ namespace Legion.Helpers.ReportGenerator
                 Phone = contract.Investor.Phone,
                 DateProlongation = $"«{DateTime.Now.Day}» {DateTime.Now.ToString("MMMM", culture)} {DateTime.Now.Year}",
                 DateStart = contract.DateStart.ToString("dd.MM.yyyy"),
-                ContractTypeName = contract.ContractType.TypeName
+                ContractTypeName = contract.ContractType.TypeName,
+                BetYear = (contract.Bet * 12.0).ToString()
             };
             if(additionalPayment != null)
             {
@@ -98,6 +114,28 @@ namespace Legion.Helpers.ReportGenerator
             }
             if (cntrProlongation != null) contractOptimazed.ProlongationDate = $"«{cntrProlongation.DateEnd.Day}» {cntrProlongation.DateEnd.ToString("MMMM", culture)} {cntrProlongation.DateEnd.Year}";
 
+            if(contract.ContractType.NextYearBetCoef != 0)
+            {
+                int yearCount = Math.Abs((contract.DateStart.Month - contract.DateEnd.Month) + 12 * (contract.DateStart.Year - contract.DateEnd.Year)) / 3;
+                List<CustomBet> customBets = new List<CustomBet>();
+                for (int currentYear = 1; currentYear < yearCount + 1; currentYear++)
+                {
+                    CustomBet customBet = new CustomBet {
+                        YearNotFormat = contract.DateStart.AddYears(currentYear).ToString("dd.MM.yyyy"),
+                        sumYearBet = (contract.Bet + (contract.ContractType.NextYearBetCoef * currentYear) * 12.0).ToString(),
+                        YearEnd = $"«{contract.DateStart.Day}» {contract.DateStart.ToString("MMMM", culture)} {Convert.ToInt32(contract.DateStart.Year) + currentYear}",
+                        YearBet = (contract.Bet + (contract.ContractType.NextYearBetCoef * currentYear)).ToString(),
+                        YearBetWords = RussianConverter.FormatCurrency((decimal)(contract.Bet + (contract.ContractType.NextYearBetCoef * currentYear)))
+                            .Replace("рубля пятьдесят копеек", "целых пять десятых")
+                            .Replace("рубля ноль копеек", ""),
+                        YearMonthPayment = (contract.Amount * (contract.Bet + (contract.ContractType.NextYearBetCoef * currentYear) / 100)).ToString("### ### ###"),
+                        YearMonthPaymentWords = RussianConverter.Format((long)(contract.Amount * (contract.Bet + (contract.ContractType.NextYearBetCoef * currentYear) / 100)))
+                    };
+                    customBets.Add(customBet);
+                }
+                contractOptimazed.CustomBet = customBets;
+            }
+
             var template = DocxTemplate.Open($"{Locator.Current.GetService<Settings>().TemplatesFolder}/Шаблон {documentType}.docx");
             template.BindModel("ds", contractOptimazed);
 
@@ -105,38 +143,57 @@ namespace Legion.Helpers.ReportGenerator
             switch (documentType)
             {
                 case "Закрытие договора":
-                {
-                    TemplateName = "Заявление на закрытие договора инвестирования";
+                    TemplateName = "Заявление на закрытие договора";
                     break;
-                }
+                case "Приложение № 3":
+                    TemplateName = $"Приложение № 3 №{contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
+                    break;
                 case "Акт":
-                {
-                    TemplateName = $"Акт {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
+                    TemplateName = $"Акт №{contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
                     break;
-                }
-                case "Доп соглашение":
-                {
+                case "Доп соглашение накопительный":
                     TemplateName = $"Доп соглашение от {contractOptimazed.DateStart}";
                     break;
-                }
-                case "Пролонгация":
-                {
-                    TemplateName = $"Доп соглашение к договору от {contractOptimazed.DateStart} {contractOptimazed.InvestorNameShort}.";
+                case "Шаблон Доп соглашение пролонгация":
+                    TemplateName = $"Доп. соглашение к договору {contractOptimazed.ContractId.Replace("/", ".")} от {contractOptimazed.DateStart} {contractOptimazed.InvestorNameShort}.";
                     break;
-                }
-                case "Договор инвестирования":
-                {
-                    TemplateName = $"Договор инвестирования {contractOptimazed.InvestorNameShort}.";
+                case "Договор инвестирования 12":
+                    TemplateName = $"Договор {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
                     break;
-                }
+                case "Договор инвестирования 36":
+                    TemplateName = $"Договор {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
+                    break;
+                case "Договор доходный":
+                    TemplateName = $"Договор {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
+                    break;
                 case "Договор накопительный":
-                {
-                    TemplateName = $"Договор накопительный {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
+                    TemplateName = $"Договор {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
                     break;
-                }
+                case "Договор накопительный Е":
+                    TemplateName = $"Договор {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
+                    break;
+                case "Договор инвестирования ТАНАКА":
+                    TemplateName = $"Договор МКК {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
+                    break;
+                case "Договор накопительный ТАНАКА":
+                    TemplateName = $"Договор МКК {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
+                    break;
             }
 
-            string subPath = $"{Locator.Current.GetService<Settings>().ArchievFolder}/{contractOptimazed.ContractTypeName} {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}";
+            string subPath = "";
+
+            if (documentType.Contains("ТАНАКА"))
+            {
+                subPath = $"{Locator.Current.GetService<Settings>().ArchievFolder}/Договор МКК {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}";
+            }
+            else if(TemplateName.Contains("накопительный"))
+            {
+                subPath = $"{Locator.Current.GetService<Settings>().ArchievFolder}/Договор Накопительный {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}";
+            }
+            else
+            {
+                subPath = $"{Locator.Current.GetService<Settings>().ArchievFolder}/Договор {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}";
+            }
 
             bool exists = Directory.Exists(subPath);
 

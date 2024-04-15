@@ -167,24 +167,39 @@ namespace Legion.ViewModels
                 {
                     _context.SaveChanges();
                     HostScreen.Router.NavigateBack.Execute();
-                    if (Contract.ContractType.TypeName.Equals("Накопительный"))
+                    Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Акт");
+                    Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Приложение № 3");
+                    switch (Contract.ContractType.TypeName)
                     {
-                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор накопительный");
-                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Акт");
+                        case "Накопительный Е":
+                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор накопительный Е");
+                            break;
+                        case "Накопительный":
+                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор накопительный");
+                            break;
+                        case "Инвестиционный":
+                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор инвестирования 12");
+                            break;
+                        case "Трехгодовой":
+                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор инвестирования 36");
+                            break;
+                        case "Доходный":
+                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор доходный");
+                            break;
+                        case "ТАНАКА инвестиционный":
+                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор инвестирования ТАНАКА");
+                            break;
+                        case "ТАНАКА накопительный":
+                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор накопительный ТАНАКА");
+                            break;
                     }
-                    else
-                    {
-                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор инвестирования");
-                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Акт");
-                        byte[] reportExcel = Helpers.ReportGenerator.ExcelGenerator.GeneratePayments(Contract);
-                        string path = $"{Locator.Current.GetService<Settings>().ArchievFolder}/" +
-                            $"{Contract.ContractType.TypeName} " +
-                            $"{Contract.CustomId.Replace("/", ".")} " +
-                            $"{Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}./" +
-                            $"Акт выплат {Contract.CustomId.Replace("/", ".")} {Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}..xlsx";
-                        File.WriteAllBytes($"{path}", reportExcel);
-                    }
-
+                    /*byte[] reportExcel = Helpers.ReportGenerator.ExcelGenerator.GeneratePayments(Contract);
+                    string path = $"{Locator.Current.GetService<Settings>().ArchievFolder}/" +
+                        $"{Contract.ContractType.TypeName} " +
+                        $"{Contract.CustomId.Replace("/", ".")} " +
+                        $"{Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}./" +
+                        $"Акт выплат {Contract.CustomId.Replace("/", ".")} {Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}..xlsx";
+                    File.WriteAllBytes($"{path}", reportExcel);*/
                 }
                 catch (Exception ex)
                 {

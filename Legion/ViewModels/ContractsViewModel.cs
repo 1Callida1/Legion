@@ -158,7 +158,7 @@ namespace Legion.ViewModels
 
                 Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
 
-                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Пролонгация", copyContract);
+                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Доп соглашение пролонгация", copyContract);
             });
 
             DataGridShowPaymentsActionCommand = ReactiveCommand.CreateFromTask(async (Models.Contract ctr) =>
@@ -185,7 +185,7 @@ namespace Legion.ViewModels
 
                 Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
 
-                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Доп соглашение", null, ap);
+                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Доп соглашение накопительный", null, ap);
             });
 
             DataGridPrintActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
