@@ -190,7 +190,32 @@ namespace Legion.ViewModels
 
             DataGridPrintActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
             {
-                Debug.WriteLine(ctr.ToString());
+                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Акт");
+                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Приложение № 3");
+                switch (ctr.ContractType.TypeName)
+                {
+                    case "Накопительный Е":
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Договор накопительный Е");
+                        break;
+                    case "Накопительный":
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Договор накопительный");
+                        break;
+                    case "Инвестиционный":
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Договор инвестирования 12");
+                        break;
+                    case "Трехгодовой":
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Договор инвестирования 36");
+                        break;
+                    case "Доходный":
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Договор доходный");
+                        break;
+                    case "ТАНАКА инвестиционный":
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Договор инвестирования ТАНАКА");
+                        break;
+                    case "ТАНАКА накопительный":
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Договор накопительный ТАНАКА");
+                        break;
+                }
             });
 
             DataGridRemoveActionCommand = ReactiveCommand.CreateFromTask(async (Models.Contract ctr) =>
