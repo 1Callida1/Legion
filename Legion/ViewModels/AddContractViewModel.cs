@@ -112,7 +112,7 @@ namespace Legion.ViewModels
                 {
                     refer = _context.Referrals.Add(new Referral()
                     {
-                        Bonus = 3, BonusClaim = false, InvestorCalled = result, InvestorInvited = Contract.Investor
+                        Bonus = 3, BonusClaim = false, InvestorCalled = result, InvestorInvited = Contract.Investor, Note = RefferalNote
                     }).Entity;
 
                     Contract.Referral = refer;

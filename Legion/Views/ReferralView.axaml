@@ -7,7 +7,13 @@
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
              xmlns:vm="using:Legion.ViewModels"
              xmlns:models="clr-namespace:Legion.Models"
+             xmlns:converters="clr-namespace:Legion.Helpers.Converters"
              x:DataType="vm:ReferralViewModel">
+    <UserControl.Resources>
+        <converters:DateTimeToDateConverter x:Key="DateConverter" />
+        <converters:BoolToPayTypeIconConverter x:Key="PayTypeConverter" />
+        <converters:BoolToRepeatedStringConverter x:Key="RepeatedConverter" />
+    </UserControl.Resources>
   <Grid>
     <Border Background="#ffff" CornerRadius="20" />
     <Grid>
@@ -44,8 +50,20 @@
                                   ItemsSource="{Binding Contracts}" AutoGenerateColumns="False"
                                   GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray" IsReadOnly="True"
                                   HorizontalScrollBarVisibility="Visible" Height="700">
-              <DataGrid.Columns>
-                <DataGridTextColumn Header="Дата заключения договора" Binding="{Binding Path=DateStart}"/>
+              <DataGrid.Resources>
+                                <ContextMenu x:Key="RowMenu">
+                                  
+                                    <MenuItem Header="Изменить получение бонуса"
+                                              CommandParameter="{Binding (models:Contract)}"
+                                              Command="{Binding #InvestorsGrid.((vm:ReferralViewModel)DataContext).DataGridBonusActionCommand}">
+                                        <MenuItem.Icon>
+                                            <i:Icon Value="fa-print" Width="35" Height="35" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </DataGrid.Resources>
+                <DataGrid.Columns>
+                <DataGridTextColumn Header="Дата заключения договора" Binding="{Binding Path=DateStart, Converter={StaticResource DateConverter}}"/>
                 <DataGridTextColumn Header="ФИО инвестора">
                   <DataGridTextColumn.Binding>
                     <MultiBinding StringFormat="{}{0} {1} {2}">
@@ -55,9 +73,15 @@
                     </MultiBinding>
                   </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Сумма" Binding="{Binding Path=Amount, StringFormat={}{0 ₽}}"/>
-                <DataGridTextColumn Header="Наличные/Безналичные" Binding="{Binding Path=Referral.InvestorInvited.PayType}"/>
-                <DataGridTextColumn Header="Первый/Повторный договор" Binding="{Binding Path=Repeated}"/>
+                <DataGridTextColumn Header="Сумма" Binding="{Binding Path=Amount}"/>
+                <DataGridTemplateColumn Header="Тип расчета">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <i:Icon Value="{Binding Referral.InvestorInvited.PayType, Converter={StaticResource PayTypeConverter}}" Width="35" Height="35"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Первый/Повторный договор" Binding="{Binding Path=Repeated, Converter={StaticResource RepeatedConverter}}"/>
                 <DataGridTextColumn Header="От кого">
                   <DataGridTextColumn.Binding>
                     <MultiBinding StringFormat="{}{0} {1} {2}">
@@ -71,23 +95,26 @@
                 <DataGridCheckBoxColumn Header="Реферальный бонус получен?" Binding="{Binding Path=Referral.BonusClaim}"/>
                 <DataGridTextColumn Header="Примечание" Binding="{Binding Path=Referral.Note}"/>
               </DataGrid.Columns>
-              <DataGrid.Styles>
-                <Style Selector="DataGridColumnHeader">
-                  <Setter Property="Foreground" Value="Black" />
-                </Style>
-                <Style Selector="ScrollBar:horizontal">
-                  <Setter Property="Background" Value="Gray" />
-                </Style>
-                <Style Selector="ScrollBar:vertical">
-                  <Setter Property="Background" Value="Gray" />
+                <DataGrid.Styles>
+                    <Style Selector="DataGridRow">
+                        <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
+                    </Style>
+                    <Style Selector="DataGridColumnHeader">
+                        <Setter Property="Foreground" Value="Black" />
+                    </Style>
+                    <Style Selector="ScrollBar:horizontal">
+                        <Setter Property="Background" Value="Gray" />
+                    </Style>
+                    <Style Selector="ScrollBar:vertical">
+                        <Setter Property="Background" Value="Gray" />
 
-                </Style>
-                <Style Selector="Thumb">
-                  <Setter Property="Background" Value="Black" />
-                  <Setter Property="Foreground" Value="Wheat" />
+                    </Style>
+                    <Style Selector="Thumb">
+                        <Setter Property="Background" Value="Black" />
+                        <Setter Property="Foreground" Value="Wheat" />
 
-                </Style>
-              </DataGrid.Styles>
+                    </Style>
+                </DataGrid.Styles>
             </DataGrid>
           </Grid>
         </StackPanel>

@@ -28,7 +28,7 @@ namespace Legion.ViewModels
         {
             _context = context;
             HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
-            Contracts = _context.Contracts.ToList();
+            Contracts = _context.Contracts.Where(c => c.Referral != null).ToList();
 
             BackCommand = ReactiveCommand.Create(() =>
             {
@@ -43,23 +43,32 @@ namespace Legion.ViewModels
 
             SearchCommand = ReactiveCommand.Create(() =>
             {
-               
+                Contracts = new List<Contract>();
+                SearchText.Split(' ').ToList().ForEach(word => Contracts.AddRange(_context.Contracts.Where(c => c.CustomId.ToLower().Contains(word.ToLower()) || c.Investor.FirstName.ToLower().Contains(word.ToLower()) || c.Investor.MiddleName.ToLower().Contains(word.ToLower()) || c.Investor.LastName.ToLower().Contains(word.ToLower()))));
+                Contracts = Contracts.Distinct().ToList();
             }, IsSearchTextExist);
+
+            DataGridBonusActionCommand = ReactiveCommand.CreateFromTask(async(Models.Contract ctr) =>
+            {
+                ctr.Referral.BonusClaim = !ctr.Referral.BonusClaim;
+                _context.Referrals.Update(ctr.Referral);
+                await _context.SaveChangesAsync();
+
+                Contracts = await _context.Contracts.Where(c => c.Referral != null).ToListAsync();
+
+            });
         }
-        public ObservableCollection<Referral> Referrals
-        {
-            get => _referral;
-            set => this.RaiseAndSetIfChanged(ref _referral, value);
-        }
+
         public string SearchText
         {
             get => _searchText;
             set
             {
-                if (value.Length == 0)
+                if (string.IsNullOrWhiteSpace(value))
                 {
-                    Contracts = _context.Contracts.ToList();
+                    Contracts = _context.Contracts.Where(c => c.Referral != null).ToList();
                 }
+
                 this.RaiseAndSetIfChanged(ref _searchText, value);
             }
         }
@@ -70,6 +79,9 @@ namespace Legion.ViewModels
             get => _contract;
             set => this.RaiseAndSetIfChanged(ref _contract, value);
         }
+
+        public ReactiveCommand<Models.Contract, Unit> DataGridBonusActionCommand { get; set; } = null!;
+
         public ReactiveCommand<Unit, Unit> BackCommand { get; } = null!;
         public sealed override IScreen HostScreen { get; set; }
         public IObservable<bool> IsSearchTextExist { get; } = null!;
