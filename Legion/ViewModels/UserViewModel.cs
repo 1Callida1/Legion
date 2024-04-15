@@ -47,12 +47,12 @@ namespace Legion.ViewModels
                 HostScreen.Router.Navigate.Execute(new AddUserViewModel(us, context));
             });
 
-            DataGridRemoveActionCommand = ReactiveCommand.Create((User us) =>
+            DataGridRemoveActionCommand = ReactiveCommand.CreateFromTask(async (User us) =>
             {
                 Debug.WriteLine(us.Id.ToString() + "to remove");
                 _context.Users.Remove(us);
-                _context.SaveChangesAsync();
-                _context.Users.LoadAsync();
+                await _context.SaveChangesAsync();
+                LoadUsesAsync();
             });
 
             RolesCommand = ReactiveCommand.Create(() =>
@@ -70,7 +70,8 @@ namespace Legion.ViewModels
         private async Task LoadUsesAsync()
         {
             LoadingVisible = true;
-            Users = new ObservableCollection<User>(await _context.Users.ToListAsync());
+            await _context.Users.LoadAsync();
+            Users = _context.Users.Local.ToObservableCollection();
             await _context.UserRoles.LoadAsync();
 
             LoadingVisible = false;
