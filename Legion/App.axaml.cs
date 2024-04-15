@@ -99,13 +99,13 @@ namespace Legion
                         await context.SaveChangesAsync();
                         await context.Users.AddAsync(new User() { Password = "123", UserName = "admin", EmployerFirstName = "Admin", UserRole = context.UserRoles.First(role => role.Role.Contains(Role.Admin.ToString())) });
 
-                        await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "id-E/yy", Bet = 2, Formula = "x*p", Period = 6, TypeName = "Накопительный Е", CanAddMoney = true });
-                        await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "id/yy", Bet = 2, Formula = "x*p", Period = 6, TypeName = "Накопительный", CanAddMoney = true });
+                        await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "id-E/yy", Bet = 2, Formula = "p*(1+x)^m", Period = 6, TypeName = "Накопительный Е", CanAddMoney = true });
+                        await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "id/yy", Bet = 2, Formula = "p*(1+x)^m", Period = 6, TypeName = "Накопительный", CanAddMoney = true });
                         await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "id/yy", Bet = 4, Formula = "x*p", Period = 12, TypeName = "Инвестиционный", CanAddMoney = false });
                         await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "id-36/yy", Bet = 6, Formula = "x*p", Period = 36, TypeName = "Трехгодовой", CanAddMoney = false, NextYearBetCoef = 0.5f });
                         await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "id-18/yy", Bet = 7, Formula = "x*p", Period = 18, TypeName = "Доходный", CanAddMoney = false });
                         await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "id/yy", Bet = 3, Formula = "x*p", Period = 12, TypeName = "ТАНАКА инвестиционный", CanAddMoney = false, NextYearBetCoef = 1 });
-                        await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "idK/yy", Bet = 3, Formula = "x*p", Period = 24, TypeName = "ТАНАКА накопительный", CanAddMoney = false, NextYearBetCoef = 1 });
+                        await context.ContractTypes.AddAsync(new ContractType() { ContractIdFormat = "idK/yy", Bet = 3, Formula = "p*(1+x)^m", Period = 24, TypeName = "ТАНАКА накопительный", CanAddMoney = false, NextYearBetCoef = 1 });
                         await context.ContractStatuses.AddAsync(new ContractStatus() { Status = "Открыт" });
                         await context.ContractStatuses.AddAsync(new ContractStatus() { Status = "Закрыт" });
                         await context.ContractStatuses.AddAsync(new ContractStatus() { Status = "Приостановлен" });
