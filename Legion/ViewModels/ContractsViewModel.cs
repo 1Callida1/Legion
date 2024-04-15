@@ -22,6 +22,7 @@ using MsBox.Avalonia;
 using Legion.Views;
 using Serilog;
 using ILogger = Serilog.ILogger;
+using System.IO;
 
 namespace Legion.ViewModels
 {
@@ -159,6 +160,32 @@ namespace Legion.ViewModels
                 Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
 
                 Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Доп соглашение пролонгация", copyContract);
+                string subPath = "";
+
+                if (ctr.ContractType.TypeName.Contains("ТАНАКА"))
+                {
+                    subPath = $"{Locator.Current.GetService<Settings>().ArchievFolder}" +
+                    $"/Договор МКК {ctr.CustomId.Replace("/", ".")} " +
+                    $"{ctr.Investor.LastName} {ctr.Investor.FirstName[0]}. {ctr.Investor.MiddleName[0]}";
+                }
+                else if (ctr.ContractType.TypeName.Contains("Накопительный"))
+                {
+                    subPath = $"{Locator.Current.GetService<Settings>().ArchievFolder}" +
+                    $"/Договор Накопительный {ctr.CustomId.Replace("/", ".")} " +
+                    $"{ctr.Investor.LastName} {ctr.Investor.FirstName[0]}. {ctr.Investor.MiddleName[0]}";
+                }
+                else
+                {
+                    subPath = $"{Locator.Current.GetService<Settings>().ArchievFolder}" +
+                    $"/Договор {ctr.CustomId.Replace("/", ".")} " +
+                    $"{ctr.Investor.LastName} {ctr.Investor.FirstName[0]}. {ctr.Investor.MiddleName[0]}";
+                }
+                byte[] reportExcel = Helpers.ReportGenerator.ExcelGenerator.GeneratePayments(ctr, int.Parse(result));
+                string path = subPath +
+                   $"/Акт выплат №{ctr.CustomId.Replace("/", ".")} от " +
+                   DateTime.Now.ToString("dd.MM.yyyy") +
+                   $" {ctr.Investor.LastName} {ctr.Investor.FirstName[0]}. {ctr.Investor.MiddleName[0]}..xlsx";
+                File.WriteAllBytes($"{path}", reportExcel);
             });
 
             DataGridShowPaymentsActionCommand = ReactiveCommand.CreateFromTask(async (Models.Contract ctr) =>

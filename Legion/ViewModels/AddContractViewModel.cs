@@ -13,6 +13,8 @@ using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using Legion.Models.Internal;
 using System.IO;
+using DocumentFormat.OpenXml.Wordprocessing;
+using System.Runtime.ConstrainedExecution;
 
 namespace Legion.ViewModels
 {
@@ -160,6 +162,15 @@ namespace Legion.ViewModels
                     case "Накопительный":
                         Contract.Bet = 2;
                         break;
+                    case "Накопительный Е":
+                        Contract.Bet = 2;
+                        break;
+                    case "ТАНАКА инвестиционный":
+                        Contract.Bet = 3;
+                        break;
+                    case "ТАНАКА накопительный":
+                        Contract.Bet = 3;
+                        break;
                 }
                 _context.Contracts.Add(Contract);
 
@@ -193,13 +204,30 @@ namespace Legion.ViewModels
                             Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор накопительный ТАНАКА");
                             break;
                     }
-                    /*byte[] reportExcel = Helpers.ReportGenerator.ExcelGenerator.GeneratePayments(Contract);
-                    string path = $"{Locator.Current.GetService<Settings>().ArchievFolder}/" +
-                        $"{Contract.ContractType.TypeName} " +
-                        $"{Contract.CustomId.Replace("/", ".")} " +
-                        $"{Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}./" +
-                        $"Акт выплат {Contract.CustomId.Replace("/", ".")} {Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}..xlsx";
-                    File.WriteAllBytes($"{path}", reportExcel);*/
+                    string subPath = "";
+
+                    if (Contract.ContractType.TypeName.Contains("ТАНАКА"))
+                    {
+                        subPath = $"{Locator.Current.GetService<Models.Internal.Settings>().ArchievFolder}" +
+                        $"/Договор МКК {Contract.CustomId.Replace("/", ".")} " +
+                        $"{Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}";
+                    }
+                    else if (Contract.ContractType.TypeName.Contains("Накопительный"))
+                    {
+                        subPath = $"{Locator.Current.GetService<Models.Internal.Settings>().ArchievFolder}" +
+                        $"/Договор Накопительный {Contract.CustomId.Replace("/", ".")} " +
+                        $"{Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}";
+                    }
+                    else
+                    {
+                        subPath = $"{Locator.Current.GetService<Models.Internal.Settings>().ArchievFolder}" +
+                        $"/Договор {Contract.CustomId.Replace("/", ".")} " +
+                        $"{Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}";
+                    }
+                    byte[] reportExcel = Helpers.ReportGenerator.ExcelGenerator.GeneratePayments(Contract);
+                    string path = subPath +
+                       $"/Акт выплат №{Contract.CustomId.Replace("/", ".")} {Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}..xlsx";
+                    File.WriteAllBytes($"{path}", reportExcel);
                 }
                 catch (Exception ex)
                 {
