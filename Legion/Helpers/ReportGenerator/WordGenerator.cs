@@ -69,7 +69,7 @@ namespace Legion.Helpers.ReportGenerator
             public string YearMonthPayment { get; set; } = null;
             public string YearMonthPaymentWords { get; set; } = null;
         }
-        public static void GenerateDocument(Models.Contract cntr, string documentType, Models.Contract cntrProlongation = null, AdditionalPayment additionalPayment = null)
+        public static void GenerateDocument(Models.Contract cntr, string documentType, string subPath, Models.Contract cntrProlongation = null, AdditionalPayment additionalPayment = null)
         {
             Legion.Models.Contract contract = cntr;
 
@@ -179,27 +179,6 @@ namespace Legion.Helpers.ReportGenerator
                     TemplateName = $"Договор МКК {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}.";
                     break;
             }
-
-            string subPath = "";
-
-            if (documentType.Contains("ТАНАКА"))
-            {
-                subPath = $"{Locator.Current.GetService<Settings>().ArchievFolder}/Договор МКК {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}";
-            }
-            else if(TemplateName.Contains("накопительный"))
-            {
-                subPath = $"{Locator.Current.GetService<Settings>().ArchievFolder}/Договор Накопительный {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}";
-            }
-            else
-            {
-                subPath = $"{Locator.Current.GetService<Settings>().ArchievFolder}/Договор {contractOptimazed.ContractId.Replace("/", ".")} {contractOptimazed.InvestorNameShort}";
-            }
-
-            bool exists = Directory.Exists(subPath);
-
-            if (!exists)
-                Directory.CreateDirectory(subPath);
-
 
             template.Save($"{subPath}/{TemplateName}.docx");
         }

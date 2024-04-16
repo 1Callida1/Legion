@@ -135,7 +135,9 @@ namespace Legion.ViewModels
 
                 Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
 
-                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Заявление на закрытие договора инвестирования");
+                string subPath = PathHelper.generatePath(ctr);
+
+                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Закрытие договора", subPath);
             });
 
             DataGridProlongationActionCommand = ReactiveCommand.CreateFromTask(async (Models.Contract ctr) =>
@@ -159,27 +161,10 @@ namespace Legion.ViewModels
 
                 Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
 
-                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Доп соглашение пролонгация", copyContract);
-                string subPath = "";
+                string subPath = PathHelper.generatePath(ctr);
 
-                if (ctr.ContractType.TypeName.Contains("ТАНАКА"))
-                {
-                    subPath = $"{Locator.Current.GetService<Settings>().ArchievFolder}" +
-                    $"/Договор МКК {ctr.CustomId.Replace("/", ".")} " +
-                    $"{ctr.Investor.LastName} {ctr.Investor.FirstName[0]}. {ctr.Investor.MiddleName[0]}";
-                }
-                else if (ctr.ContractType.TypeName.Contains("Накопительный"))
-                {
-                    subPath = $"{Locator.Current.GetService<Settings>().ArchievFolder}" +
-                    $"/Договор Накопительный {ctr.CustomId.Replace("/", ".")} " +
-                    $"{ctr.Investor.LastName} {ctr.Investor.FirstName[0]}. {ctr.Investor.MiddleName[0]}";
-                }
-                else
-                {
-                    subPath = $"{Locator.Current.GetService<Settings>().ArchievFolder}" +
-                    $"/Договор {ctr.CustomId.Replace("/", ".")} " +
-                    $"{ctr.Investor.LastName} {ctr.Investor.FirstName[0]}. {ctr.Investor.MiddleName[0]}";
-                }
+                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Доп соглашение пролонгация", subPath, copyContract);
+
                 byte[] reportExcel = Helpers.ReportGenerator.ExcelGenerator.GeneratePayments(ctr, int.Parse(result));
                 string path = subPath +
                    $"/Акт выплат №{ctr.CustomId.Replace("/", ".")} от " +
@@ -212,12 +197,45 @@ namespace Legion.ViewModels
 
                 Contracts = new ObservableCollection<Contract>(await _context.Contracts.ToListAsync());
 
-                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Доп соглашение накопительный", null, ap);
+                string subPath = PathHelper.generatePath(ctr);
+
+                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Доп соглашение накопительный", subPath, null, ap);
             });
 
             DataGridPrintActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
             {
-                Debug.WriteLine(ctr.ToString());
+                string subPath = PathHelper.generatePath(ctr);
+
+                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Акт", subPath);
+                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Приложение № 3", subPath);
+                switch (ctr.ContractType.TypeName)
+                {
+                    case "Накопительный Е":
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Договор накопительный Е", subPath);
+                        break;
+                    case "Накопительный":
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Договор накопительный", subPath);
+                        break;
+                    case "Инвестиционный":
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Договор инвестирования 12", subPath);
+                        break;
+                    case "Трехгодовой":
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Договор инвестирования 36", subPath);
+                        break;
+                    case "Доходный":
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Договор доходный", subPath);
+                        break;
+                    case "ТАНАКА инвестиционный":
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Договор инвестирования ТАНАКА", subPath);
+                        break;
+                    case "ТАНАКА накопительный":
+                        Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Договор накопительный ТАНАКА", subPath);
+                        break;
+                }
+                byte[] reportExcel = Helpers.ReportGenerator.ExcelGenerator.GeneratePayments(ctr);
+                string path = subPath +
+                   $"/Акт выплат №{ctr.CustomId.Replace("/", ".")} {ctr.Investor.LastName} {ctr.Investor.FirstName[0]}. {ctr.Investor.MiddleName[0]}..xlsx";
+                File.WriteAllBytes($"{path}", reportExcel);
             });
 
             DataGridRemoveActionCommand = ReactiveCommand.CreateFromTask(async (Models.Contract ctr) =>
