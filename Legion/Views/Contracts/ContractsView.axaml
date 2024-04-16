@@ -95,15 +95,12 @@
                             <DataGrid.Resources>
                                 <ContextMenu x:Key="RowMenu">
                                   
-                                    <MenuItem Header="Печать"
+                                    <MenuItem Header="Генерация документов"
                                               CommandParameter="{Binding (models:Contract)}"
                                               Command="{Binding #ContractGrid.((vm:ContractsViewModel)DataContext).DataGridPrintActionCommand}">
                                         <MenuItem.Icon>
                                             <i:Icon Value="fa-print" Width="35" Height="35" />
                                         </MenuItem.Icon>
-
-                                        <MenuItem Header="Договор" />
-                                        <MenuItem Header="График" />
                                     </MenuItem>
 
                                     <Separator />

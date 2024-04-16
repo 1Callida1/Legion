@@ -128,20 +128,6 @@
               <DataGrid.Resources>
 
                 <ContextMenu x:Key="RowMenu">
-                  <MenuItem Header="Печать"
-                            CommandParameter="{Binding (models:Investor)}"
-                            Command="{Binding #InvestorsGrid.((vm:InvestorsViewModel)DataContext).DataGridPrintActionCommand}">
-                    <MenuItem.Icon>
-                      <i:Icon Value="fa-print" Width="35" Height="35"/>
-                    </MenuItem.Icon>
-
-                    <MenuItem Header="Договор">
-
-                    </MenuItem>
-                    <MenuItem Header="График">
-
-                    </MenuItem>
-                  </MenuItem>
                   <MenuItem Header="Редактировать"
                             CommandParameter="{Binding (models:Investor)}"
                             Command="{Binding #InvestorsGrid.((vm:InvestorsViewModel)DataContext).DataGridEditActionCommand}">
