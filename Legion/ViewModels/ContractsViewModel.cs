@@ -200,6 +200,13 @@ namespace Legion.ViewModels
                 string subPath = PathHelper.generatePath(ctr);
 
                 Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Доп соглашение накопительный", subPath, null, ap);
+
+                byte[] reportExcel = Helpers.ReportGenerator.ExcelGenerator.GeneratePayments(ctr, int.Parse(result));
+                string path = subPath +
+                   $"/Акт выплат пополненный №{ctr.CustomId.Replace("/", ".")} от " +
+                   DateTime.Now.ToString("dd.MM.yyyy") +
+                   $" {ctr.Investor.LastName} {ctr.Investor.FirstName[0]}. {ctr.Investor.MiddleName[0]}..xlsx";
+                File.WriteAllBytes($"{path}", reportExcel);
             });
 
             DataGridPrintActionCommand = ReactiveCommand.Create((Models.Contract ctr) =>
