@@ -187,6 +187,7 @@ namespace Legion.Helpers.ReportGenerator
             }
 
             int yearCount = mounthCount % 12 == 0 ? mounthCount / 12 : mounthCount / 12 + 1;
+            double sumLastMounth = contract.Amount;
 
             for (int sheetNumber = 0; sheetNumber < yearCount; sheetNumber++)
             {
@@ -205,7 +206,7 @@ namespace Legion.Helpers.ReportGenerator
                 }
                 else
                 {
-                    worksheetsName = $"{contract.DateStart.Year}-{contract.DateStart.Year + 1}";
+                    worksheetsName = $"{contract.DateStart.Year + sheetNumber}-{contract.DateStart.Year + sheetNumber + 1}";
                 }
 
                 ExcelWorksheet sheet = package.Workbook.Worksheets.Add(worksheetsName);
@@ -344,7 +345,7 @@ namespace Legion.Helpers.ReportGenerator
                 {
                     sheet.Column(row).Width = 16;
 
-                    sheet.Cells[row, column].Value = contract.DateStart.AddMonths(month + 1).ToString("dd.MM.yyyy");
+                    sheet.Cells[row, column].Value = contract.DateStart.AddMonths(month + 1 + 12 * sheetNumber).ToString("dd.MM.yyyy");
 
                     sheet.Cells[row, column + 1].Value = " -  руб";
 
@@ -363,23 +364,34 @@ namespace Legion.Helpers.ReportGenerator
                     double result = Convert.ToDouble(new DataTable().Compute(monthPayment.Replace(",", "."), null));
                     if(contract.ContractType.Formula.Contains('^'))
                     {
-                        result = Math.Pow(result, sheetNumber * 12 + month + 1) * sumPercent - Convert.ToDouble(contract.Amount);
-                        sumPercent += result;
+                        result = Math.Pow(result, sheetNumber * 12 + month + 1) * sumPercent;
 
-                        sheet.Cells[row, column + 2].Value = sumPercent.ToString("### ### ### руб.");
+                        sheet.Cells[row, column + 2].Value = result.ToString("### ### ### руб.");
 
-                        sheet.Cells[row, column + 4].Value = sumPercent.ToString("### ### ### руб.");
+                        sheet.Cells[row, column + 4].Value = result.ToString("### ### ### руб.");
+
+                        sum = result;
+
+                        sheet.Cells[row, column + 3].Value = (result - sumLastMounth).ToString("### ### ### руб."); ;
                     }
-                    sheet.Cells[row, column + 3].Value = result.ToString("### ### ### руб.");
+                    else
+                    {
+                        sheet.Cells[row, column + 3].Value = (result).ToString("### ### ### руб.");
+                    }
 
                     sheet.Cells[row, 1, row, 7].Style.Font.SetFromFont("Verdana", 8);
 
                     if ((month + 1) % 3 == 0)
                     {
-                        sheet.Cells[row, 2, row, 4].Style.Font.Bold = true;
+                        sheet.Cells[row, 2, row, 5].Style.Font.Bold = true;
                     }
-                    sum += result;
 
+                    if (!contract.ContractType.Formula.Contains('^'))
+                    {
+                        sum += result;
+                    }
+
+                    sumLastMounth = result;
                     row++;
                 }
 
@@ -391,14 +403,23 @@ namespace Legion.Helpers.ReportGenerator
 
                 sheet.Cells[row, column + 2].Value = contract.Amount.ToString("### ### ### руб.");
 
-                sheet.Cells[row, column + 3].Value = sum.ToString("### ### ### руб.");
+                if(contract.ContractType.Formula.Contains('^'))
+                {
+                    sheet.Cells[row, column + 2].Value = sumLastMounth.ToString("### ### ### руб.");
+                    sheet.Cells[row, column + 4].Value = sumLastMounth.ToString("### ### ### руб.");
+                    sheet.Cells[row, column + 3].Value = (sumLastMounth - Convert.ToDouble(contract.Amount)).ToString("### ### ### руб.");
+                }
+                else
+                {
+                    sheet.Cells[row, column + 3].Value = sum.ToString("### ### ### руб.");
+                }
 
                 sheet.Cells[row, 2, row, 4].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
 
                 sheet.Column(row).Width = 23;
                 sheet.Cells[row, 1].Style.VerticalAlignment = ExcelVerticalAlignment.Bottom;
                 sheet.Cells[row, 1, row, 7].Style.Font.SetFromFont("Verdana", 8);
-                sheet.Cells[row, 1, row, 4].Style.Font.Bold = true;
+                sheet.Cells[row, 1, row, 5].Style.Font.Bold = true;
 
                 createTableBorder(sheet.Cells[15, 1, row, 7], "Medium");
 

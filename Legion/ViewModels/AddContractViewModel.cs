@@ -15,6 +15,7 @@ using Legion.Models.Internal;
 using System.IO;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Runtime.ConstrainedExecution;
+using Legion.Helpers;
 
 namespace Legion.ViewModels
 {
@@ -138,7 +139,7 @@ namespace Legion.ViewModels
             {
                 switch (Contract.ContractType.TypeName)
                 {
-                    case "Годовой":
+                    case "Инвестиционный":
                         Contract.Bet = Contract.Amount switch
                         {
                             >= 500000 and <= 800000 => 4,
@@ -178,51 +179,34 @@ namespace Legion.ViewModels
                 {
                     _context.SaveChanges();
                     HostScreen.Router.NavigateBack.Execute();
-                    Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Акт");
-                    Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Приложение № 3");
+
+                    string subPath = PathHelper.generatePath(Contract);
+
+                    Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Акт", subPath);
+                    Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Приложение № 3", subPath);
                     switch (Contract.ContractType.TypeName)
                     {
                         case "Накопительный Е":
-                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор накопительный Е");
+                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор накопительный Е", subPath);
                             break;
                         case "Накопительный":
-                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор накопительный");
+                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор накопительный", subPath);
                             break;
                         case "Инвестиционный":
-                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор инвестирования 12");
+                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор инвестирования 12", subPath);
                             break;
                         case "Трехгодовой":
-                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор инвестирования 36");
+                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор инвестирования 36", subPath);
                             break;
                         case "Доходный":
-                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор доходный");
+                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор доходный", subPath);
                             break;
                         case "ТАНАКА инвестиционный":
-                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор инвестирования ТАНАКА");
+                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор инвестирования ТАНАКА", subPath);
                             break;
                         case "ТАНАКА накопительный":
-                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор накопительный ТАНАКА");
+                            Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Договор накопительный ТАНАКА", subPath);
                             break;
-                    }
-                    string subPath = "";
-
-                    if (Contract.ContractType.TypeName.Contains("ТАНАКА"))
-                    {
-                        subPath = $"{Locator.Current.GetService<Models.Internal.Settings>().ArchievFolder}" +
-                        $"/Договор МКК {Contract.CustomId.Replace("/", ".")} " +
-                        $"{Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}";
-                    }
-                    else if (Contract.ContractType.TypeName.Contains("Накопительный"))
-                    {
-                        subPath = $"{Locator.Current.GetService<Models.Internal.Settings>().ArchievFolder}" +
-                        $"/Договор Накопительный {Contract.CustomId.Replace("/", ".")} " +
-                        $"{Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}";
-                    }
-                    else
-                    {
-                        subPath = $"{Locator.Current.GetService<Models.Internal.Settings>().ArchievFolder}" +
-                        $"/Договор {Contract.CustomId.Replace("/", ".")} " +
-                        $"{Contract.Investor.LastName} {Contract.Investor.FirstName[0]}. {Contract.Investor.MiddleName[0]}";
                     }
                     byte[] reportExcel = Helpers.ReportGenerator.ExcelGenerator.GeneratePayments(Contract);
                     string path = subPath +
