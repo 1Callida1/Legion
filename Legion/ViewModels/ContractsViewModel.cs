@@ -213,8 +213,7 @@ namespace Legion.ViewModels
             {
                 string subPath = PathHelper.generatePath(ctr);
 
-                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Акт", subPath);
-                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Приложение № 3", subPath);
+                Helpers.ReportGenerator.WordGenerator.GenerateDocument(ctr, "Акт", subPath);    
                 switch (ctr.ContractType.TypeName)
                 {
                     case "Накопительный Е":

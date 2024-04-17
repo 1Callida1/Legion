@@ -15,23 +15,46 @@ namespace Legion.Helpers
     {
         public static string generatePath(Models.Contract contract)
         {
-            string subPath = string.Empty;
+            string subPath = $"{Settings.ArchievFolder}";
+
+            switch (contract.ContractType.TypeName)
+            {
+                case "Накопительный Е":
+                    subPath += "/Договор накопительный Е";
+                    break;
+                case "Накопительный":
+                    subPath += "/Договор накопительный";
+                    break;
+                case "Инвестиционный":
+                    subPath += "/Договор инвестирования 12";
+                    break;
+                case "Трехгодовой":
+                    subPath += "/Договор инвестирования 36";
+                    break;
+                case "Доходный":
+                    subPath += "/Договор доходный";
+                    break;
+                case "ТАНАКА инвестиционный":
+                    subPath += "/Договор инвестирования ТАНАКА";
+                    break;
+                case "ТАНАКА накопительный":
+                    subPath += "/Договор накопительный ТАНАКА";
+                    break;
+            }
+
             if (contract.ContractType.TypeName.Contains("ТАНАКА"))
             {
-                subPath = $"{Settings.ArchievFolder}" +
-                $"/Договор МКК {contract.CustomId.Replace("/", ".")} " +
+                subPath += $"/Договор МКК {contract.CustomId.Replace("/", ".")} " +
                 $"{contract.Investor.LastName} {contract.Investor.FirstName[0]}. {contract.Investor.MiddleName[0]}";
             }
             else if (contract.ContractType.TypeName.Contains("Накопительный"))
             {
-                subPath = $"{Settings.ArchievFolder}" +
-                $"/Договор Накопительный {contract.CustomId.Replace("/", ".")} " +
+                subPath += $"/Договор Накопительный {contract.CustomId.Replace("/", ".")} " +
                 $"{contract.Investor.LastName} {contract.Investor.FirstName[0]}. {contract.Investor.MiddleName[0]}";
             }
             else
             {
-                subPath = $"{Settings.ArchievFolder}" +
-                $"/Договор {contract.CustomId.Replace("/", ".")} " +
+                subPath += $"/Договор {contract.CustomId.Replace("/", ".")} " +
                 $"{contract.Investor.LastName} {contract.Investor.FirstName[0]}. {contract.Investor.MiddleName[0]}";
             }
 

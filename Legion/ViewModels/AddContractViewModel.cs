@@ -149,13 +149,7 @@ namespace Legion.ViewModels
                         };
                         break;
                     case "Трехгодовой":
-                        Contract.Bet = Contract.Amount switch
-                        {
-                            >= 500000 and <= 800000 => 6,
-                            > 800000 and <= 1200000 => 6.5f,
-                            > 1200000 => 7,
-                            _ => Contract.Bet
-                        };
+                        Contract.Bet = 6;
                         break;
                     case "Доходный":
                         Contract.Bet = 7;
@@ -173,6 +167,8 @@ namespace Legion.ViewModels
                         Contract.Bet = 3;
                         break;
                 }
+
+                Contract.Referral.Bonus = Contract.Amount * Contract.ContractType.ReferalBet / 100;
                 _context.Contracts.Add(Contract);
 
                 try
@@ -183,7 +179,6 @@ namespace Legion.ViewModels
                     string subPath = PathHelper.generatePath(Contract);
 
                     Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Акт", subPath);
-                    Helpers.ReportGenerator.WordGenerator.GenerateDocument(Contract, "Приложение № 3", subPath);
                     switch (Contract.ContractType.TypeName)
                     {
                         case "Накопительный Е":

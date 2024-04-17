@@ -21,5 +21,6 @@ namespace Legion.Models
         public string Formula { get; set; } = string.Empty;
         public string ContractIdFormat { get; set; } = string.Empty;
         public bool CanAddMoney { get; set; } = false;
+        public int ReferalBet { get; set; }
     }
 }
