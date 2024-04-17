@@ -274,7 +274,7 @@ namespace Legion.Helpers.ReportGenerator
 
                 sheet.Cells[11, 1].RichText.Add("Кол-во" + "\r\n");
                 sheet.Cells[11, 1].RichText.Add("месяцев:");
-                sheet.Cells[11, 2].Value = $"{mounthCount}";
+                sheet.Cells[11, 2].Value = $"{currentYearMounthCount}";
 
                 sheet.Cells[12, 1].RichText.Add("Процентная" + "\r\n");
                 sheet.Cells[12, 1].RichText.Add("ставка в:" + "\r\n");
@@ -522,7 +522,7 @@ namespace Legion.Helpers.ReportGenerator
                 else if(contract.Investor.Contracts.Count > 1)
                 {
                    string[] ArrayNumberOfContracts = new string[7] { "второй", "третий", "четвертый", "пятый", "шестой", "седьмой", "восьмой" };
-                   sheet.Cells[row, column + 10].Value = $"{ArrayNumberOfContracts[contract.RepeatNumber - 1]} договор";
+                   sheet.Cells[row, column + 10].Value = $"{ArrayNumberOfContracts[contract.Investor.Contracts.Count - 2]} договор";
                 }
                 else
                 {
@@ -625,7 +625,7 @@ namespace Legion.Helpers.ReportGenerator
                 }
                 else
                 {
-                    sheet.Cells[row, column + 6].Value = (Convert.ToDouble(contract.Referral.Bonus) / 100.0 * Convert.ToDouble(contract.Amount)).ToString("### ### ### руб.");
+                    sheet.Cells[row, column + 6].Value = (Convert.ToDouble(contract.ContractType.ReferalBet) / 100.0 * Convert.ToDouble(contract.Amount)).ToString("### ### ### руб.");
                 }
 
                 sheet.Cells[row, column + 8].Value = contract.Referral.Note;

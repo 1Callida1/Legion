@@ -91,7 +91,7 @@
                     </MultiBinding>
                   </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Реферальный бонус 3%" Binding="{Binding Path=Referral.Bonus}"/>
+                <DataGridTextColumn Header="Реферальный бонус" Binding="{Binding Path=Referral.Bonus}"/>
                 <DataGridCheckBoxColumn Header="Реферальный бонус получен?" Binding="{Binding Path=Referral.BonusClaim}"/>
                 <DataGridTextColumn Header="Примечание" Binding="{Binding Path=Referral.Note}"/>
               </DataGrid.Columns>

@@ -89,8 +89,13 @@ namespace Legion.Helpers.ReportGenerator
                 DayPayment = contract.DateEnd.Day.ToString(),
                 Bet = contract.Bet.ToString(),
                 BetWords = RussianConverter.FormatCurrency((decimal)contract.Bet)
-                    .Replace("рубля пятьдесят копеек", "целых пять десятых")
-                    .Replace("рубля ноль копеек", ""),
+                    .Replace("рублей ноль копеек процентов", "процентов")
+                    .Replace("рубля пятьдесят копеек процентов", "целых пять десятых процентов")
+                    .Replace("рубля ноль копеек процентов", "процентов")
+                    .Replace("рублей пятьдесят копеек процентов", "целых пять десятых процентов")
+                    .Replace("рублей ноль копеек", "процентов")
+                    .Replace("рубля пятьдесят копеек", "целых пять десятых процентов")
+                    .Replace("рубля ноль копеек", "процентов"),
                 MonthPayment = (contract.Amount * contract.Bet / 100).ToString("### ### ###"),
                 MonthPaymentWords = RussianConverter.Format((long)(contract.Amount * contract.Bet / 100)),
                 Dob = contract.Investor.DateBirth.ToString("dd.MM.yyyy"),
@@ -126,8 +131,14 @@ namespace Legion.Helpers.ReportGenerator
                         YearEnd = $"«{contract.DateStart.Day}» {contract.DateStart.ToString("MMMM", culture)} {Convert.ToInt32(contract.DateStart.Year) + currentYear}",
                         YearBet = (contract.Bet + (contract.ContractType.NextYearBetCoef * currentYear)).ToString(),
                         YearBetWords = RussianConverter.FormatCurrency((decimal)(contract.Bet + (contract.ContractType.NextYearBetCoef * currentYear)))
-                            .Replace("рубля пятьдесят копеек", "целых пять десятых")
-                            .Replace("рубля ноль копеек", ""),
+                            .Replace("рублей ноль копеек процентов", "процентов")
+                            .Replace("рубля пятьдесят копеек процентов", "целых пять десятых процентов")
+                            .Replace("рубля ноль копеек процентов", "процентов")
+                            .Replace("рублей пятьдесят копеек процентов", "целых пять десятых процентов")
+                            .Replace("рублей ноль копеек", "процентов")
+                            .Replace("рубля пятьдесят копеек", "целых пять десятых процентов")
+                            .Replace("рубля ноль копеек", "процентов"),
+
                         YearMonthPayment = (contract.Amount * (contract.Bet + (contract.ContractType.NextYearBetCoef * currentYear) / 100)).ToString("### ### ###"),
                         YearMonthPaymentWords = RussianConverter.Format((long)(contract.Amount * (contract.Bet + (contract.ContractType.NextYearBetCoef * currentYear) / 100)))
                     };
@@ -154,7 +165,7 @@ namespace Legion.Helpers.ReportGenerator
                 case "Доп соглашение накопительный":
                     TemplateName = $"Доп соглашение от {contractOptimazed.DateStart}";
                     break;
-                case "Шаблон Доп соглашение пролонгация":
+                case "Доп соглашение пролонгация":
                     TemplateName = $"Доп. соглашение к договору {contractOptimazed.ContractId.Replace("/", ".")} от {contractOptimazed.DateStart} {contractOptimazed.InvestorNameShort}.";
                     break;
                 case "Договор инвестирования 12":
