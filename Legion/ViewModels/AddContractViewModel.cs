@@ -168,7 +168,11 @@ namespace Legion.ViewModels
                         break;
                 }
 
-                Contract.Referral.Bonus = Contract.Amount * Contract.ContractType.ReferalBet / 100;
+                if(Contract.Referral != null)
+                {
+                    Contract.Referral.Bonus = Contract.Amount * Contract.ContractType.ReferalBet / 100;
+                }
+
                 _context.Contracts.Add(Contract);
 
                 try
