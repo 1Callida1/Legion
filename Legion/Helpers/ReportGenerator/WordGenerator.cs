@@ -95,7 +95,9 @@ namespace Legion.Helpers.ReportGenerator
                     .Replace("рублей пятьдесят копеек процентов", "целых пять десятых процентов")
                     .Replace("рублей ноль копеек", "процентов")
                     .Replace("рубля пятьдесят копеек", "целых пять десятых процентов")
-                    .Replace("рубля ноль копеек", "процентов"),
+                    .Replace("рубля ноль копеек", "процентов")
+                    .Replace("пятьдесят копеек", "целых пять десятых процентов")
+                    .Replace("рублей ", ""),
                 MonthPayment = (contract.Amount * contract.Bet / 100).ToString("### ### ###"),
                 MonthPaymentWords = RussianConverter.Format((long)(contract.Amount * contract.Bet / 100)),
                 Dob = contract.Investor.DateBirth.ToString("dd.MM.yyyy"),
@@ -121,7 +123,7 @@ namespace Legion.Helpers.ReportGenerator
 
             if(contract.ContractType.NextYearBetCoef != 0)
             {
-                int yearCount = Math.Abs((contract.DateStart.Month - contract.DateEnd.Month) + 12 * (contract.DateStart.Year - contract.DateEnd.Year)) / 3;
+                int yearCount = Math.Abs((contract.DateStart.Month - contract.DateEnd.Month) + 12 * (contract.DateStart.Year - contract.DateEnd.Year)) / 12;
                 List<CustomBet> customBets = new List<CustomBet>();
                 for (int currentYear = 1; currentYear < yearCount + 1; currentYear++)
                 {
@@ -137,10 +139,11 @@ namespace Legion.Helpers.ReportGenerator
                             .Replace("рублей пятьдесят копеек процентов", "целых пять десятых процентов")
                             .Replace("рублей ноль копеек", "процентов")
                             .Replace("рубля пятьдесят копеек", "целых пять десятых процентов")
-                            .Replace("рубля ноль копеек", "процентов"),
-
-                        YearMonthPayment = (contract.Amount * (contract.Bet + (contract.ContractType.NextYearBetCoef * currentYear) / 100)).ToString("### ### ###"),
-                        YearMonthPaymentWords = RussianConverter.Format((long)(contract.Amount * (contract.Bet + (contract.ContractType.NextYearBetCoef * currentYear) / 100)))
+                            .Replace("рубля ноль копеек", "процентов")
+                            .Replace("пятьдесят копеек", "целых пять десятых процентов")
+                            .Replace("рублей ", ""),
+                        YearMonthPayment = (contract.Amount * (contract.Bet + (contract.ContractType.NextYearBetCoef * currentYear)) / 100).ToString("### ### ###"),
+                        YearMonthPaymentWords = RussianConverter.Format((long)(contract.Amount * (contract.Bet + (contract.ContractType.NextYearBetCoef * currentYear)) / 100))
                     };
                     customBets.Add(customBet);
                 }
