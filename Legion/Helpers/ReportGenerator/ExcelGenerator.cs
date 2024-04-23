@@ -339,7 +339,12 @@ namespace Legion.Helpers.ReportGenerator
 
                 double sum = 0;
                 double bet = contract.ContractType.NextYearBetCoef == 0 ? contract.Bet : contract.Bet + sheetNumber * contract.ContractType.NextYearBetCoef;
-                double sumPercent = contract.Amount;
+
+                var a = contract.AdditionalPayments;
+                double addPaymentsSum = a.Sum(p => p.Amount);
+
+                // all
+                double sumPercent = contract.Amount - addPaymentsSum;
 
                 for (int month = 0; month <= currentYearMounthCount - 1; month++)
                 {
@@ -348,6 +353,13 @@ namespace Legion.Helpers.ReportGenerator
                     sheet.Cells[row, column].Value = contract.DateStart.AddMonths(month + 1 + 12 * sheetNumber).ToString("dd.MM.yyyy");
 
                     sheet.Cells[row, column + 1].Value = " -  руб";
+
+                    if (a.Any(p => p.Date.Year == contract.DateStart.Year + sheetNumber && p.Date.Month == month + 1))
+                    {
+                        sumPercent += a.Where(p =>
+                                p.Date.Year == contract.DateStart.Year + sheetNumber && p.Date.Month == month + 1)
+                            .Sum(p => p.Amount);
+                    }
 
                     sheet.Cells[row, column + 2].Value = sumPercent.ToString("### ### ### руб.");
 

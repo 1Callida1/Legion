@@ -20,6 +20,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Contract>().Navigation(c => c.ContractType).AutoInclude();
         modelBuilder.Entity<Contract>().Navigation(c => c.Status).AutoInclude();
         modelBuilder.Entity<Contract>().Navigation(c => c.Referral).AutoInclude();
+        modelBuilder.Entity<Contract>().Navigation(c => c.AdditionalPayments).AutoInclude();
 
         modelBuilder.Entity<Referral>().Navigation(c => c.InvestorCalled).AutoInclude();
         modelBuilder.Entity<Referral>().Navigation(c => c.InvestorInvited).AutoInclude();

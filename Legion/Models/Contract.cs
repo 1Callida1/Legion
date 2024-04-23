@@ -28,5 +28,7 @@ namespace Legion.Models
         public Referral? Referral { get; set; } = null!;
         public DateTime DateProlonagtion { get; set; } = DateTime.Now;
         public string? Note {  get; set; } = null!;
+
+        public List<AdditionalPayment> AdditionalPayments { get; set; }
     }
 }
